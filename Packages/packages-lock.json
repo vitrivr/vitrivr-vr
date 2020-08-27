@@ -66,6 +66,13 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
+    "com.vitrivr.unityinterface.cineastapi": {
+      "version": "https://github.com/vitrivr/UnityInterface.git#latest-stage",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "ac79df87e705d976b97687f1ee038e192184e89d"
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,
