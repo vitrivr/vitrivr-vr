@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using Org.Vitrivr.CineastApi.Api;
-using Org.Vitrivr.CineastApi.Client;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -78,7 +75,7 @@ public class TagInputController : MonoBehaviour
         // Set button position
         RectTransform buttonTransform = buttonObject.GetComponent<RectTransform>();
         buttonTransform.anchoredPosition = new Vector2(buttonTransform.anchoredPosition.x, -_tagButtonHeight *
-            _searchViewChildCount - (_tagButtonHeight / 2));
+            _searchViewChildCount - _tagButtonHeight / 2);
         // Set button text
         TextMeshProUGUI textMesh = buttonObject.GetComponentInChildren<TextMeshProUGUI>();
         textMesh.text = tagName;
