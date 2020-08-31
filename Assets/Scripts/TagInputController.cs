@@ -5,7 +5,8 @@ using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using Org.Vitrivr.CineastApi.Api;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
 
 public class TagInputController : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class TagInputController : MonoBehaviour
     public GameObject tagItemPrefab;
     public RectTransform searchScrollViewContent;
     public RectTransform tagScrollViewContent;
+    public TMP_InputField tagTextField;
     public int maxResults = 50;
 
     public readonly List<TagData> TagItems = new List<TagData>();
@@ -57,6 +59,17 @@ public class TagInputController : MonoBehaviour
         {
             CreateNewTagButton(resultTag.Name, resultTag.Id);
         }
+    }
+
+    public void Selected()
+    {
+        Debug.Log("Input box selected!");
+        tagTextField.text += "Cac";
+    }
+    
+    public void Deselected()
+    {
+        Debug.Log("Input box deselected!");
     }
 
     void ClearTagButtons()
