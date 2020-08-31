@@ -51,6 +51,8 @@ public class TagInputController : MonoBehaviour
         }
 
         ClearTagButtons();
+        var tags = tagsQueryResult.Tags;
+        tags.Sort((t0, t1) => t0.Name.Length - t1.Name.Length);
         foreach (var resultTag in tagsQueryResult.Tags.Take(maxResults))
         {
             CreateNewTagButton(resultTag.Name, resultTag.Id);
