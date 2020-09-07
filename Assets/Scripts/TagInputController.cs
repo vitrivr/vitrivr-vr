@@ -61,17 +61,6 @@ public class TagInputController : MonoBehaviour
         }
     }
 
-    public void Selected()
-    {
-        Debug.Log("Input box selected!");
-        tagTextField.text += "Cac";
-    }
-    
-    public void Deselected()
-    {
-        Debug.Log("Input box deselected!");
-    }
-
     void ClearTagButtons()
     {
         foreach (Transform child in searchScrollViewContent)

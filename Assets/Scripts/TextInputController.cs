@@ -25,7 +25,6 @@ public class TextInputController : MonoBehaviour
     {
         if (_keyboard != null)
         {
-            Debug.LogError("Tried to open keyboard, but keyboard already open!");
             return;
         }
 
@@ -46,7 +45,13 @@ public class TextInputController : MonoBehaviour
                     {
                         if (textField.text.Length > 0)
                         {
-                            textField.text = textField.text.Substring(0, textField.text.Length - 1);
+                            var caretPosition = textField.caretPosition;
+                            if (caretPosition == 0)
+                            {
+                                caretPosition = textField.text.Length;
+                            }
+                            textField.text = textField.text.Remove(caretPosition - 1, 1);
+                            textField.caretPosition = Mathf.Max(caretPosition - 1, 0);
                         }
                     });
                 }
@@ -62,10 +67,31 @@ public class TextInputController : MonoBehaviour
             }
             j++;
         }
+        
+        // Space bar
+        var spaceKey = Instantiate(keyboardButtonPrefab, _keyboard.transform);
+        spaceKey.onClick.AddListener(() => textField.text += ' ');
+        var spaceKeyText = spaceKey.GetComponentInChildren<TMP_Text>();
+        spaceKeyText.text = "_";
+        var spaceKeyRect = spaceKey.GetComponent<RectTransform>();
+        var spaceKeyWidth = _buttonSize * 4;
+        spaceKeyRect.anchoredPosition = new Vector2(0, -j * _buttonSize);
+        spaceKeyRect.sizeDelta = new Vector2(spaceKeyWidth, _buttonSize);
+        
+        // Hide key
+        var hideKey = Instantiate(keyboardButtonPrefab, _keyboard.transform);
+        hideKey.onClick.AddListener(HideKeyboard);
+        var hideKeyText = hideKey.GetComponentInChildren<TMP_Text>();
+        hideKeyText.text = "DONE";
+        var hideKeyRect = hideKey.GetComponent<RectTransform>();
+        var hideKeyWidth = _buttonSize * 4;
+        hideKeyRect.anchoredPosition = new Vector2(spaceKeyWidth, -j * _buttonSize);
+        hideKeyRect.sizeDelta = new Vector2(hideKeyWidth, _buttonSize);
     }
 
     public void HideKeyboard()
     {
-        
+        Destroy(_keyboard.gameObject);
+        _keyboard = null;
     }
 }
