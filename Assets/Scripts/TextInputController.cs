@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.Windows.Speech;
 
 public class TextInputController : MonoBehaviour
 {
@@ -15,10 +17,43 @@ public class TextInputController : MonoBehaviour
     private float _buttonSize;
     private Canvas _keyboard;
 
+    private DictationRecognizer _dictationRecognizer;
+
     void Awake()
     {
         var buttonRect = keyboardButtonPrefab.GetComponent<RectTransform>();
         _buttonSize = buttonRect.rect.height;
+        
+        // Set up dictation
+        _dictationRecognizer = new DictationRecognizer();
+        
+        _dictationRecognizer.DictationResult += (text, confidence) =>
+        {
+            Debug.Log($"{text}: {confidence}");
+            if (confidence == ConfidenceLevel.High || confidence == ConfidenceLevel.Medium)
+            {
+                if (textField.text.Length > 0)
+                {
+                    textField.text += " ";
+                }
+                textField.text += text;
+            }
+        };
+
+        _dictationRecognizer.DictationHypothesis += text =>
+        {
+            Debug.Log(text);
+        };
+
+        _dictationRecognizer.DictationComplete += completionCause =>
+        {
+            Debug.Log(completionCause);
+        };
+
+        _dictationRecognizer.DictationError += (error, hresult) =>
+        {
+            Debug.LogError($"{error}: {hresult}");
+        };
     }
 
     public void ShowKeyboard()
@@ -68,30 +103,58 @@ public class TextInputController : MonoBehaviour
             j++;
         }
         
-        // Space bar
-        var spaceKey = Instantiate(keyboardButtonPrefab, _keyboard.transform);
-        spaceKey.onClick.AddListener(() => textField.text += ' ');
-        var spaceKeyText = spaceKey.GetComponentInChildren<TMP_Text>();
-        spaceKeyText.text = "_";
-        var spaceKeyRect = spaceKey.GetComponent<RectTransform>();
-        var spaceKeyWidth = _buttonSize * 4;
-        spaceKeyRect.anchoredPosition = new Vector2(0, -j * _buttonSize);
-        spaceKeyRect.sizeDelta = new Vector2(spaceKeyWidth, _buttonSize);
-        
-        // Hide key
-        var hideKey = Instantiate(keyboardButtonPrefab, _keyboard.transform);
-        hideKey.onClick.AddListener(HideKeyboard);
-        var hideKeyText = hideKey.GetComponentInChildren<TMP_Text>();
-        hideKeyText.text = "DONE";
-        var hideKeyRect = hideKey.GetComponent<RectTransform>();
-        var hideKeyWidth = _buttonSize * 4;
-        hideKeyRect.anchoredPosition = new Vector2(spaceKeyWidth, -j * _buttonSize);
-        hideKeyRect.sizeDelta = new Vector2(hideKeyWidth, _buttonSize);
+        CreateKey("_", 4, 0, j, () => textField.text += ' ');
+        CreateKey("Done", 2, 4, j, HideKeyboard);
+        CreateKey("Rec", 2, 6, j, ToggleDictation);
+        CreateKey("Clear", 2, 8, j, () => textField.text = "");
     }
 
     public void HideKeyboard()
     {
         Destroy(_keyboard.gameObject);
         _keyboard = null;
+    }
+
+    public void ToggleDictation()
+    {
+        if (_dictationRecognizer.Status == SpeechSystemStatus.Running)
+        {
+            StopDictation();
+        }
+        else
+        {
+            StartDictation();
+        }
+    }
+
+    public void StartDictation()
+    {
+        if (_dictationRecognizer.Status == SpeechSystemStatus.Running)
+        {
+            Debug.Log("Dictation already running!");
+            return;
+        }
+        _dictationRecognizer.Start();
+    }
+    
+    public void StopDictation()
+    {
+        if (_dictationRecognizer.Status != SpeechSystemStatus.Running)
+        {
+            Debug.Log("Dictation not running, cannot stop!");
+            return;
+        }
+        _dictationRecognizer.Stop();
+    }
+
+    private void CreateKey(string text, int width, int column, int row, UnityAction onClick)
+    {
+        var button = Instantiate(keyboardButtonPrefab, _keyboard.transform);
+        button.onClick.AddListener(onClick);
+        var buttonText = button.GetComponentInChildren<TMP_Text>();
+        buttonText.text = text;
+        var buttonRect = button.GetComponent<RectTransform>();
+        buttonRect.anchoredPosition = new Vector2(column * _buttonSize, -row * _buttonSize);
+        buttonRect.sizeDelta = new Vector2(width * _buttonSize, _buttonSize);
     }
 }
