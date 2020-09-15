@@ -54,7 +54,8 @@ public class QueryController : MonoBehaviour
         }
 
         IdList idList = new IdList();
-        idList.Ids = queryResults.Results[0].Content.Take(maxResults).Select(result => result.Key).ToList();
+        var topResults = queryResults.Results[0].Content.Take(maxResults).ToList();
+        idList.Ids = topResults.Select(result => result.Key).ToList();
         var segmentQueryResults = await Task.Run(() => _segmentApi.FindSegmentByIdBatched(idList));
 
         if (_localQueryGuid != localGuid)
@@ -63,6 +64,6 @@ public class QueryController : MonoBehaviour
             return;
         }
 
-        mediaCarousel.CreateResults(segmentQueryResults.Content);
+        mediaCarousel.CreateResults(segmentQueryResults.Content.Zip(topResults.Select(result => result.Value), (item, score) => (item, score)).ToList());
     }
 }
