@@ -15,10 +15,9 @@ namespace VitrivrVR.Query
         public GameObject tagItemPrefab;
         public RectTransform searchScrollViewContent;
         public RectTransform tagScrollViewContent;
-        public TMP_InputField tagTextField;
         public int maxResults = 50;
 
-        public readonly List<TagData> TagItems = new List<TagData>();
+        public readonly List<TagData> tagItems = new List<TagData>();
     
         private TagApi _tagApi;
 
@@ -97,7 +96,7 @@ namespace VitrivrVR.Query
             // Set item position
             RectTransform itemTransform = item.GetComponent<RectTransform>();
             itemTransform.anchoredPosition = new Vector2(itemTransform.anchoredPosition.x, -_tagItemHeight *
-                TagItems.Count);
+                tagItems.Count);
             // Set item text
             TextMeshProUGUI textMesh = item.GetComponentInChildren<TextMeshProUGUI>();
             textMesh.text = tagName;
@@ -108,14 +107,14 @@ namespace VitrivrVR.Query
             // Set button action
             Button button = item.GetComponentInChildren<Button>();
             button.onClick.AddListener(() => RemoveTagItem(tagData));
-            TagItems.Add(tagData);
+            tagItems.Add(tagData);
         }
 
         void RemoveTagItem(TagData tagData)
         {
-            int index = TagItems.IndexOf(tagData);
-            TagItems.RemoveAt(index);
-            foreach (var item in TagItems.Skip(index))
+            int index = tagItems.IndexOf(tagData);
+            tagItems.RemoveAt(index);
+            foreach (var item in tagItems.Skip(index))
             {
                 RectTransform itemTransform = item.GetComponent<RectTransform>();
                 var anchoredPosition = itemTransform.anchoredPosition;
