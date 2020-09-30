@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
 using VitrivrVR.Media;
+using VitrivrVR.Query.Term;
 
 namespace VitrivrVR.Query
 {
   public class QueryController : MonoBehaviour
   {
-    public TagInputController tagInputController;
+    public QueryTermProvider queryTermProvider;
     public int prefetch = 72;
     public MediaCarouselController mediaCarousel;
 
@@ -23,20 +25,17 @@ namespace VitrivrVR.Query
       var localGuid = Guid.NewGuid();
       _localQueryGuid = localGuid;
 
-      var tagItems = tagInputController.tagItems;
+      var queryTerms = queryTermProvider.GetTerms();
 
-      if (tagItems.Count == 0)
+      if (queryTerms.Count == 0)
       {
-        Debug.Log("Cannot run query: No tags specified.");
+        Debug.Log("Cannot run query: No terms specified.");
         return;
       }
 
       mediaCarousel.ClearResults();
       
-      // TODO: Interfaces for tag and text providers
-
-      var tags = tagItems.Select(tagItem => (tagItem.TagId, tagItem.TagName)).ToList();
-      var query = QueryBuilder.BuildTagsSimilarityQuery(tags);
+      var query = QueryBuilder.BuildSimilarityQuery(queryTerms.ToArray());
 
       var queryData = await CineastWrapper.ExecuteQuery(query, 1000, prefetch);
 
