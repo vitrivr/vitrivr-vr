@@ -11,7 +11,7 @@ using Button = UnityEngine.UI.Button;
 
 namespace VitrivrVR.Query
 {
-  public class TagInputController : QueryTermProvider
+  public class CanvasQueryTermProvider : QueryTermProvider
   {
     public GameObject tagButtonPrefab;
     public GameObject tagItemPrefab;
@@ -23,6 +23,12 @@ namespace VitrivrVR.Query
     private readonly HashSet<string> _tagIds = new HashSet<string>();
 
     private TagApi _tagApi;
+
+    // Text input data
+    private bool _ocr;
+    private bool _asr;
+    private bool _sceneCaption;
+    private string _textSearchText;
 
     // Stores the latest tag search input to determine if search results are still relevant
     private string _latestInput;
@@ -37,6 +43,26 @@ namespace VitrivrVR.Query
       _tagButtonHeight = tagButtonRect.rect.height;
       var tagItemRect = tagItemPrefab.GetComponent<RectTransform>();
       _tagItemHeight = tagItemRect.rect.height;
+    }
+
+    public void SetTextSearchText(string text)
+    {
+      _textSearchText = text;
+    }
+
+    public void SetOcrSearch(bool ocr)
+    {
+      _ocr = ocr;
+    }
+
+    public void SetAsrSearch(bool asr)
+    {
+      _asr = asr;
+    }
+
+    public void SetSceneCaptionSearch(bool sceneCaption)
+    {
+      _sceneCaption = sceneCaption;
     }
 
     public async void GetTags(string input)
@@ -138,15 +164,19 @@ namespace VitrivrVR.Query
 
     public override List<QueryTerm> GetTerms()
     {
+      var terms = new List<QueryTerm>();
       var tags = _tagItems.Select(tagItem => (tagItem.TagId, tagItem.TagName)).ToList();
-      if (tags.Count == 0)
+      if (tags.Count > 0)
       {
-        // No tags specified
-        return new List<QueryTerm>();
+        terms.Add(QueryTermBuilder.BuildTagTerm(tags));
       }
 
-      var tagTerm = QueryTermBuilder.BuildTagTerm(tags);
-      return new List<QueryTerm> {tagTerm};
+      if ((_ocr || _asr || _sceneCaption) && _textSearchText.Length > 0)
+      {
+        terms.Add(QueryTermBuilder.BuildTextTerm(_textSearchText, _ocr, _asr, _sceneCaption));
+      }
+
+      return terms;
     }
   }
 }
