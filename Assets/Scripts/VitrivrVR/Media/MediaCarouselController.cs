@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
-using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
 
 namespace VitrivrVR.Media
@@ -37,7 +36,7 @@ namespace VitrivrVR.Media
       var scroll = UnityEngine.Input.GetAxisRaw(scrollAxis);
       Transform transform1 = transform;
       transform1.Rotate(Vector3.up, Time.deltaTime * scrollSpeed * scroll);
-    
+
       // Move thumbnails to create more organic spacing
       var targetPosition = transform1.position;
 
@@ -69,9 +68,10 @@ namespace VitrivrVR.Media
         {
           thumbnail.transform.position += force * Time.deltaTime;
         }
-      
+
         // Rotate thumbnail to face center
-        thumbnail.transform.rotation = Quaternion.LookRotation(thumbnail.transform.position - targetPosition, Vector3.up);
+        thumbnail.transform.rotation =
+          Quaternion.LookRotation(thumbnail.transform.position - targetPosition, Vector3.up);
       }
     }
 
@@ -87,10 +87,11 @@ namespace VitrivrVR.Media
       // Ensure all required data is available
       var segmentId = result.item.GetId();
       var objectId = await result.item.GetObjectId();
-      
+
       var angle = 30; // Angle between thumbnails
       // Determine position
-      var position = new Vector3(0, 0, innerRadius + 1 - (float) result.score + Mathf.Floor(_thumbnails.Count / (360f / angle)));
+      var position = new Vector3(0, 0,
+        innerRadius + 1 - (float) result.score + Mathf.Floor(_thumbnails.Count / (360f / angle)));
       position = Quaternion.Euler((_thumbnails.Count % rows - (rows - 1) / 2) * angle, _thumbnails.Count / rows * angle,
         0) * position;
       var targetPosition = transform.position;
@@ -98,7 +99,7 @@ namespace VitrivrVR.Media
       // Rotate thumbnail to face center
       var rotation = Quaternion.LookRotation(position - targetPosition, Vector3.up);
       var thumbnailPath = PathResolver.ResolvePath(_thumbnailPath, objectId, segmentId);
-      
+
       var thumbnailController = Instantiate(thumbnailTemplate, position, rotation, transform);
       thumbnailController.URL = $"{_mediaHost}{thumbnailPath}{_thumbnailExtension}";
       _thumbnails.Add((thumbnailController.gameObject, (float) result.score));

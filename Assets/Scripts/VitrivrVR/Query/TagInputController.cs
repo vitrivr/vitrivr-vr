@@ -144,6 +144,7 @@ namespace VitrivrVR.Query
         // No tags specified
         return new List<QueryTerm>();
       }
+
       var tagTerm = QueryTermBuilder.BuildTagTerm(tags);
       return new List<QueryTerm> {tagTerm};
     }

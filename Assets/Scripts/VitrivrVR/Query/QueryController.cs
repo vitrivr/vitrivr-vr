@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
@@ -34,7 +32,7 @@ namespace VitrivrVR.Query
       }
 
       mediaCarousel.ClearResults();
-      
+
       var query = QueryBuilder.BuildSimilarityQuery(queryTerms.ToArray());
 
       var queryData = await CineastWrapper.ExecuteQuery(query, 1000, prefetch);
