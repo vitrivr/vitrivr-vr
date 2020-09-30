@@ -429,6 +429,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b5a27f114074364aa89cf33708ebcd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  primaryButtonEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1107429518}
+        m_MethodName: SetDictation
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &95755673
 Transform:
   m_ObjectHideFlags: 0
@@ -967,8 +981,9 @@ GameObject:
   - component: {fileID: 428119606}
   - component: {fileID: 428119605}
   - component: {fileID: 428119604}
+  - component: {fileID: 428119609}
   m_Layer: 0
-  m_Name: Tag UI Canvas
+  m_Name: Text UI Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1073,6 +1088,28 @@ RectTransform:
   m_AnchoredPosition: {x: -1, y: 1}
   m_SizeDelta: {x: 1500, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &428119609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428119603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcbcea6e796eb1f4c90c9907b2b74ae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tagTextField: {fileID: 720707181}
+  textTextField: {fileID: 655535748}
+  keyboardButtonPrefab: {fileID: 2088159314671751484, guid: 88f216670d9cca946b6486a7eb50b0d9,
+    type: 3}
+  keyboardCanvasPrefab: {fileID: 287035826496090033, guid: fe1277b1b48f6574aa0a9eb7efa95330,
+    type: 3}
+  keys:
+  - qwertyuiop
+  - asdfghjkl
+  - zxcvbnm<
 --- !u!1 &501414172
 GameObject:
   m_ObjectHideFlags: 0
@@ -1748,7 +1785,7 @@ GameObject:
   - component: {fileID: 655535749}
   - component: {fileID: 655535748}
   m_Layer: 0
-  m_Name: InputField (TMP)
+  m_Name: Text InputField (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2308,9 +2345,8 @@ GameObject:
   - component: {fileID: 720707183}
   - component: {fileID: 720707182}
   - component: {fileID: 720707181}
-  - component: {fileID: 720707184}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: Tag InputField (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2481,27 +2517,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 720707179}
   m_CullTransparentMesh: 0
---- !u!114 &720707184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 720707179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcbcea6e796eb1f4c90c9907b2b74ae8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textField: {fileID: 720707181}
-  keyboardButtonPrefab: {fileID: 2088159314671751484, guid: 88f216670d9cca946b6486a7eb50b0d9,
-    type: 3}
-  keyboardCanvasPrefab: {fileID: 287035826496090033, guid: fe1277b1b48f6574aa0a9eb7efa95330,
-    type: 3}
-  keys:
-  - qwertyuiop
-  - asdfghjkl
-  - zxcvbnm<
 --- !u!1 &879932499
 GameObject:
   m_ObjectHideFlags: 0
@@ -2837,7 +2852,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -2.6}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1658813529}
@@ -3014,9 +3029,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130d71f4ad21fbe45a3cefdecd9d2eee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  previewText: {fileID: 2097262021}
-  textField: {fileID: 720707181}
-  buttonObserver: {fileID: 95755672}
+  onDictationResult:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: ReceiveDictationResult
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onDictationHypothesis:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2097262021}
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onDictationComplete:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2097262021}
+        m_MethodName: set_text
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onDictationError:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &1107429519
 Transform:
   m_ObjectHideFlags: 0

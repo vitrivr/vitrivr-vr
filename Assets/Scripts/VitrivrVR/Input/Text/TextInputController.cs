@@ -8,7 +8,8 @@ namespace VitrivrVR.Input.Text
 {
   public class TextInputController : MonoBehaviour
   {
-    public TMP_InputField textField;
+    public TMP_InputField tagTextField;
+    public TMP_InputField textTextField;
     public Button keyboardButtonPrefab;
     public Canvas keyboardCanvasPrefab;
     public string[] keys;
@@ -16,35 +17,34 @@ namespace VitrivrVR.Input.Text
     private float _buttonSize;
     private Canvas _keyboard;
 
-    private DictationRecognizer _dictationRecognizer;
-
     void Awake()
     {
       var buttonRect = keyboardButtonPrefab.GetComponent<RectTransform>();
       _buttonSize = buttonRect.rect.height;
+    }
 
-      // Set up dictation
-      _dictationRecognizer = new DictationRecognizer();
+    public void ReceiveDictationResult(string text, ConfidenceLevel confidence)
+    {
+      if (confidence != ConfidenceLevel.High && confidence != ConfidenceLevel.Medium) return;
+      
+      var textField = GetSelectedTextField();
 
-      _dictationRecognizer.DictationResult += (text, confidence) =>
+      if (textField == null)
       {
-        Debug.Log($"{text}: {confidence}");
-        if (confidence == ConfidenceLevel.High || confidence == ConfidenceLevel.Medium)
-        {
-          if (textField.text.Length > 0)
-          {
-            textField.text += " ";
-          }
+        return;
+      }
+        
+      if (textField.text.Length > 0)
+      {
+        textField.text += " ";
+      }
+      
+      textField.text += text;
+    }
 
-          textField.text += text;
-        }
-      };
-
-      _dictationRecognizer.DictationHypothesis += text => { Debug.Log(text); };
-
-      _dictationRecognizer.DictationComplete += completionCause => { Debug.Log(completionCause); };
-
-      _dictationRecognizer.DictationError += (error, hresult) => { Debug.LogError($"{error}: {hresult}"); };
+    private TMP_InputField GetSelectedTextField()
+    {
+      return tagTextField.isFocused ? tagTextField : textTextField.isFocused ? textTextField : null;
     }
 
     public void ShowKeyboard()
@@ -53,6 +53,8 @@ namespace VitrivrVR.Input.Text
       {
         return;
       }
+      // TODO: Find good way to determine which text ¯box the text should be added to
+      var textField = GetSelectedTextField();
 
       _keyboard = Instantiate(keyboardCanvasPrefab, new Vector3(0, 1, -0.1f), Quaternion.identity);
 
@@ -99,48 +101,13 @@ namespace VitrivrVR.Input.Text
 
       CreateKey("_", 4, 0, j, () => textField.text += ' ');
       CreateKey("Done", 2, 4, j, HideKeyboard);
-      CreateKey("Rec", 2, 6, j, ToggleDictation);
-      CreateKey("Clear", 2, 8, j, () => textField.text = "");
+      CreateKey("Clear", 2, 6, j, () => textField.text = "");
     }
 
     public void HideKeyboard()
     {
       Destroy(_keyboard.gameObject);
       _keyboard = null;
-    }
-
-    public void ToggleDictation()
-    {
-      if (_dictationRecognizer.Status == SpeechSystemStatus.Running)
-      {
-        StopDictation();
-      }
-      else
-      {
-        StartDictation();
-      }
-    }
-
-    public void StartDictation()
-    {
-      if (_dictationRecognizer.Status == SpeechSystemStatus.Running)
-      {
-        Debug.Log("Dictation already running!");
-        return;
-      }
-
-      _dictationRecognizer.Start();
-    }
-
-    public void StopDictation()
-    {
-      if (_dictationRecognizer.Status != SpeechSystemStatus.Running)
-      {
-        Debug.Log("Dictation not running, cannot stop!");
-        return;
-      }
-
-      _dictationRecognizer.Stop();
     }
 
     private void CreateKey(string text, int width, int column, int row, UnityAction onClick)

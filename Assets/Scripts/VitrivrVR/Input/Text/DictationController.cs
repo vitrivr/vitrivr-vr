@@ -1,5 +1,7 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Windows.Speech;
 using VitrivrVR.Input.Controller;
 
@@ -7,9 +9,19 @@ namespace VitrivrVR.Input.Text
 {
   public class DictationController : MonoBehaviour
   {
-    public TextMeshPro previewText;
-    public TMP_InputField textField;
-    public XRButtonObserver buttonObserver;
+    [Serializable]
+    public class DictationResultEvent : UnityEvent<string, ConfidenceLevel> { }
+    [Serializable]
+    public class DictationHypothesisEvent : UnityEvent<string> { }
+    [Serializable]
+    public class DictationCompleteEvent : UnityEvent<DictationCompletionCause> { }
+    [Serializable]
+    public class DictationErrorEvent : UnityEvent<string, int> { }
+    
+    public DictationResultEvent onDictationResult;
+    public DictationHypothesisEvent onDictationHypothesis;
+    public DictationCompleteEvent onDictationComplete;
+    public DictationErrorEvent onDictationError;
 
     private DictationRecognizer _dictationRecognizer;
 
@@ -21,33 +33,38 @@ namespace VitrivrVR.Input.Text
       _dictationRecognizer.DictationResult += (text, confidence) =>
       {
         Debug.Log($"{text}: {confidence}");
-        if (confidence == ConfidenceLevel.High || confidence == ConfidenceLevel.Medium)
-        {
-          if (textField.text.Length > 0)
-          {
-            textField.text += " ";
-          }
-
-          textField.text += text;
-        }
+        // if (confidence == ConfidenceLevel.High || confidence == ConfidenceLevel.Medium)
+        // {
+        //   if (textField.text.Length > 0)
+        //   {
+        //     textField.text += " ";
+        //   }
+        //
+        //   textField.text += text;
+        // }
+        
+        onDictationResult.Invoke(text, confidence);
       };
 
       _dictationRecognizer.DictationHypothesis += text =>
       {
         Debug.Log(text);
-        previewText.text = text;
+        // previewText.text = text;
+        onDictationHypothesis.Invoke(text);
       };
 
       _dictationRecognizer.DictationComplete += completionCause =>
       {
         Debug.Log(completionCause);
-        previewText.text = "";
+        // previewText.text = "";
+        onDictationComplete.Invoke(completionCause);
       };
 
-      _dictationRecognizer.DictationError += (error, hresult) => { Debug.LogError($"{error}: {hresult}"); };
-
-      // Register with button observer
-      buttonObserver.primaryButtonEvent.AddListener(SetDictation);
+      _dictationRecognizer.DictationError += (error, hresult) =>
+      {
+        Debug.LogError($"{error}: {hresult}");
+        onDictationError.Invoke(error, hresult);
+      };
     }
 
     public void SetDictation(bool dictation)
