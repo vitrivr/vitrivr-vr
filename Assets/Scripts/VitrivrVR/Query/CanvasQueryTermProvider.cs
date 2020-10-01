@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
-using Org.Vitrivr.CineastApi.Api;
 using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
@@ -22,8 +21,6 @@ namespace VitrivrVR.Query
     private readonly List<TagData> _tagItems = new List<TagData>();
     private readonly HashSet<string> _tagIds = new HashSet<string>();
 
-    private TagApi _tagApi;
-
     // Text input data
     private bool _ocr;
     private bool _asr;
@@ -38,7 +35,6 @@ namespace VitrivrVR.Query
 
     void Awake()
     {
-      _tagApi = new TagApi(CineastConfigManager.Instance.ApiConfiguration);
       var tagButtonRect = tagButtonPrefab.GetComponent<RectTransform>();
       _tagButtonHeight = tagButtonRect.rect.height;
       var tagItemRect = tagItemPrefab.GetComponent<RectTransform>();
@@ -74,7 +70,7 @@ namespace VitrivrVR.Query
         return;
       }
 
-      var tagsQueryResult = await Task.Run(() => _tagApi.FindTagsBy("matchingname", input));
+      var tags = await CineastWrapper.GetMatchingTags(input);
       if (input != _latestInput)
       {
         // A tag search with a different input has been started and the results from this search are no longer relevant
@@ -82,9 +78,8 @@ namespace VitrivrVR.Query
       }
 
       ClearTagButtons();
-      var tags = tagsQueryResult.Tags;
       tags.Sort((t0, t1) => t0.Name.Length - t1.Name.Length);
-      foreach (var resultTag in tagsQueryResult.Tags.Take(maxResults))
+      foreach (var resultTag in tags.Take(maxResults))
       {
         CreateNewTagButton(resultTag.Name, resultTag.Id);
       }
