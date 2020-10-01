@@ -11,6 +11,7 @@ namespace VitrivrVR.Query
   {
     public QueryTermProvider queryTermProvider;
     public int prefetch = 72;
+    public GameObject timer;
     public MediaCarouselController mediaCarousel;
 
     /// <summary>
@@ -35,6 +36,11 @@ namespace VitrivrVR.Query
 
       var query = QueryBuilder.BuildSimilarityQuery(queryTerms.ToArray());
 
+      if (!timer.activeSelf)
+      {
+        timer.SetActive(true);
+      }
+
       var queryData = await CineastWrapper.ExecuteQuery(query, 1000, prefetch);
 
       if (_localQueryGuid != localGuid)
@@ -44,6 +50,12 @@ namespace VitrivrVR.Query
       }
 
       mediaCarousel.CreateResults(queryData);
+
+      if (_localQueryGuid == localGuid)
+      {
+        timer.transform.rotation = Quaternion.identity;
+        timer.SetActive(false);
+      }
     }
   }
 }
