@@ -5,10 +5,9 @@ using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
-using VitrivrVR.Query.Term;
 using Button = UnityEngine.UI.Button;
 
-namespace VitrivrVR.Query
+namespace VitrivrVR.Query.Term
 {
   public class CanvasQueryTermProvider : QueryTermProvider
   {
