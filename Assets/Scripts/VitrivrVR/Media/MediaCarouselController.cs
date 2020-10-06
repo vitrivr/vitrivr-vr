@@ -78,7 +78,11 @@ namespace VitrivrVR.Media
     public async void CreateResults(QueryData query)
     {
       // TODO: Turn this into a query display factory and separate query display object
-      var tasks = query.results.Take(maxResults).ToList().Select(CreateResultObject);
+      // TODO: Proper result merging
+      var tasks = query.results.Values
+        .Aggregate((IEnumerable<(SegmentData item, double score)>) new List<(SegmentData item, double score)>(),
+          (collection, categoryList) => collection.Concat(categoryList)).Take(maxResults).ToList()
+        .Select(CreateResultObject);
       await Task.WhenAll(tasks);
     }
 

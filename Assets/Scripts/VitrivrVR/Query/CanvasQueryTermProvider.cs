@@ -166,7 +166,7 @@ namespace VitrivrVR.Query
         terms.Add(QueryTermBuilder.BuildTagTerm(tags));
       }
 
-      if ((_ocr || _asr || _sceneCaption) && _textSearchText.Length > 0)
+      if ((_ocr || _asr || _sceneCaption) && !string.IsNullOrEmpty(_textSearchText))
       {
         terms.Add(QueryTermBuilder.BuildTextTerm(_textSearchText, _ocr, _asr, _sceneCaption));
       }
