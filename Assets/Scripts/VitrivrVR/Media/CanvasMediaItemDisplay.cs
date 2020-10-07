@@ -83,8 +83,6 @@ namespace VitrivrVR.Media
       _videoPlayer = gameObject.AddComponent<VideoPlayer>();
       var audioSource = gameObject.AddComponent<AudioSource>();
 
-      _videoPlayer.url = mediaUrl;
-
       _videoPlayer.isLooping = true;
       _videoPlayer.renderMode = VideoRenderMode.RenderTexture;
 
@@ -92,6 +90,11 @@ namespace VitrivrVR.Media
       _videoPlayer.SetTargetAudioSource(0, audioSource);
       _videoPlayer.prepareCompleted += PrepareCompleted;
       _videoPlayer.errorReceived += ErrorEncountered;
+
+      _videoPlayer.playOnAwake = true;
+
+      _videoPlayer.url = mediaUrl;
+      _videoPlayer.frame = await _segment.GetStart();
     }
 
     private IEnumerator DownloadTexture(string url)
@@ -114,7 +117,7 @@ namespace VitrivrVR.Media
       }
     }
 
-    async void PrepareCompleted(VideoPlayer videoPlayer)
+    void PrepareCompleted(VideoPlayer videoPlayer)
     {
       float factor = Mathf.Max(videoPlayer.width, videoPlayer.height);
       Vector3 scale = new Vector3(videoPlayer.width / factor, videoPlayer.height / factor, 1);
@@ -122,7 +125,8 @@ namespace VitrivrVR.Media
       videoPlayer.targetTexture = renderTex;
       previewImage.texture = renderTex;
       previewImage.transform.localScale = scale;
-      _videoPlayer.frame = await _segment.GetStart();
+
+      videoPlayer.Pause();
     }
 
     void ErrorEncountered(VideoPlayer videoPlayer, string error)
