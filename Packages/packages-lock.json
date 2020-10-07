@@ -91,11 +91,11 @@
       "url": "https://packages.unity.com"
     },
     "com.vitrivr.unityinterface.cineastapi": {
-      "version": "https://github.com/vitrivr/UnityInterface.git#latest-stage",
+      "version": "https://github.com/vitrivr/UnityInterface.git#latest",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "a3782f426124be741504343446a9c493fd5a5af8"
+      "hash": "4078ff2ad5f6491a1db557ea2958656be27ee275"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
