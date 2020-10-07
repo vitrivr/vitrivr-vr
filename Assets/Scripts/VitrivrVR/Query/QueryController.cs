@@ -2,7 +2,7 @@
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
-using VitrivrVR.Media;
+using VitrivrVR.Query.Display;
 using VitrivrVR.Query.Term;
 
 namespace VitrivrVR.Query
@@ -12,7 +12,9 @@ namespace VitrivrVR.Query
     public QueryTermProvider queryTermProvider;
     public int prefetch = 72;
     public GameObject timer;
-    public MediaCarouselController mediaCarousel;
+    public QueryDisplay queryDisplay;
+
+    private QueryDisplay _currentDisplay;
 
     /// <summary>
     /// Keeps track of the latest query to determine if results of a returning query are still relevant.
@@ -32,7 +34,10 @@ namespace VitrivrVR.Query
         return;
       }
 
-      mediaCarousel.ClearResults();
+      if (_currentDisplay != null)
+      {
+        Destroy(_currentDisplay.gameObject);
+      }
 
       var query = QueryBuilder.BuildSimilarityQuery(queryTerms.ToArray());
 
@@ -49,7 +54,9 @@ namespace VitrivrVR.Query
         return;
       }
 
-      mediaCarousel.CreateResults(queryData);
+      _currentDisplay = Instantiate(queryDisplay);
+
+      _currentDisplay.Initialize(queryData);
 
       if (_localQueryGuid == localGuid)
       {

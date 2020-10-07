@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.574817, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -455,7 +455,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &136867035
 GameObject:
@@ -869,7 +869,7 @@ PrefabInstance:
     - target: {fileID: 3603498185390360078, guid: f2f36bb0a1c3743b996ebbfb2f795c26,
         type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 3603498185390360078, guid: f2f36bb0a1c3743b996ebbfb2f795c26,
         type: 3}
@@ -1034,7 +1034,8 @@ MonoBehaviour:
   queryTermProvider: {fileID: 994448842}
   prefetch: 72
   timer: {fileID: 301389700}
-  mediaCarousel: {fileID: 1406574602}
+  queryDisplay: {fileID: 4366645700309737021, guid: b3d8bbebd338c45dca213d2e28e5bbfe,
+    type: 3}
 --- !u!4 &408528907
 Transform:
   m_ObjectHideFlags: 0
@@ -3168,7 +3169,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1130435070
 GameObject:
@@ -3843,7 +3844,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1334787230
 GameObject:
@@ -4171,57 +4172,6 @@ RectTransform:
   m_AnchoredPosition: {x: -1, y: 0.35}
   m_SizeDelta: {x: 100, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1406574601
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1406574603}
-  - component: {fileID: 1406574602}
-  m_Layer: 0
-  m_Name: MediaCarousel
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1406574602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1406574601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c66835178ca0b4a38b662758304cb086, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  thumbnailTemplate: {fileID: 2550728198607861108, guid: df9e32658f9354bfb88abf111839f9cd,
-    type: 3}
-  rows: 3
-  innerRadius: 2.7
-  scrollAxis: Horizontal
-  scrollSpeed: 30
-  forceThreshold: 0.3
-  maxResults: 72
---- !u!4 &1406574603
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1406574601}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1443838488
 GameObject:
   m_ObjectHideFlags: 0
@@ -4270,7 +4220,7 @@ Transform:
   m_Children:
   - {fileID: 1658813529}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1502778546
 GameObject:
@@ -6276,7 +6226,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2022543285
 GameObject:

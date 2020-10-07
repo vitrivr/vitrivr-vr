@@ -2,14 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
-using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
+using VitrivrVR.Media;
 
-namespace VitrivrVR.Media
+namespace VitrivrVR.Query.Display
 {
-  public class MediaCarouselController : MonoBehaviour
+  public class MediaCarouselController : QueryDisplay
   {
-    public ThumbnailController thumbnailTemplate;
+    public MediaItemDisplay mediaItemDisplay;
     public int rows = 3;
     public float innerRadius = 2.7f;
     public string scrollAxis = "Horizontal";
@@ -18,17 +18,6 @@ namespace VitrivrVR.Media
     public int maxResults = 72;
 
     private readonly List<(GameObject thumbnail, float score)> _thumbnails = new List<(GameObject, float)>();
-    private string _thumbnailPath;
-    private string _thumbnailExtension;
-    private string _mediaHost;
-
-    public void Awake()
-    {
-      var config = CineastConfigManager.Instance.Config;
-      _thumbnailPath = config.thumbnailPath;
-      _thumbnailExtension = config.thumbnailExtension;
-      _mediaHost = config.mediaHost;
-    }
 
     void Update()
     {
@@ -75,7 +64,7 @@ namespace VitrivrVR.Media
       }
     }
 
-    public async void CreateResults(QueryData query)
+    private async void CreateResults(QueryData query)
     {
       // TODO: Turn this into a query display factory and separate query display object
       // TODO: Proper result merging
@@ -88,9 +77,8 @@ namespace VitrivrVR.Media
 
     private async Task CreateResultObject((SegmentData item, double score) result)
     {
-      // Ensure all required data is available
-      var segmentId = result.item.GetId();
-      var objectId = await result.item.GetObjectId();
+      var itemDisplay = Instantiate(mediaItemDisplay, transform);
+      await itemDisplay.Initialize(result.item);
 
       var angle = 30; // Angle between thumbnails
       // Determine position
@@ -102,11 +90,12 @@ namespace VitrivrVR.Media
       position += targetPosition; // Move result display focus a little bit higher
       // Rotate thumbnail to face center
       var rotation = Quaternion.LookRotation(position - targetPosition, Vector3.up);
-      var thumbnailPath = PathResolver.ResolvePath(_thumbnailPath, objectId, segmentId);
 
-      var thumbnailController = Instantiate(thumbnailTemplate, position, rotation, transform);
-      thumbnailController.URL = $"{_mediaHost}{thumbnailPath}{_thumbnailExtension}";
-      _thumbnails.Add((thumbnailController.gameObject, (float) result.score));
+      var itemTransform = itemDisplay.transform;
+      itemTransform.position = position;
+      itemTransform.rotation = rotation;
+
+      _thumbnails.Add((itemDisplay.gameObject, (float) result.score));
     }
 
     public void ClearResults()
@@ -121,6 +110,16 @@ namespace VitrivrVR.Media
       transform.rotation = Quaternion.identity;
 
       _thumbnails.Clear();
+    }
+
+    public override void Initialize(QueryData queryData)
+    {
+      CreateResults(queryData);
+    }
+
+    private void OnDestroy()
+    {
+      ClearResults();
     }
   }
 }
