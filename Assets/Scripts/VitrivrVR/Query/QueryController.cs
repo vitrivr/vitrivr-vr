@@ -7,6 +7,9 @@ using VitrivrVR.Query.Term;
 
 namespace VitrivrVR.Query
 {
+  /// <summary>
+  /// Object for the execution of similarity queries and the creation of query result displays.
+  /// </summary>
   public class QueryController : MonoBehaviour
   {
     public QueryTermProvider queryTermProvider;
@@ -58,11 +61,9 @@ namespace VitrivrVR.Query
 
       _currentDisplay.Initialize(queryData);
 
-      if (_localQueryGuid == localGuid)
-      {
-        timer.transform.rotation = Quaternion.identity;
-        timer.SetActive(false);
-      }
+      if (_localQueryGuid != localGuid) return;
+      timer.transform.rotation = Quaternion.identity;
+      timer.SetActive(false);
     }
   }
 }

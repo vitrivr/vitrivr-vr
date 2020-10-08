@@ -3,6 +3,9 @@ using UnityEngine.Video;
 
 namespace VitrivrVR.Media
 {
+  /// <summary>
+  /// Legacy media display exclusively for videos.
+  /// </summary>
   public class VideoPreviewController : MonoBehaviour
   {
     public Texture2D errorTexture;
@@ -10,7 +13,7 @@ namespace VitrivrVR.Media
 
     private VideoPlayer _videoPlayer;
 
-    void Start()
+    private void Start()
     {
       _videoPlayer = gameObject.AddComponent<VideoPlayer>();
       var audioSource = gameObject.AddComponent<AudioSource>();
@@ -28,34 +31,32 @@ namespace VitrivrVR.Media
       _videoPlayer.errorReceived += ErrorEncountered;
     }
 
-    void Update()
+    private void Update()
     {
-      if (UnityEngine.Input.GetButtonDown("Jump"))
+      if (!UnityEngine.Input.GetButtonDown("Jump")) return;
+      if (_videoPlayer.isPlaying)
       {
-        if (_videoPlayer.isPlaying)
-        {
-          _videoPlayer.Pause();
-        }
-        else
-        {
-          _videoPlayer.Play();
-        }
+        _videoPlayer.Pause();
+      }
+      else
+      {
+        _videoPlayer.Play();
       }
     }
 
-    void PrepareCompleted(VideoPlayer videoPlayer)
+    private void PrepareCompleted(VideoPlayer videoPlayer)
     {
       if (videoPlayer.isPlaying)
       {
         videoPlayer.Pause();
       }
 
-      float factor = Mathf.Max(videoPlayer.width, videoPlayer.height);
-      Vector3 scale = new Vector3(videoPlayer.width / factor, videoPlayer.height / factor, 1);
+      var factor = Mathf.Max(videoPlayer.width, videoPlayer.height);
+      var scale = new Vector3(videoPlayer.width / factor, videoPlayer.height / factor, 1);
       transform.localScale = scale;
     }
 
-    void ErrorEncountered(VideoPlayer videoPlayer, string error)
+    private void ErrorEncountered(VideoPlayer videoPlayer, string error)
     {
       Debug.LogError(error);
       GetComponent<Renderer>().material.mainTexture = errorTexture;

@@ -7,11 +7,15 @@ using VitrivrVR.Media;
 
 namespace VitrivrVR.Query.Display
 {
+  /// <summary>
+  /// Very simple <see cref="QueryDisplay"/> showing results in a spherical manner around the user.
+  /// </summary>
   public class MediaCarouselController : QueryDisplay
   {
     public MediaItemDisplay mediaItemDisplay;
     public int rows = 3;
     public float innerRadius = 2.7f;
+    public float itemAngle = 30; // Angle between media items
     public string scrollAxis = "Horizontal";
     public float scrollSpeed = 30f;
     public float forceThreshold = 0.3f; // Threshold after which forces moving thumbnails apart are no longer applied
@@ -19,11 +23,11 @@ namespace VitrivrVR.Query.Display
 
     private readonly List<(GameObject thumbnail, float score)> _thumbnails = new List<(GameObject, float)>();
 
-    void Update()
+    private void Update()
     {
       // Rotate carousel
       var scroll = UnityEngine.Input.GetAxisRaw(scrollAxis);
-      Transform transform1 = transform;
+      var transform1 = transform;
       transform1.Rotate(Vector3.up, Time.deltaTime * scrollSpeed * scroll);
 
       // Move thumbnails to create more organic spacing
@@ -80,12 +84,11 @@ namespace VitrivrVR.Query.Display
       var itemDisplay = Instantiate(mediaItemDisplay, transform);
       await itemDisplay.Initialize(result.item);
 
-      var angle = 30; // Angle between thumbnails
       // Determine position
       var position = new Vector3(0, 0,
-        innerRadius + 1 - (float) result.score + Mathf.Floor(_thumbnails.Count / (360f / angle)));
-      position = Quaternion.Euler((_thumbnails.Count % rows - (rows - 1) / 2) * angle, _thumbnails.Count / rows * angle,
-        0) * position;
+        innerRadius + 1 - (float) result.score + Mathf.Floor(_thumbnails.Count / (360f / itemAngle)));
+      position = Quaternion.Euler((_thumbnails.Count % rows - (rows - 1) / 2) * itemAngle,
+        _thumbnails.Count / rows * itemAngle, 0) * position;
       var targetPosition = transform.position;
       position += targetPosition; // Move result display focus a little bit higher
       // Rotate thumbnail to face center

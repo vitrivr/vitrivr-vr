@@ -11,6 +11,9 @@ using UnityEngine.Video;
 
 namespace VitrivrVR.Media
 {
+  /// <summary>
+  /// Canvas based <see cref="MediaItemDisplay"/>.
+  /// </summary>
   public class CanvasMediaItemDisplay : MediaItemDisplay
   {
     public Texture2D errorTexture;
@@ -21,6 +24,9 @@ namespace VitrivrVR.Media
     private bool _videoInitialized;
     private VideoPlayer _videoPlayer;
 
+    /// <summary>
+    /// Tiny class for the sole purpose of enabling click events on <see cref="CanvasMediaItemDisplay"/> instances.
+    /// </summary>
     private class ClickHandler : MonoBehaviour, IPointerClickHandler
     {
       public Action onClick;
@@ -38,6 +44,10 @@ namespace VitrivrVR.Media
       clickHandler.onClick = OnClick;
     }
 
+    /// <summary>
+    /// Initializes this display with the given segment data.
+    /// </summary>
+    /// <param name="segment">Segment to display</param>
     public override async Task Initialize(SegmentData segment)
     {
       _segment = segment;
@@ -45,7 +55,7 @@ namespace VitrivrVR.Media
       var objectId = await segment.GetObjectId();
       var thumbnailPath = PathResolver.ResolvePath(config.thumbnailPath, objectId, segment.GetId());
       var thumbnailUrl = $"{config.mediaHost}{thumbnailPath}{config.thumbnailExtension}";
-      StartCoroutine(DownloadTexture(thumbnailUrl));
+      StartCoroutine(DownloadThumbnailTexture(thumbnailUrl));
     }
 
     private void OnClick()
@@ -67,18 +77,24 @@ namespace VitrivrVR.Media
       }
     }
 
+    /// <summary>
+    /// Initializes the <see cref="VideoPlayer"/> component of this display.
+    /// </summary>
     private async void InitializeVideo()
     {
+      // Set flag here to ensure video is only initialized once
       _videoInitialized = true;
 
+      // Change texture to loading texture and reset scale
       previewImage.texture = loadingTexture;
       previewImage.transform.localScale = Vector3.one;
 
+      // Resolve media URL
+      // TODO: Retrieve and / or apply all required media information, potentially from within PathResolver
       var config = CineastConfigManager.Instance.Config;
       var objectId = await _segment.GetObjectId();
       var mediaPath = PathResolver.ResolvePath(config.mediaPath, objectId);
       var mediaUrl = $"{config.mediaHost}{mediaPath}";
-
 
       _videoPlayer = gameObject.AddComponent<VideoPlayer>();
       var audioSource = gameObject.AddComponent<AudioSource>();
@@ -97,9 +113,13 @@ namespace VitrivrVR.Media
       _videoPlayer.frame = await _segment.GetStart();
     }
 
-    private IEnumerator DownloadTexture(string url)
+    /// <summary>
+    /// Method to download and apply the thumbnail texture from the given URL. Start as <see cref="Coroutine"/>.
+    /// </summary>
+    /// <param name="url">The URL to the thumbnail file</param>
+    private IEnumerator DownloadThumbnailTexture(string url)
     {
-      UnityWebRequest www = UnityWebRequestTexture.GetTexture(url);
+      var www = UnityWebRequestTexture.GetTexture(url);
       yield return www.SendWebRequest();
 
       if (www.isNetworkError || www.isHttpError)
@@ -109,18 +129,18 @@ namespace VitrivrVR.Media
       }
       else
       {
-        Texture2D loadedTexture = ((DownloadHandlerTexture) www.downloadHandler).texture;
+        var loadedTexture = ((DownloadHandlerTexture) www.downloadHandler).texture;
         previewImage.texture = loadedTexture;
         float factor = Mathf.Max(loadedTexture.width, loadedTexture.height);
-        Vector3 scale = new Vector3(loadedTexture.width / factor, loadedTexture.height / factor, 1);
+        var scale = new Vector3(loadedTexture.width / factor, loadedTexture.height / factor, 1);
         previewImage.transform.localScale = scale;
       }
     }
 
-    void PrepareCompleted(VideoPlayer videoPlayer)
+    private void PrepareCompleted(VideoPlayer videoPlayer)
     {
-      float factor = Mathf.Max(videoPlayer.width, videoPlayer.height);
-      Vector3 scale = new Vector3(videoPlayer.width / factor, videoPlayer.height / factor, 1);
+      var factor = Mathf.Max(videoPlayer.width, videoPlayer.height);
+      var scale = new Vector3(videoPlayer.width / factor, videoPlayer.height / factor, 1);
       var renderTex = new RenderTexture((int) videoPlayer.width, (int) videoPlayer.height, 24);
       videoPlayer.targetTexture = renderTex;
       previewImage.texture = renderTex;
@@ -129,7 +149,7 @@ namespace VitrivrVR.Media
       videoPlayer.Pause();
     }
 
-    void ErrorEncountered(VideoPlayer videoPlayer, string error)
+    private void ErrorEncountered(VideoPlayer videoPlayer, string error)
     {
       Debug.LogError(error);
       previewImage.texture = errorTexture;

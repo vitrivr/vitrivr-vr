@@ -6,7 +6,10 @@ using UnityEngine.Windows.Speech;
 
 namespace VitrivrVR.Input.Text
 {
-  public class TextInputController : MonoBehaviour
+  /// <summary>
+  /// Canvas based text input controller that can also receive text input from a <see cref="DictationController"/>.
+  /// </summary>
+  public class CanvasTextInputController : MonoBehaviour
   {
     public TMP_InputField tagTextField;
     public TMP_InputField textTextField;
@@ -17,28 +20,32 @@ namespace VitrivrVR.Input.Text
     private float _buttonSize;
     private Canvas _keyboard;
 
-    void Awake()
+    private void Awake()
     {
       var buttonRect = keyboardButtonPrefab.GetComponent<RectTransform>();
       _buttonSize = buttonRect.rect.height;
     }
 
+    /// <summary>
+    /// Adds the dictation result to the currently selected text field. Will only process dictation results with High or
+    /// Medium <see cref="ConfidenceLevel"/>.
+    /// </summary>
     public void ReceiveDictationResult(string text, ConfidenceLevel confidence)
     {
       if (confidence != ConfidenceLevel.High && confidence != ConfidenceLevel.Medium) return;
-      
+
       var textField = GetSelectedTextField();
 
       if (textField == null)
       {
-        return;
+        return; // No text field selected, nothing to do
       }
-        
+
       if (textField.text.Length > 0)
       {
-        textField.text += " ";
+        textField.text += " "; // If there is preexisting text, append space
       }
-      
+
       textField.text += text;
     }
 
@@ -47,13 +54,17 @@ namespace VitrivrVR.Input.Text
       return tagTextField.isFocused ? tagTextField : textTextField.isFocused ? textTextField : null;
     }
 
+    /// <summary>
+    /// Shows a <see cref="Canvas"/> based keyboard for very simple XR based text input with configurable keys.
+    /// </summary>
     public void ShowKeyboard()
     {
       if (_keyboard != null)
       {
         return;
       }
-      // TODO: Find good way to determine which text ¯box the text should be added to
+
+      // TODO: Find good way to determine which text box the text should be added to
       var textField = GetSelectedTextField();
 
       _keyboard = Instantiate(keyboardCanvasPrefab, new Vector3(0, 1, -0.1f), Quaternion.identity);
@@ -71,17 +82,15 @@ namespace VitrivrVR.Input.Text
           {
             button.onClick.AddListener(() =>
             {
-              if (textField.text.Length > 0)
+              if (textField.text.Length <= 0) return;
+              var caretPosition = textField.caretPosition;
+              if (caretPosition == 0)
               {
-                var caretPosition = textField.caretPosition;
-                if (caretPosition == 0)
-                {
-                  caretPosition = textField.text.Length;
-                }
-
-                textField.text = textField.text.Remove(caretPosition - 1, 1);
-                textField.caretPosition = Mathf.Max(caretPosition - 1, 0);
+                caretPosition = textField.text.Length;
               }
+
+              textField.text = textField.text.Remove(caretPosition - 1, 1);
+              textField.caretPosition = Mathf.Max(caretPosition - 1, 0);
             });
           }
           else
@@ -106,6 +115,7 @@ namespace VitrivrVR.Input.Text
 
     public void HideKeyboard()
     {
+      if (_keyboard == null) return;
       Destroy(_keyboard.gameObject);
       _keyboard = null;
     }

@@ -9,6 +9,9 @@ using Button = UnityEngine.UI.Button;
 
 namespace VitrivrVR.Query.Term
 {
+  /// <summary>
+  /// Canvas based <see cref="QueryTermProvider"/>.
+  /// </summary>
   public class CanvasQueryTermProvider : QueryTermProvider
   {
     public GameObject tagButtonPrefab;
@@ -26,13 +29,16 @@ namespace VitrivrVR.Query.Term
     private bool _sceneCaption;
     private string _textSearchText;
 
-    // Stores the latest tag search input to determine if search results are still relevant
+    /// <summary>
+    /// Stores the latest tag search input to determine if search results are still relevant.
+    /// </summary>
     private string _latestInput;
+
     private int _searchViewChildCount;
     private float _tagButtonHeight;
     private float _tagItemHeight;
 
-    void Awake()
+    private void Awake()
     {
       var tagButtonRect = tagButtonPrefab.GetComponent<RectTransform>();
       _tagButtonHeight = tagButtonRect.rect.height;
@@ -60,6 +66,10 @@ namespace VitrivrVR.Query.Term
       _sceneCaption = sceneCaption;
     }
 
+    /// <summary>
+    /// Retrieves tags similar to the text input and adds corresponding buttons to the search scroll view.
+    /// </summary>
+    /// <param name="input">Text to use for tag search</param>
     public async void GetTags(string input)
     {
       _latestInput = input;
@@ -84,7 +94,7 @@ namespace VitrivrVR.Query.Term
       }
     }
 
-    void ClearTagButtons()
+    private void ClearTagButtons()
     {
       foreach (Transform child in searchScrollViewContent)
       {
@@ -95,24 +105,24 @@ namespace VitrivrVR.Query.Term
       searchScrollViewContent.sizeDelta = new Vector2(0, 0);
     }
 
-    void CreateNewTagButton(string tagName, string tagId)
+    private void CreateNewTagButton(string tagName, string tagId)
     {
       searchScrollViewContent.sizeDelta = new Vector2(0, searchScrollViewContent.sizeDelta.y + _tagButtonHeight);
-      GameObject buttonObject = Instantiate(tagButtonPrefab, searchScrollViewContent);
+      var buttonObject = Instantiate(tagButtonPrefab, searchScrollViewContent);
       // Set button position
-      RectTransform buttonTransform = buttonObject.GetComponent<RectTransform>();
+      var buttonTransform = buttonObject.GetComponent<RectTransform>();
       buttonTransform.anchoredPosition = new Vector2(buttonTransform.anchoredPosition.x, -_tagButtonHeight *
         _searchViewChildCount - _tagButtonHeight / 2);
       // Set button text
-      TextMeshProUGUI textMesh = buttonObject.GetComponentInChildren<TextMeshProUGUI>();
+      var textMesh = buttonObject.GetComponentInChildren<TextMeshProUGUI>();
       textMesh.text = tagName;
       // Set button action
-      Button button = buttonObject.GetComponent<Button>();
+      var button = buttonObject.GetComponent<Button>();
       button.onClick.AddListener(() => CreateNewTagItem(tagName, tagId));
       _searchViewChildCount++;
     }
 
-    void CreateNewTagItem(string tagName, string tagId)
+    private void CreateNewTagItem(string tagName, string tagId)
     {
       if (_tagIds.Contains(tagId))
       {
@@ -121,28 +131,28 @@ namespace VitrivrVR.Query.Term
       }
 
       tagScrollViewContent.sizeDelta = new Vector2(0, tagScrollViewContent.sizeDelta.y + _tagItemHeight);
-      GameObject item = Instantiate(tagItemPrefab, tagScrollViewContent);
+      var item = Instantiate(tagItemPrefab, tagScrollViewContent);
       // Set item position
-      RectTransform itemTransform = item.GetComponent<RectTransform>();
+      var itemTransform = item.GetComponent<RectTransform>();
       itemTransform.anchoredPosition = new Vector2(itemTransform.anchoredPosition.x, -_tagItemHeight *
         _tagItems.Count);
       // Set item text
-      TextMeshProUGUI textMesh = item.GetComponentInChildren<TextMeshProUGUI>();
+      var textMesh = item.GetComponentInChildren<TextMeshProUGUI>();
       textMesh.text = tagName;
       // Set tag data
-      TagData tagData = item.GetComponent<TagData>();
+      var tagData = item.GetComponent<TagData>();
       tagData.TagName = tagName;
       tagData.TagId = tagId;
       // Set button action
-      Button button = item.GetComponentInChildren<Button>();
+      var button = item.GetComponentInChildren<Button>();
       button.onClick.AddListener(() => RemoveTagItem(tagData));
       _tagItems.Add(tagData);
       _tagIds.Add(tagId);
     }
 
-    void RemoveTagItem(TagData tagData)
+    private void RemoveTagItem(TagData tagData)
     {
-      int index = _tagItems.IndexOf(tagData);
+      var index = _tagItems.IndexOf(tagData);
       _tagIds.Remove(tagData.TagId);
       _tagItems.RemoveAt(index);
       foreach (var item in _tagItems.Skip(index))
