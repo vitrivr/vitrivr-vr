@@ -21,7 +21,7 @@ namespace VitrivrVR.Query.Display
     public float forceThreshold = 0.3f; // Threshold after which forces moving thumbnails apart are no longer applied
     public int maxResults = 72;
 
-    private readonly List<(GameObject thumbnail, float score)> _thumbnails = new List<(GameObject, float)>();
+    private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays = new List<(MediaItemDisplay, float)>();
 
     private void Update()
     {
@@ -33,22 +33,22 @@ namespace VitrivrVR.Query.Display
       // Move thumbnails to create more organic spacing
       var targetPosition = transform1.position;
 
-      foreach (var (thumbnail, score) in _thumbnails)
+      foreach (var (display, score) in _mediaDisplays)
       {
         // Force pulling thumbnail to designated distance from center
         var sqrTargetDistance = Mathf.Pow(innerRadius + 1 - score, 2);
-        var displacement = targetPosition - thumbnail.transform.position;
+        var displacement = targetPosition - display.transform.position;
         var sqrDistance = displacement.sqrMagnitude;
         var force = displacement.normalized * (sqrDistance - sqrTargetDistance);
         // Forces pushing thumbnail away from other thumbnails
-        foreach (var (other, _) in _thumbnails)
+        foreach (var (other, _) in _mediaDisplays)
         {
-          if (thumbnail == other)
+          if (display == other)
           {
             continue;
           }
 
-          var neighborDisplacement = thumbnail.transform.position - other.transform.position;
+          var neighborDisplacement = display.transform.position - other.transform.position;
 
           if (neighborDisplacement.sqrMagnitude < 2)
           {
@@ -59,60 +59,62 @@ namespace VitrivrVR.Query.Display
         // Apply forces immediately to avoid getting stuck in local minima
         if (force.sqrMagnitude > forceThreshold)
         {
-          thumbnail.transform.position += force * Time.deltaTime;
+          display.transform.position += force * Time.deltaTime;
         }
 
-        // Rotate thumbnail to face center
-        thumbnail.transform.rotation =
-          Quaternion.LookRotation(thumbnail.transform.position - targetPosition, Vector3.up);
+        // Rotate media display to face center
+        display.transform.rotation =
+          Quaternion.LookRotation(display.transform.position - targetPosition);
       }
     }
 
     private async void CreateResults(QueryData query)
     {
       // TODO: Turn this into a query display factory and separate query display object
-      // TODO: Proper result merging
-      var tasks = query.results.Values
-        .Aggregate((IEnumerable<(SegmentData item, double score)>) new List<(SegmentData item, double score)>(),
-          (collection, categoryList) => collection.Concat(categoryList)).Take(maxResults).ToList()
+      var fusionResults = query.GetMeanFusionResults();
+      var tasks = fusionResults
+        .Take(maxResults)
         .Select(CreateResultObject);
       await Task.WhenAll(tasks);
     }
 
-    private async Task CreateResultObject((SegmentData item, double score) result)
+    private async Task CreateResultObject(ScoredSegment result)
     {
       var itemDisplay = Instantiate(mediaItemDisplay, transform);
-      await itemDisplay.Initialize(result.item);
 
       // Determine position
       var position = new Vector3(0, 0,
-        innerRadius + 1 - (float) result.score + Mathf.Floor(_thumbnails.Count / (360f / itemAngle)));
-      position = Quaternion.Euler((_thumbnails.Count % rows - (rows - 1) / 2) * itemAngle,
-        _thumbnails.Count / rows * itemAngle, 0) * position;
+        innerRadius + 1 - (float) result.score + Mathf.Floor(_mediaDisplays.Count / (360f / itemAngle)));
+      var column = _mediaDisplays.Count % rows - (rows - 1) / 2;
+      var row = _mediaDisplays.Count / rows;
+      position = Quaternion.Euler(column * itemAngle, row * itemAngle, 0) * position;
       var targetPosition = transform.position;
       position += targetPosition; // Move result display focus a little bit higher
-      // Rotate thumbnail to face center
+      // Rotate media display to face center
       var rotation = Quaternion.LookRotation(position - targetPosition, Vector3.up);
 
       var itemTransform = itemDisplay.transform;
       itemTransform.position = position;
       itemTransform.rotation = rotation;
 
-      _thumbnails.Add((itemDisplay.gameObject, (float) result.score));
+      _mediaDisplays.Add((itemDisplay, (float) result.score));
+      
+      // Only begin initialization after determining position so that results can begin positioning
+      await itemDisplay.Initialize(result.segment);
     }
 
     public void ClearResults()
     {
-      // Destroy all thumbnails
-      foreach (var (thumbnail, _) in _thumbnails)
+      // Destroy all media displays
+      foreach (var (display, _) in _mediaDisplays)
       {
-        Destroy(thumbnail);
+        Destroy(display.gameObject);
       }
 
       // Reset rotation
       transform.rotation = Quaternion.identity;
 
-      _thumbnails.Clear();
+      _mediaDisplays.Clear();
     }
 
     public override void Initialize(QueryData queryData)
