@@ -98,6 +98,8 @@ namespace VitrivrVR.Media
 
       _videoPlayer = gameObject.AddComponent<VideoPlayer>();
       var audioSource = gameObject.AddComponent<AudioSource>();
+      audioSource.spatialize = true;
+      audioSource.spatialBlend = 1;
 
       _videoPlayer.isLooping = true;
       _videoPlayer.renderMode = VideoRenderMode.RenderTexture;
