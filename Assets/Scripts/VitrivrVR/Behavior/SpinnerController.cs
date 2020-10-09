@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace VitrivrVR.Behavior
 {
@@ -8,19 +9,10 @@ namespace VitrivrVR.Behavior
   public class SpinnerController : MonoBehaviour
   {
     public float spinSpeed = -180;
-    public Vector3 axis;
-
-    private void Start()
-    {
-      if (axis == Vector3.zero)
-      {
-        axis = transform.forward;
-      }
-    }
 
     private void Update()
     {
-      transform.Rotate(axis, Time.deltaTime * spinSpeed);
+      transform.Rotate(transform.forward, Time.deltaTime * spinSpeed, Space.World);
     }
   }
 }
