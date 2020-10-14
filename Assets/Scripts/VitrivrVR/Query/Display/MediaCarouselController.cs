@@ -63,8 +63,7 @@ namespace VitrivrVR.Query.Display
         }
 
         // Rotate media display to face center
-        display.transform.rotation =
-          Quaternion.LookRotation(display.transform.position - targetPosition);
+        display.transform.LookAt(targetPosition);
       }
     }
 
