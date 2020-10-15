@@ -8,6 +8,6 @@ namespace VitrivrVR.Query.Display
   /// </summary>
   public abstract class QueryDisplay : MonoBehaviour
   {
-    public abstract void Initialize(QueryData queryData);
+    public abstract void Initialize(QueryResponse queryData);
   }
 }

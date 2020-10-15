@@ -67,7 +67,7 @@ namespace VitrivrVR.Query.Display
       }
     }
 
-    private async void CreateResults(QueryData query)
+    private async void CreateResults(QueryResponse query)
     {
       // TODO: Turn this into a query display factory and separate query display object
       var fusionResults = query.GetMeanFusionResults();
@@ -116,7 +116,7 @@ namespace VitrivrVR.Query.Display
       _mediaDisplays.Clear();
     }
 
-    public override void Initialize(QueryData queryData)
+    public override void Initialize(QueryResponse queryData)
     {
       CreateResults(queryData);
     }

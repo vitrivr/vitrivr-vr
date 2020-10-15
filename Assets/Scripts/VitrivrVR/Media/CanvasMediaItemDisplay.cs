@@ -53,7 +53,7 @@ namespace VitrivrVR.Media
       _segment = segment;
       var config = CineastConfigManager.Instance.Config;
       var objectId = await segment.GetObjectId();
-      var thumbnailPath = PathResolver.ResolvePath(config.thumbnailPath, objectId, segment.GetId());
+      var thumbnailPath = PathResolver.ResolvePath(config.thumbnailPath, objectId, segment.Id);
       var thumbnailUrl = $"{config.mediaHost}{thumbnailPath}{config.thumbnailExtension}";
       StartCoroutine(DownloadThumbnailTexture(thumbnailUrl));
     }
