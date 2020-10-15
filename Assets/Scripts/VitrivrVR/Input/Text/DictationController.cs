@@ -31,6 +31,11 @@ namespace VitrivrVR.Input.Text
     public class DictationErrorEvent : UnityEvent<string, int>
     {
     }
+    
+    [Serializable]
+    public class DictationStateEvent : UnityEvent<bool>
+    {
+    }
 
     /// <summary>
     /// Event triggered when a dictation result is available. Provides the dictation result and the recognition
@@ -54,6 +59,11 @@ namespace VitrivrVR.Input.Text
     /// corresponding error code.
     /// </summary>
     public DictationErrorEvent onDictationError;
+
+    /// <summary>
+    /// Event triggered when the dictation state changes.
+    /// </summary>
+    public DictationStateEvent onDictationStateChange;
 
     private DictationRecognizer _dictationRecognizer;
 
@@ -114,6 +124,8 @@ namespace VitrivrVR.Input.Text
       }
 
       _dictationRecognizer.Start();
+      
+      onDictationStateChange.Invoke(true);
     }
 
     private void StopDictation()
@@ -125,6 +137,8 @@ namespace VitrivrVR.Input.Text
       }
 
       _dictationRecognizer.Stop();
+      
+      onDictationStateChange.Invoke(false);
     }
   }
 }
