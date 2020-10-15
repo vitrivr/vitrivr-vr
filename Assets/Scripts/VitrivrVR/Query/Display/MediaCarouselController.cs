@@ -21,7 +21,8 @@ namespace VitrivrVR.Query.Display
     public float forceThreshold = 0.3f; // Threshold after which forces moving thumbnails apart are no longer applied
     public int maxResults = 72;
 
-    private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays = new List<(MediaItemDisplay, float)>();
+    private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays =
+      new List<(MediaItemDisplay, float)>();
 
     private void Update()
     {
@@ -63,7 +64,7 @@ namespace VitrivrVR.Query.Display
         }
 
         // Rotate media display to face center
-        display.transform.LookAt(targetPosition);
+        display.transform.rotation = Quaternion.LookRotation(display.transform.position - targetPosition);
       }
     }
 
@@ -97,7 +98,7 @@ namespace VitrivrVR.Query.Display
       itemTransform.rotation = rotation;
 
       _mediaDisplays.Add((itemDisplay, (float) result.score));
-      
+
       // Only begin initialization after determining position so that results can begin positioning
       await itemDisplay.Initialize(result.segment);
     }
