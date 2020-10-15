@@ -62,7 +62,7 @@ namespace VitrivrVR.Query
       _currentDisplay.Initialize(queryData);
 
       if (_localQueryGuid != localGuid) return;
-      timer.transform.rotation = Quaternion.identity;
+      timer.transform.localRotation = Quaternion.identity;
       timer.SetActive(false);
     }
   }
