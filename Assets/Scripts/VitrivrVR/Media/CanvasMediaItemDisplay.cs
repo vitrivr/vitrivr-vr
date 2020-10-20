@@ -3,6 +3,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
@@ -19,6 +20,7 @@ namespace VitrivrVR.Media
     public Texture2D errorTexture;
     public Texture2D loadingTexture;
     public RawImage previewImage;
+    public TextMeshProUGUI segmentDataText;
 
     private SegmentData _segment;
     private bool _videoInitialized;
@@ -113,6 +115,10 @@ namespace VitrivrVR.Media
 
       _videoPlayer.url = mediaUrl;
       _videoPlayer.frame = await _segment.GetStart();
+
+      var start = await _segment.GetAbsoluteStart();
+      var end = await _segment.GetAbsoluteEnd();
+      segmentDataText.text = $"Segment {_segment.Id} (Object {objectId}): {start:F}s - {end:F}s";
     }
 
     /// <summary>
@@ -134,19 +140,17 @@ namespace VitrivrVR.Media
         var loadedTexture = ((DownloadHandlerTexture) www.downloadHandler).texture;
         previewImage.texture = loadedTexture;
         float factor = Mathf.Max(loadedTexture.width, loadedTexture.height);
-        var scale = new Vector3(loadedTexture.width / factor, loadedTexture.height / factor, 1);
-        previewImage.transform.localScale = scale;
+        previewImage.rectTransform.sizeDelta = new Vector2(1000 * loadedTexture.width / factor, 1000 * loadedTexture.height / factor);
       }
     }
 
     private void PrepareCompleted(VideoPlayer videoPlayer)
     {
       var factor = Mathf.Max(videoPlayer.width, videoPlayer.height);
-      var scale = new Vector3(videoPlayer.width / factor, videoPlayer.height / factor, 1);
       var renderTex = new RenderTexture((int) videoPlayer.width, (int) videoPlayer.height, 24);
       videoPlayer.targetTexture = renderTex;
       previewImage.texture = renderTex;
-      previewImage.transform.localScale = scale;
+      previewImage.rectTransform.sizeDelta = new Vector2(1000 * videoPlayer.width / factor, 1000 * videoPlayer.height / factor);
 
       videoPlayer.Pause();
     }
