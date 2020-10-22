@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace VitrivrVR.Behavior
+namespace VitrivrVR.Behavior.Movement
 {
   /// <summary>
   /// Behavior controller moving the transform it is attached to to a location within the specified distance and view
@@ -13,6 +13,7 @@ namespace VitrivrVR.Behavior
     public float maximumDistance = 1.5f;
     public float targetFov = 90;
     public bool followHeight = true;
+    public float minimumHeight;
     public bool lookAt = true;
 
     private float _sqrMaxDist, _sqrMinDist, _halfFov;
@@ -67,6 +68,7 @@ namespace VitrivrVR.Behavior
 
       // Determine height
       delta.y = followHeight ? targetPos.y : pos.y;
+      delta.y = Mathf.Max(delta.y, minimumHeight);
 
       // Finally add target x and z positions
       delta.x += targetPos.x;

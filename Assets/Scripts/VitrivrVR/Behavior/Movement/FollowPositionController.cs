@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace VitrivrVR.Behavior
+namespace VitrivrVR.Behavior.Movement
 {
   public class FollowPositionController : MonoBehaviour
   {
