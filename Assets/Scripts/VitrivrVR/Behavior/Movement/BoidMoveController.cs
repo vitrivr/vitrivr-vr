@@ -10,16 +10,20 @@ namespace VitrivrVR.Behavior.Movement
     public float radiusForceWeight = 1;
     public float heightForceWeight = 1;
     public float minimumHeight = 0.5f;
+    public float maximumHeight = 2f;
+    public float maximumNeighborForce = 1;
 
     private Rigidbody _rb;
     private readonly List<Transform> _neighbors = new List<Transform>();
     private Transform _radiusTarget;
     private float _targetRadius;
+    private float _squaredMaxForce;
 
     private void Awake()
     {
       _rb = GetComponent<Rigidbody>();
       InitializeTarget(transform.parent);
+      _squaredMaxForce = maximumNeighborForce * maximumNeighborForce;
     }
 
     private void Update()
@@ -30,14 +34,23 @@ namespace VitrivrVR.Behavior.Movement
     private void FixedUpdate()
     {
       var position = transform.position;
+      
+      var neighborForce = Vector3.zero;
 
       // Neighbor forces
       foreach (var neighbor in _neighbors)
       {
         var separation = position - neighbor.position;
         var sqrDistance = separation.sqrMagnitude;
-        _rb.AddForce(neighborForceWeight / sqrDistance * separation);
+        neighborForce += neighborForceWeight / sqrDistance * separation;
       }
+
+      if (neighborForce.sqrMagnitude > _squaredMaxForce)
+      {
+        neighborForce = neighborForce.normalized * maximumNeighborForce;
+      }
+      
+      _rb.AddForce(neighborForce);
 
       // Radius force
       var radiusTargetPosition = _radiusTarget.position;
@@ -50,7 +63,11 @@ namespace VitrivrVR.Behavior.Movement
       if (position.y < minimumHeight)
       {
         var diff = minimumHeight - position.y;
-        _rb.AddForce(diff * Vector3.up);
+        _rb.AddForce(heightForceWeight * diff * Vector3.up);
+      } else if (position.y > maximumHeight)
+      {
+        var diff = position.y - maximumHeight;
+        _rb.AddForce(heightForceWeight * diff * Vector3.down);
       }
     }
 

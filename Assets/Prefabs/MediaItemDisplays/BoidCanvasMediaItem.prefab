@@ -60,8 +60,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14ec16be62d5e4e55b48a044a25de87c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  neighborForceWeight: 0.1
+  neighborForceWeight: 0.5
   radiusForceWeight: 1
+  heightForceWeight: 1
+  minimumHeight: 0.5
+  maximumHeight: 2
+  maximumNeighborForce: 1
 --- !u!135 &7484037522391912275
 SphereCollider:
   m_ObjectHideFlags: 0

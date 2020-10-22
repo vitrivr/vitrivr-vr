@@ -16,10 +16,9 @@ namespace VitrivrVR.Query.Display
     public int rows = 3;
     public float innerRadius = 2.7f;
     public float itemAngle = 30; // Angle between media items
-    public float angleNoise = 0.1f;
+    public float angleNoise = 10f;
     public string scrollAxis = "Horizontal";
     public float scrollSpeed = 30f;
-    public float forceThreshold = 0.3f; // Threshold after which forces moving thumbnails apart are no longer applied
     public int maxResults = 72;
 
     private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays =
@@ -31,42 +30,6 @@ namespace VitrivrVR.Query.Display
       var scroll = UnityEngine.Input.GetAxisRaw(scrollAxis);
       var transform1 = transform;
       transform1.Rotate(Vector3.up, Time.deltaTime * scrollSpeed * scroll);
-
-      // Move thumbnails to create more organic spacing
-      // var targetPosition = transform1.position;
-      //
-      // foreach (var (display, score) in _mediaDisplays)
-      // {
-      //   // Force pulling thumbnail to designated distance from center
-      //   var sqrTargetDistance = Mathf.Pow(innerRadius + 1 - score, 2);
-      //   var displacement = targetPosition - display.transform.position;
-      //   var sqrDistance = displacement.sqrMagnitude;
-      //   var force = displacement.normalized * (sqrDistance - sqrTargetDistance);
-      //   // Forces pushing thumbnail away from other thumbnails
-      //   foreach (var (other, _) in _mediaDisplays)
-      //   {
-      //     if (display == other)
-      //     {
-      //       continue;
-      //     }
-      //
-      //     var neighborDisplacement = display.transform.position - other.transform.position;
-      //
-      //     if (neighborDisplacement.sqrMagnitude < 2)
-      //     {
-      //       force += neighborDisplacement / neighborDisplacement.sqrMagnitude;
-      //     }
-      //   }
-      //
-      //   // Apply forces immediately to avoid getting stuck in local minima
-      //   if (force.sqrMagnitude > forceThreshold)
-      //   {
-      //     display.transform.position += force * Time.deltaTime;
-      //   }
-      //
-      //   // Rotate media display to face center
-      //   display.transform.rotation = Quaternion.LookRotation(display.transform.position - targetPosition);
-      // }
     }
 
     private async void CreateResults(QueryResponse query)
