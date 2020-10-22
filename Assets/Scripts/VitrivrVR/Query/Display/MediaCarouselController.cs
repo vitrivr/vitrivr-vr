@@ -100,7 +100,7 @@ namespace VitrivrVR.Query.Display
       _mediaDisplays.Add((itemDisplay, (float) result.score));
 
       // Only begin initialization after determining position so that results can begin positioning
-      await itemDisplay.Initialize(result.segment);
+      await itemDisplay.Initialize(result);
     }
 
     public void ClearResults()
