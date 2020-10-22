@@ -13,6 +13,6 @@ namespace VitrivrVR.Media
     /// Initializes this display with the given segment data.
     /// </summary>
     /// <param name="segment">Segment to initialize this display with</param>
-    public abstract Task Initialize(SegmentData segment);
+    public abstract Task Initialize(ScoredSegment segment);
   }
 }
