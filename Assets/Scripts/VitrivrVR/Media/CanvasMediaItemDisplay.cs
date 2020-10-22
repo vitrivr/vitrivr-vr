@@ -89,7 +89,7 @@ namespace VitrivrVR.Media
 
       // Change texture to loading texture and reset scale
       previewImage.texture = loadingTexture;
-      previewImage.transform.localScale = Vector3.one;
+      previewImage.rectTransform.sizeDelta = new Vector2(1000, 1000);
 
       // Resolve media URL
       // TODO: Retrieve and / or apply all required media information, potentially from within PathResolver
