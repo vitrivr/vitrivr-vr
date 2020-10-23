@@ -2,6 +2,7 @@
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
+using VitrivrVR.Config;
 using VitrivrVR.Query.Display;
 using VitrivrVR.Query.Term;
 
@@ -13,7 +14,6 @@ namespace VitrivrVR.Query
   public class QueryController : MonoBehaviour
   {
     public QueryTermProvider queryTermProvider;
-    public int prefetch = 72;
     public GameObject timer;
     public QueryDisplay queryDisplay;
 
@@ -49,7 +49,10 @@ namespace VitrivrVR.Query
         timer.SetActive(true);
       }
 
-      var queryData = await CineastWrapper.ExecuteQuery(query, 1000, prefetch);
+      var config = ConfigManager.Config;
+      var maxResults = config.maxResults;
+      var prefetch = config.maxPrefetch;
+      var queryData = await CineastWrapper.ExecuteQuery(query, maxResults, prefetch);
 
       if (_localQueryGuid != localGuid)
       {
