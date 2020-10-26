@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
+using VitrivrVR.Config;
 using VitrivrVR.Media;
 
 namespace VitrivrVR.Query.Display
@@ -19,7 +20,6 @@ namespace VitrivrVR.Query.Display
     public float angleNoise = 10f;
     public string scrollAxis = "Horizontal";
     public float scrollSpeed = 30f;
-    public int maxResults = 72;
 
     private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays =
       new List<(MediaItemDisplay, float)>();
@@ -37,7 +37,7 @@ namespace VitrivrVR.Query.Display
       // TODO: Turn this into a query display factory and separate query display object
       var fusionResults = query.GetMeanFusionResults();
       var tasks = fusionResults
-        .Take(maxResults)
+        .Take(ConfigManager.Config.maxResults)
         .Select(CreateResultObject);
       await Task.WhenAll(tasks);
     }
