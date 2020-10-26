@@ -16,7 +16,7 @@ namespace VitrivrVR.Query.Display
     public MediaItemDisplay mediaItemDisplay;
     public int rows = 3;
     public float innerRadius = 2.7f;
-    public float itemAngle = 30; // Angle between media items
+    public float itemAngle = 15f; // Angle between media items
     public float angleNoise = 10f;
     public string scrollAxis = "Horizontal";
     public float scrollSpeed = 30f;
