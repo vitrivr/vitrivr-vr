@@ -15,19 +15,40 @@ namespace VitrivrVR.Query.Display
     public float scrollSpeed;
     public float distance;
     public float padding = 0.2f;
-    
+    /// <summary>
+    /// Number of columns of results to display at a minimum.
+    /// </summary>
+    public int loadBuffer = 10;
+
     private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays =
       new List<(MediaItemDisplay, float)>();
 
-    private void Update()
+    private List<ScoredSegment> _results;
+    private int _nResults;
+
+    private async void Update()
     {
       var scroll = UnityEngine.Input.GetAxisRaw("Horizontal");
       transform.Translate(Time.deltaTime * scrollSpeed * scroll * Vector3.left);
+      var columns = _mediaDisplays.Count / rows;
+
+      if (transform.position.x - (rows * loadBuffer) < -(1 + padding) * columns)
+      {
+        var start = _mediaDisplays.Count;
+        var end = (columns + 1) * rows;
+        if (start < _nResults)
+        {
+          var tasks = _results.GetRange(start, end - start).Select(CreateResultObject);
+          await Task.WhenAll(tasks);
+        }
+      }
     }
 
     public override async void Initialize(QueryResponse queryData)
     {
       var fusionResults = queryData.GetMeanFusionResults();
+      _results = fusionResults;
+      _nResults = _results.Count;
       var tasks = fusionResults
         .Take(ConfigManager.Config.maxDisplay)
         .Select(CreateResultObject);
