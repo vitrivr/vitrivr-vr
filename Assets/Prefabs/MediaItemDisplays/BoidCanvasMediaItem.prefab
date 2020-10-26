@@ -63,7 +63,7 @@ MonoBehaviour:
   neighborForceWeight: 0.5
   radiusForceWeight: 1
   heightForceWeight: 1
-  minimumHeight: 0.5
+  minimumHeight: 1
   maximumHeight: 2
   maximumNeighborForce: 1
 --- !u!135 &7484037522391912275
