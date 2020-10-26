@@ -606,7 +606,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 6189976341000526342}
         m_MethodName: SetOcrSearch
         m_Mode: 0
         m_Arguments:
@@ -862,7 +862,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 6189976341000526342}
         m_MethodName: SetTextSearchText
         m_Mode: 0
         m_Arguments:
@@ -1108,7 +1108,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 6189976341000526342}
         m_MethodName: SetAsrSearch
         m_Mode: 0
         m_Arguments:
@@ -4138,7 +4138,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 6189976341000526342}
         m_MethodName: SetSceneCaptionSearch
         m_Mode: 0
         m_Arguments:

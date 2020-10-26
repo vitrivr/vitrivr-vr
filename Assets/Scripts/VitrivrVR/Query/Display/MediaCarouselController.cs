@@ -34,7 +34,6 @@ namespace VitrivrVR.Query.Display
 
     private async void CreateResults(QueryResponse query)
     {
-      // TODO: Turn this into a query display factory and separate query display object
       var fusionResults = query.GetMeanFusionResults();
       var tasks = fusionResults
         .Take(ConfigManager.Config.maxDisplay)
