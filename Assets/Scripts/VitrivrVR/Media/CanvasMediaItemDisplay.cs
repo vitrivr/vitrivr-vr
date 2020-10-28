@@ -56,10 +56,18 @@ namespace VitrivrVR.Media
       _scoredSegment = segment;
       _segment = segment.segment;
       var config = CineastConfigManager.Instance.Config;
-      var objectId = await _segment.GetObjectId();
-      var thumbnailPath = PathResolver.ResolvePath(config.thumbnailPath, objectId, _segment.Id);
-      var thumbnailUrl = $"{config.mediaHost}{thumbnailPath}{config.thumbnailExtension}";
-      StartCoroutine(DownloadThumbnailTexture(thumbnailUrl));
+      segmentDataText.text = $"Segment {_segment.Id}\nScore: {_scoredSegment.score:F}";
+      try
+      {
+        var objectId = await _segment.GetObjectId();
+        var thumbnailPath = PathResolver.ResolvePath(config.thumbnailPath, objectId, _segment.Id);
+        var thumbnailUrl = $"{config.mediaHost}{thumbnailPath}{config.thumbnailExtension}";
+        StartCoroutine(DownloadThumbnailTexture(thumbnailUrl));
+      }
+      catch (Exception)
+      {
+        previewImage.texture = errorTexture;
+      }
     }
 
     private void OnClick()
@@ -86,6 +94,20 @@ namespace VitrivrVR.Media
     /// </summary>
     private async void InitializeVideo()
     {
+      // Check if segment has encountered error during initialization
+      if (!_segment.Initialized)
+      {
+        // Try again to initialize
+        try
+        {
+          await _segment.GetObjectId();
+        }
+        catch (Exception)
+        {
+          return;
+        }
+      }
+
       // Set flag here to ensure video is only initialized once
       _videoInitialized = true;
 
