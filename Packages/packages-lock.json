@@ -88,7 +88,14 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "ae0381552c6bd4fb1c93130bf5a1ced43a0e86bc"
+      "hash": "8d05b5f3baae7d9443b64b9ef7915e6b4ab63cd6"
+    },
+    "jillejr.newtonsoft.json-for-unity": {
+      "version": "12.0.201",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://npm.cloudsmith.io/jillejr/newtonsoft-json-for-unity"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
