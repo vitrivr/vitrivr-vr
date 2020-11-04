@@ -75,19 +75,16 @@ namespace VitrivrVR.Input.Text
       // Register dictation events
       _dictationRecognizer.DictationResult += (text, confidence) =>
       {
-        Debug.Log($"{text}: {confidence}");
         onDictationResult.Invoke(text, confidence);
       };
 
       _dictationRecognizer.DictationHypothesis += text =>
       {
-        Debug.Log(text);
         onDictationHypothesis.Invoke(text);
       };
 
       _dictationRecognizer.DictationComplete += completionCause =>
       {
-        Debug.Log(completionCause);
         onDictationComplete.Invoke(completionCause);
       };
 
