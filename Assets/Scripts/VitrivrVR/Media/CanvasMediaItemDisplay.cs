@@ -9,6 +9,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using VitrivrVR.Config;
 
 namespace VitrivrVR.Media
 {
@@ -20,7 +21,10 @@ namespace VitrivrVR.Media
     public Texture2D errorTexture;
     public Texture2D loadingTexture;
     public RawImage previewImage;
+    public RawImage scoreFrame;
+    public RectTransform imageFrame;
     public TextMeshProUGUI segmentDataText;
+    public int scoreFrameSize = 25;
 
     private ScoredSegment _scoredSegment;
     private SegmentData _segment;
@@ -56,7 +60,15 @@ namespace VitrivrVR.Media
       _scoredSegment = segment;
       _segment = segment.segment;
       var config = CineastConfigManager.Instance.Config;
-      segmentDataText.text = $"Segment {_segment.Id}\nScore: {_scoredSegment.score:F}";
+      var vrConfig = ConfigManager.Config;
+      var score = (float) _scoredSegment.score;
+      segmentDataText.text = $"Segment {_segment.Id}\nScore: {score:F}";
+      scoreFrame.color = vrConfig.similarityColor.ToColor() * score +
+                         vrConfig.dissimilarityColor.ToColor() * (1 - score);
+      var rectTransform = scoreFrame.rectTransform;
+      rectTransform.offsetMin = new Vector2(-scoreFrameSize, 0);
+      rectTransform.offsetMax = new Vector2(scoreFrameSize, scoreFrameSize);
+      scoreFrame.gameObject.SetActive(true);
       try
       {
         var objectId = await _segment.GetObjectId();
@@ -113,7 +125,7 @@ namespace VitrivrVR.Media
 
       // Change texture to loading texture and reset scale
       previewImage.texture = loadingTexture;
-      previewImage.rectTransform.sizeDelta = new Vector2(1000, 1000);
+      imageFrame.sizeDelta = new Vector2(1000, 1000);
 
       // Resolve media URL
       // TODO: Retrieve and / or apply all required media information, potentially from within PathResolver
@@ -165,7 +177,7 @@ namespace VitrivrVR.Media
         var loadedTexture = ((DownloadHandlerTexture) www.downloadHandler).texture;
         previewImage.texture = loadedTexture;
         float factor = Mathf.Max(loadedTexture.width, loadedTexture.height);
-        previewImage.rectTransform.sizeDelta =
+        imageFrame.sizeDelta =
           new Vector2(1000 * loadedTexture.width / factor, 1000 * loadedTexture.height / factor);
       }
     }
@@ -176,7 +188,7 @@ namespace VitrivrVR.Media
       var renderTex = new RenderTexture((int) videoPlayer.width, (int) videoPlayer.height, 24);
       videoPlayer.targetTexture = renderTex;
       previewImage.texture = renderTex;
-      previewImage.rectTransform.sizeDelta =
+      imageFrame.sizeDelta =
         new Vector2(1000 * videoPlayer.width / factor, 1000 * videoPlayer.height / factor);
 
       videoPlayer.Pause();
