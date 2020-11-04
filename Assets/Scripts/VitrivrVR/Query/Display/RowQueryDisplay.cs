@@ -32,10 +32,10 @@ namespace VitrivrVR.Query.Display
       transform.Translate(Time.deltaTime * scrollSpeed * scroll * Vector3.left);
       var columns = _mediaDisplays.Count / rows;
 
-      if (transform.position.x - (rows * loadBuffer) < -(1 + padding) * columns)
+      if (transform.position.x - rows * loadBuffer < -(1 + padding) * columns)
       {
         var start = _mediaDisplays.Count;
-        var end = (columns + 1) * rows;
+        var end = Mathf.Min((columns + 1) * rows, _nResults);
         if (start < _nResults)
         {
           var tasks = _results.GetRange(start, end - start).Select(CreateResultObject);
