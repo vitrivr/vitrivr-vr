@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Windows.Speech;
+using VitrivrVR.Config;
 
 namespace VitrivrVR.Input.Text
 {
@@ -31,7 +32,7 @@ namespace VitrivrVR.Input.Text
     public class DictationErrorEvent : UnityEvent<string, int>
     {
     }
-    
+
     [Serializable]
     public class DictationStateEvent : UnityEvent<bool>
     {
@@ -75,16 +76,31 @@ namespace VitrivrVR.Input.Text
       // Register dictation events
       _dictationRecognizer.DictationResult += (text, confidence) =>
       {
+        if (ConfigManager.Config.dictationDebugOutput)
+        {
+          Debug.Log($"{text}: {confidence}");
+        }
+
         onDictationResult.Invoke(text, confidence);
       };
 
       _dictationRecognizer.DictationHypothesis += text =>
       {
+        if (ConfigManager.Config.dictationDebugOutput)
+        {
+          Debug.Log(text);
+        }
+
         onDictationHypothesis.Invoke(text);
       };
 
       _dictationRecognizer.DictationComplete += completionCause =>
       {
+        if (ConfigManager.Config.dictationDebugOutput)
+        {
+          Debug.Log(completionCause);
+        }
+
         onDictationComplete.Invoke(completionCause);
       };
 
@@ -121,7 +137,7 @@ namespace VitrivrVR.Input.Text
       }
 
       _dictationRecognizer.Start();
-      
+
       onDictationStateChange.Invoke(true);
     }
 
@@ -134,7 +150,7 @@ namespace VitrivrVR.Input.Text
       }
 
       _dictationRecognizer.Stop();
-      
+
       onDictationStateChange.Invoke(false);
     }
   }
