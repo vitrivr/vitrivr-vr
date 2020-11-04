@@ -13,7 +13,7 @@ namespace VitrivrVR.Config
     private static VitrivrVrConfig GetConfig()
     {
       return File.Exists(GetConfigFilePath())
-        ? FileUtils.ReadJson<VitrivrVrConfig>(GetConfigFilePath())
+        ? ReadAndMerge()
         : VitrivrVrConfig.GetDefault();
     }
 
@@ -26,6 +26,16 @@ namespace VitrivrVR.Config
       folder = Application.persistentDataPath;
 #endif
       return Path.Combine(folder, ConfigFileName);
+    }
+
+    private static VitrivrVrConfig ReadAndMerge()
+    {
+      var streamReader = File.OpenText(GetConfigFilePath());
+      var json = streamReader.ReadToEnd();
+      streamReader.Close();
+      var config = VitrivrVrConfig.GetDefault();
+      JsonUtility.FromJsonOverwrite(json, config);
+      return config;
     }
   }
 }
