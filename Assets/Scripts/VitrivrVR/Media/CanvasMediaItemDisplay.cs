@@ -59,7 +59,9 @@ namespace VitrivrVR.Media
       var progressBarSizeDelta = progressBar.sizeDelta;
       progressBarSizeDelta.y = scoreFrameSize;
       progressBar.sizeDelta = progressBarSizeDelta;
-      // TODO: Set y position to compensate for size
+      var progressBarPos = progressBar.anchoredPosition;
+      progressBarPos.y = -scoreFrameSize / 2f;
+      progressBar.anchoredPosition = progressBarPos;
     }
 
     private void Update()
@@ -223,13 +225,15 @@ namespace VitrivrVR.Media
       previewImage.texture = renderTex;
       imageFrame.sizeDelta =
         new Vector2(1000 * videoPlayer.width / factor, 1000 * videoPlayer.height / factor);
+      
+      segmentDataText.rectTransform.anchoredPosition -= new Vector2(0, scoreFrameSize);
 
-      progressBar.gameObject.SetActive(true);
       var start = _segment.GetAbsoluteStart().Result;
       var end = _segment.GetAbsoluteEnd().Result;
       var length = _videoPlayer.length;
       UpdateProgressIndicator(start);
       SetSegmentIndicator(start, end, length);
+      progressBar.gameObject.SetActive(true);
 
       videoPlayer.Pause();
     }
