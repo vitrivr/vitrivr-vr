@@ -25,6 +25,9 @@ namespace VitrivrVR.Media
     public RectTransform imageFrame;
     public TextMeshProUGUI segmentDataText;
     public int scoreFrameSize = 25;
+    public RectTransform progressBar;
+    public RectTransform progressIndicator;
+    public RectTransform segmentIndicator;
 
     private ScoredSegment _scoredSegment;
     private SegmentData _segment;
@@ -51,6 +54,35 @@ namespace VitrivrVR.Media
       clickHandler.onClick = OnClick;
     }
 
+    private void Start()
+    {
+      var progressBarSizeDelta = progressBar.sizeDelta;
+      progressBarSizeDelta.y = scoreFrameSize;
+      progressBar.sizeDelta = progressBarSizeDelta;
+      // TODO: Set y position to compensate for size
+    }
+
+    private void Update()
+    {
+      if (_videoInitialized && _videoPlayer.isPlaying)
+      {
+        UpdateProgressIndicator(_videoPlayer.time);
+      }
+    }
+
+    private void UpdateProgressIndicator(double time)
+    {
+      progressIndicator.anchoredPosition =
+        new Vector2((float) (progressBar.rect.width * time / _videoPlayer.length), 0);
+    }
+
+    private void SetSegmentIndicator(double start, double end, double length)
+    {
+      var rect = progressBar.rect;
+      segmentIndicator.anchoredPosition = new Vector2((float) (rect.width * start / length), 0);
+      segmentIndicator.sizeDelta = new Vector2((float) (rect.width * (end - start) / length), 0);
+    }
+
     /// <summary>
     /// Initializes this display with the given segment data.
     /// </summary>
@@ -63,6 +95,7 @@ namespace VitrivrVR.Media
       var vrConfig = ConfigManager.Config;
       var score = (float) _scoredSegment.score;
       segmentDataText.text = $"Segment {_segment.Id}\nScore: {score:F}";
+      // Score frame
       scoreFrame.color = vrConfig.similarityColor.ToColor() * score +
                          vrConfig.dissimilarityColor.ToColor() * (1 - score);
       var rectTransform = scoreFrame.rectTransform;
@@ -190,6 +223,13 @@ namespace VitrivrVR.Media
       previewImage.texture = renderTex;
       imageFrame.sizeDelta =
         new Vector2(1000 * videoPlayer.width / factor, 1000 * videoPlayer.height / factor);
+
+      progressBar.gameObject.SetActive(true);
+      var start = _segment.GetAbsoluteStart().Result;
+      var end = _segment.GetAbsoluteEnd().Result;
+      var length = _videoPlayer.length;
+      UpdateProgressIndicator(start);
+      SetSegmentIndicator(start, end, length);
 
       videoPlayer.Pause();
     }
