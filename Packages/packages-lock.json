@@ -83,19 +83,12 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.vitrivr.unityinterface.cineastapi": {
-      "version": "https://github.com/vitrivr/UnityInterface.git#latest",
+    "org.vitrivr.unityinterface.cineastapi": {
+      "version": "https://github.com/vitrivr/UnityInterface.git#dev-all",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "dda5cb5aec954f28ecdf9b43c4f44a0e6e0ce1b0"
-    },
-    "jillejr.newtonsoft.json-for-unity": {
-      "version": "12.0.201",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://npm.cloudsmith.io/jillejr/newtonsoft-json-for-unity"
+      "hash": "427dc1d0bce40d625cbe1b5e472b930949815a27"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

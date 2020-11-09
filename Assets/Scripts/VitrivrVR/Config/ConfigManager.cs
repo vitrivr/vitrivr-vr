@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
 
 namespace VitrivrVR.Config
