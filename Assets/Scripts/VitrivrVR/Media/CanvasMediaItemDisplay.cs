@@ -32,7 +32,7 @@ namespace VitrivrVR.Media
     private ScoredSegment _scoredSegment;
     private SegmentData _segment;
     private bool _videoInitialized;
-    private VideoPlayer _videoPlayer;
+    private VideoPlayerController _videoPlayerController;
 
     /// <summary>
     /// Tiny class for the sole purpose of enabling click events on <see cref="CanvasMediaItemDisplay"/> instances.
@@ -66,16 +66,16 @@ namespace VitrivrVR.Media
 
     private void Update()
     {
-      if (_videoInitialized && _videoPlayer.isPlaying)
+      if (_videoInitialized && _videoPlayerController.IsPlaying)
       {
-        UpdateProgressIndicator(_videoPlayer.time);
+        UpdateProgressIndicator(_videoPlayerController.Time);
       }
     }
 
     private void UpdateProgressIndicator(double time)
     {
       progressIndicator.anchoredPosition =
-        new Vector2((float) (progressBar.rect.width * time / _videoPlayer.length), 0);
+        new Vector2((float) (progressBar.rect.width * time / _videoPlayerController.Length), 0);
     }
 
     private void SetSegmentIndicator(double start, double end, double length)
@@ -121,13 +121,13 @@ namespace VitrivrVR.Media
     {
       if (_videoInitialized)
       {
-        if (_videoPlayer.isPlaying)
+        if (_videoPlayerController.IsPlaying)
         {
-          _videoPlayer.Pause();
+          _videoPlayerController.Pause();
         }
         else
         {
-          _videoPlayer.Play();
+          _videoPlayerController.Play();
         }
       }
       else
@@ -169,23 +169,10 @@ namespace VitrivrVR.Media
       var mediaPath = PathResolver.ResolvePath(config.mediaPath, objectId);
       var mediaUrl = $"{config.mediaHost}{mediaPath}";
 
-      _videoPlayer = gameObject.AddComponent<VideoPlayer>();
-      var audioSource = gameObject.AddComponent<AudioSource>();
-      audioSource.spatialize = true;
-      audioSource.spatialBlend = 1;
+      var startFrame = await _segment.GetStart();
 
-      _videoPlayer.isLooping = true;
-      _videoPlayer.renderMode = VideoRenderMode.RenderTexture;
-
-      _videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
-      _videoPlayer.SetTargetAudioSource(0, audioSource);
-      _videoPlayer.prepareCompleted += PrepareCompleted;
-      _videoPlayer.errorReceived += ErrorEncountered;
-
-      _videoPlayer.playOnAwake = true;
-
-      _videoPlayer.url = mediaUrl;
-      _videoPlayer.frame = await _segment.GetStart();
+      _videoPlayerController =
+        new VideoPlayerController(gameObject, mediaUrl, startFrame, PrepareCompleted, ErrorEncountered);
 
       var start = await _segment.GetAbsoluteStart();
       var end = await _segment.GetAbsoluteEnd();
@@ -217,25 +204,22 @@ namespace VitrivrVR.Media
       }
     }
 
-    private void PrepareCompleted(VideoPlayer videoPlayer)
+    private void PrepareCompleted(RenderTexture texture)
     {
-      var factor = Mathf.Max(videoPlayer.width, videoPlayer.height);
-      var renderTex = new RenderTexture((int) videoPlayer.width, (int) videoPlayer.height, 24);
-      videoPlayer.targetTexture = renderTex;
-      previewImage.texture = renderTex;
-      imageFrame.sizeDelta =
-        new Vector2(1000 * videoPlayer.width / factor, 1000 * videoPlayer.height / factor);
-      
+      var width = _videoPlayerController.Width;
+      var height = _videoPlayerController.Height;
+      var factor = Mathf.Max(width, height);
+      previewImage.texture = texture;
+      imageFrame.sizeDelta = new Vector2(1000f * width / factor, 1000f * height / factor);
+
       segmentDataText.rectTransform.anchoredPosition -= new Vector2(0, scoreFrameSize);
 
       var start = _segment.GetAbsoluteStart().Result;
       var end = _segment.GetAbsoluteEnd().Result;
-      var length = _videoPlayer.length;
+      var length = _videoPlayerController.Length;
       UpdateProgressIndicator(start);
       SetSegmentIndicator(start, end, length);
       progressBar.gameObject.SetActive(true);
-
-      videoPlayer.Pause();
     }
 
     private void ErrorEncountered(VideoPlayer videoPlayer, string error)
