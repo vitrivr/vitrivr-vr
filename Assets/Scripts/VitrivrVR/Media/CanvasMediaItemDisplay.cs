@@ -176,8 +176,7 @@ namespace VitrivrVR.Media
 
       var start = await _segment.GetAbsoluteStart();
       var end = await _segment.GetAbsoluteEnd();
-      segmentDataText.text =
-        $"Segment {_segment.Id} (Object {objectId}): {start:F}s - {end:F}s\nScore: {_scoredSegment.score:F}";
+      segmentDataText.text = $"Segment {_segment.Id}: {start:F}s - {end:F}s\nScore: {_scoredSegment.score:F}";
     }
 
     /// <summary>
