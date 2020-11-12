@@ -15,6 +15,7 @@ namespace VitrivrVR.Query.Display
     public float scrollSpeed;
     public float distance;
     public float padding = 0.2f;
+
     /// <summary>
     /// Number of columns of results to display at a minimum.
     /// </summary>
@@ -23,6 +24,8 @@ namespace VitrivrVR.Query.Display
     private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays =
       new List<(MediaItemDisplay, float)>();
 
+    private readonly Queue<ScoredSegment> _instantiationQueue = new Queue<ScoredSegment>();
+
     private List<ScoredSegment> _results;
     private int _nResults;
 
@@ -30,29 +33,37 @@ namespace VitrivrVR.Query.Display
     {
       var scroll = UnityEngine.Input.GetAxisRaw("Horizontal");
       transform.Translate(Time.deltaTime * scrollSpeed * scroll * Vector3.left);
-      var columns = _mediaDisplays.Count / rows;
+      // Start includes items in the instantiation queue, since these will be instantiated shortly
+      var start = _mediaDisplays.Count + _instantiationQueue.Count;
+      var columns = start / rows;
 
       if (transform.position.x - rows * loadBuffer < -(1 + padding) * columns)
       {
-        var start = _mediaDisplays.Count;
         var end = Mathf.Min((columns + 1) * rows, _nResults);
         if (start < _nResults)
         {
-          var tasks = _results.GetRange(start, end - start).Select(CreateResultObject);
-          await Task.WhenAll(tasks);
+          foreach (var segment in _results.GetRange(start, end - start))
+          {
+            _instantiationQueue.Enqueue(segment);
+          }
         }
+      }
+
+      if (_instantiationQueue.Count > 0)
+      {
+        await CreateResultObject(_instantiationQueue.Dequeue());
       }
     }
 
-    public override async void Initialize(QueryResponse queryData)
+    public override void Initialize(QueryResponse queryData)
     {
       var fusionResults = queryData.GetMeanFusionResults();
       _results = fusionResults;
       _nResults = _results.Count;
-      var tasks = fusionResults
-        .Take(ConfigManager.Config.maxDisplay)
-        .Select(CreateResultObject);
-      await Task.WhenAll(tasks);
+      foreach (var segment in fusionResults.Take(ConfigManager.Config.maxDisplay))
+      {
+        _instantiationQueue.Enqueue(segment);
+      }
     }
 
     private async Task CreateResultObject(ScoredSegment result)
