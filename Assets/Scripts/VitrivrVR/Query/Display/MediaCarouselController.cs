@@ -24,21 +24,19 @@ namespace VitrivrVR.Query.Display
     private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays =
       new List<(MediaItemDisplay, float)>();
 
-    private void Update()
+    private readonly Queue<ScoredSegment> _instantiationQueue = new Queue<ScoredSegment>();
+
+    private async void Update()
     {
       // Rotate carousel
       var scroll = UnityEngine.Input.GetAxisRaw(scrollAxis);
       var transform1 = transform;
       transform1.Rotate(Vector3.up, Time.deltaTime * scrollSpeed * scroll);
-    }
 
-    private async void CreateResults(QueryResponse query)
-    {
-      var fusionResults = query.GetMeanFusionResults();
-      var tasks = fusionResults
-        .Take(ConfigManager.Config.maxDisplay)
-        .Select(CreateResultObject);
-      await Task.WhenAll(tasks);
+      if (_instantiationQueue.Count > 0)
+      {
+        await CreateResultObject(_instantiationQueue.Dequeue());
+      }
     }
 
     private async Task CreateResultObject(ScoredSegment result)
@@ -78,7 +76,11 @@ namespace VitrivrVR.Query.Display
 
     public override void Initialize(QueryResponse queryData)
     {
-      CreateResults(queryData);
+      var fusionResults = queryData.GetMeanFusionResults();
+      foreach (var segment in fusionResults.Take(ConfigManager.Config.maxDisplay))
+      {
+        _instantiationQueue.Enqueue(segment);
+      }
     }
 
     private void OnDestroy()
