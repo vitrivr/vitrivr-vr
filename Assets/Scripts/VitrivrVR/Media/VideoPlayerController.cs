@@ -35,8 +35,10 @@ namespace VitrivrVR.Media
     public int Width => (int)_videoPlayer.width;
     public int Height => (int)_videoPlayer.height;
     public double Length => _videoPlayer.length;
+    public long FrameCount => (long)_videoPlayer.frameCount;
     public bool IsPlaying => _videoPlayer.isPlaying;
     public double Time => _videoPlayer.time;
+    public double ClockTime => _videoPlayer.clockTime;
 
     public void Pause()
     {
@@ -46,6 +48,16 @@ namespace VitrivrVR.Media
     public void Play()
     {
       _videoPlayer.Play();
+    }
+
+    public void SetFrame(long frame)
+    {
+      _videoPlayer.frame = frame;
+    }
+    
+    public void SetTime(double time)
+    {
+      _videoPlayer.time = time;
     }
 
     private void PrepareCompleted(VideoPlayer videoPlayer)

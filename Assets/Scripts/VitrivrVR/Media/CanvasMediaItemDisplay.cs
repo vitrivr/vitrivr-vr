@@ -39,11 +39,11 @@ namespace VitrivrVR.Media
     /// </summary>
     private class ClickHandler : MonoBehaviour, IPointerClickHandler
     {
-      public Action onClick;
+      public Action<PointerEventData> onClick;
 
       public void OnPointerClick(PointerEventData eventData)
       {
-        onClick();
+        onClick(eventData);
       }
     }
 
@@ -51,7 +51,7 @@ namespace VitrivrVR.Media
     {
       GetComponent<Canvas>().worldCamera = Camera.main;
       var clickHandler = previewImage.gameObject.AddComponent<ClickHandler>();
-      clickHandler.onClick = OnClick;
+      clickHandler.onClick = OnClickImage;
     }
 
     private void Start()
@@ -68,7 +68,7 @@ namespace VitrivrVR.Media
     {
       if (_videoInitialized && _videoPlayerController.IsPlaying)
       {
-        UpdateProgressIndicator(_videoPlayerController.Time);
+        UpdateProgressIndicator(_videoPlayerController.ClockTime);
       }
     }
 
@@ -117,7 +117,7 @@ namespace VitrivrVR.Media
       }
     }
 
-    private void OnClick()
+    private void OnClickImage(PointerEventData pointerEventData)
     {
       if (_videoInitialized)
       {
@@ -134,6 +134,26 @@ namespace VitrivrVR.Media
       {
         InitializeVideo();
       }
+    }
+
+    private void OnClickProgressBar(PointerEventData pointerEventData)
+    {
+      var clickPosition = Quaternion.Inverse(Quaternion.LookRotation(progressBar.forward)) *
+                          (pointerEventData.pointerCurrentRaycast.worldPosition - progressBar.position);
+      var clickProgress = clickPosition.x + 0.5;
+      var newTime = _videoPlayerController.Length * clickProgress;
+      if (_videoPlayerController.IsPlaying)
+      {
+        _videoPlayerController.Pause();
+        _videoPlayerController.SetTime(newTime);
+        _videoPlayerController.Play();
+      }
+      else
+      {
+        _videoPlayerController.SetTime(newTime);
+      }
+
+      UpdateProgressIndicator(newTime);
     }
 
     /// <summary>
@@ -177,6 +197,9 @@ namespace VitrivrVR.Media
       var start = await _segment.GetAbsoluteStart();
       var end = await _segment.GetAbsoluteEnd();
       segmentDataText.text = $"Segment {_segment.Id}: {start:F}s - {end:F}s\nScore: {_scoredSegment.score:F}";
+
+      var progressClickHandler = progressBar.gameObject.AddComponent<ClickHandler>();
+      progressClickHandler.onClick = OnClickProgressBar;
     }
 
     /// <summary>
