@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR;
@@ -19,10 +20,17 @@ namespace VitrivrVR.Input.Controller
     {
     }
 
+    [Serializable]
+    public class XRAxisEvent : UnityEvent<Vector2>
+    {
+    }
+
     public XRButtonEvent primaryButtonEvent;
+    public XRAxisEvent primaryAxisEvent;
 
     private bool _lastPrimaryButtonState;
     private readonly List<InputDevice> _devicesWithPrimaryButton = new List<InputDevice>();
+    private readonly List<InputDevice> _devicesWithPrimaryAxis = new List<InputDevice>();
 
     private void OnEnable()
     {
@@ -44,6 +52,7 @@ namespace VitrivrVR.Input.Controller
       InputDevices.deviceDisconnected -= DeviceDisconnected;
       // Clear all device lists
       _devicesWithPrimaryButton.Clear();
+      _devicesWithPrimaryAxis.Clear();
     }
 
     /// <summary>
@@ -53,9 +62,9 @@ namespace VitrivrVR.Input.Controller
     private void DeviceConnected(InputDevice device)
     {
       if (device.TryGetFeatureValue(CommonUsages.primaryButton, out _))
-      {
         _devicesWithPrimaryButton.Add(device);
-      }
+      if (device.TryGetFeatureValue(CommonUsages.primary2DAxis, out _))
+        _devicesWithPrimaryAxis.Add(device);
     }
 
     /// <summary>
@@ -66,22 +75,31 @@ namespace VitrivrVR.Input.Controller
     {
       if (_devicesWithPrimaryButton.Contains(device))
         _devicesWithPrimaryButton.Remove(device);
+      if (_devicesWithPrimaryAxis.Contains(device))
+        _devicesWithPrimaryAxis.Remove(device);
     }
 
     private void Update()
     {
       // Get button states
-      var primaryButtonState = false;
-      foreach (var device in _devicesWithPrimaryButton)
-      {
-        primaryButtonState = device.TryGetFeatureValue(CommonUsages.primaryButton, out var tempState) && tempState
-                             || primaryButtonState;
-      }
+      var primaryButtonState = _devicesWithPrimaryButton.Aggregate(false, (current, device) =>
+        device.TryGetFeatureValue(CommonUsages.primaryButton, out var tempState) && tempState || current);
+
+      var primaryAxisState = _devicesWithPrimaryAxis.Aggregate(Vector2.negativeInfinity,
+        (current, device) =>
+          device.TryGetFeatureValue(CommonUsages.primary2DAxis, out var tempState) ? tempState : current);
 
       // Invoke events for which state has changed
-      if (primaryButtonState == _lastPrimaryButtonState) return;
-      primaryButtonEvent.Invoke(primaryButtonState);
-      _lastPrimaryButtonState = primaryButtonState;
+      if (primaryButtonState != _lastPrimaryButtonState)
+      {
+        primaryButtonEvent.Invoke(primaryButtonState);
+        _lastPrimaryButtonState = primaryButtonState;
+      }
+
+      if (primaryAxisState != Vector2.negativeInfinity)
+      {
+        primaryAxisEvent.Invoke(primaryAxisState);
+      }
     }
   }
 }
