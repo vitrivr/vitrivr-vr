@@ -96,7 +96,7 @@ namespace VitrivrVR.Input.Controller
         _lastPrimaryButtonState = primaryButtonState;
       }
 
-      if (primaryAxisState != Vector2.negativeInfinity)
+      if (!float.IsNegativeInfinity(primaryAxisState.x))
       {
         primaryAxisEvent.Invoke(primaryAxisState);
       }
