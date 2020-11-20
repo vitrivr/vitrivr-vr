@@ -10,6 +10,7 @@ namespace VitrivrVR.Interaction.ViewerToolViews
 
     private void Start()
     {
+      GetComponent<Canvas>().worldCamera = Camera.main;
       var uiTable = Instantiate(scrollableUITable, transform);
       var uiTableController = uiTable.GetComponentInChildren<UITableController>();
       uiTableController.table = new[,]
