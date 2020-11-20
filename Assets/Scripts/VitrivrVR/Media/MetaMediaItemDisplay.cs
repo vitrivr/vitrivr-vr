@@ -9,7 +9,9 @@ namespace VitrivrVR.Media
   public class MetaMediaItemDisplay : MediaItemDisplay
   {
     public MediaItemDisplay mediaItemDisplay;
-    
+
+    public override ScoredSegment ScoredSegment => mediaItemDisplay.ScoredSegment;
+
     public override Task Initialize(ScoredSegment segment)
     {
       return mediaItemDisplay.Initialize(segment);

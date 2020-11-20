@@ -85,6 +85,8 @@ namespace VitrivrVR.Media
       segmentIndicator.sizeDelta = new Vector2((float) (rect.width * (end - start) / length), 0);
     }
 
+    public override ScoredSegment ScoredSegment => _scoredSegment;
+
     /// <summary>
     /// Initializes this display with the given segment data.
     /// </summary>

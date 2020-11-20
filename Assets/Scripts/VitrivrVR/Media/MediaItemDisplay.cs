@@ -9,6 +9,8 @@ namespace VitrivrVR.Media
   /// </summary>
   public abstract class MediaItemDisplay : MonoBehaviour
   {
+    public abstract ScoredSegment ScoredSegment { get; }
+
     /// <summary>
     /// Initializes this display with the given segment data.
     /// </summary>
