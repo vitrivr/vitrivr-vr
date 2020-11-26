@@ -26,10 +26,13 @@ namespace VitrivrVR.Input.Controller
     }
 
     public XRButtonEvent primaryButtonEvent;
+    public XRButtonEvent secondaryButtonEvent;
     public XRAxisEvent primaryAxisEvent;
 
     private bool _lastPrimaryButtonState;
+    private bool _lastSecondaryButtonState;
     private readonly List<InputDevice> _devicesWithPrimaryButton = new List<InputDevice>();
+    private readonly List<InputDevice> _devicesWithSecondaryButton = new List<InputDevice>();
     private readonly List<InputDevice> _devicesWithPrimaryAxis = new List<InputDevice>();
 
     private void OnEnable()
@@ -63,6 +66,8 @@ namespace VitrivrVR.Input.Controller
     {
       if (device.TryGetFeatureValue(CommonUsages.primaryButton, out _))
         _devicesWithPrimaryButton.Add(device);
+      if (device.TryGetFeatureValue(CommonUsages.secondaryButton, out _))
+        _devicesWithSecondaryButton.Add(device);
       if (device.TryGetFeatureValue(CommonUsages.primary2DAxis, out _))
         _devicesWithPrimaryAxis.Add(device);
     }
@@ -75,6 +80,8 @@ namespace VitrivrVR.Input.Controller
     {
       if (_devicesWithPrimaryButton.Contains(device))
         _devicesWithPrimaryButton.Remove(device);
+      if (_devicesWithSecondaryButton.Contains(device))
+        _devicesWithSecondaryButton.Remove(device);
       if (_devicesWithPrimaryAxis.Contains(device))
         _devicesWithPrimaryAxis.Remove(device);
     }
@@ -85,6 +92,10 @@ namespace VitrivrVR.Input.Controller
       var primaryButtonState = _devicesWithPrimaryButton.Aggregate(false, (current, device) =>
         device.TryGetFeatureValue(CommonUsages.primaryButton, out var tempState) && tempState || current);
 
+      var secondaryButtonState = _devicesWithSecondaryButton.Aggregate(false, (current, device) =>
+        device.TryGetFeatureValue(CommonUsages.secondaryButton, out var tempState) && tempState || current);
+
+      // Get axis states
       var primaryAxisState = _devicesWithPrimaryAxis.Aggregate(Vector2.negativeInfinity,
         (current, device) =>
           device.TryGetFeatureValue(CommonUsages.primary2DAxis, out var tempState) ? tempState : current);
@@ -94,6 +105,12 @@ namespace VitrivrVR.Input.Controller
       {
         primaryButtonEvent.Invoke(primaryButtonState);
         _lastPrimaryButtonState = primaryButtonState;
+      }
+      
+      if (secondaryButtonState != _lastSecondaryButtonState)
+      {
+        secondaryButtonEvent.Invoke(secondaryButtonState);
+        _lastSecondaryButtonState = secondaryButtonState;
       }
 
       if (!float.IsNegativeInfinity(primaryAxisState.x))
