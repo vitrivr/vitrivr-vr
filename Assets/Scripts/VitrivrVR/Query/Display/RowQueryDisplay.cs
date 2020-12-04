@@ -14,6 +14,7 @@ namespace VitrivrVR.Query.Display
     public int rows = 3;
     public float scrollSpeed;
     public float distance;
+    public float resultSize;
     public float padding = 0.2f;
 
     /// <summary>
@@ -59,8 +60,14 @@ namespace VitrivrVR.Query.Display
     {
       var fusionResults = queryData.GetMeanFusionResults();
       _results = fusionResults;
+      if (_results == null)
+      {
+        Debug.Log("No results returned from query!");
+        // TODO: Handle no results case fully (user notification etc.)
+        _results = new List<ScoredSegment>();
+      }
       _nResults = _results.Count;
-      foreach (var segment in fusionResults.Take(ConfigManager.Config.maxDisplay))
+      foreach (var segment in _results.Take(ConfigManager.Config.maxDisplay))
       {
         _instantiationQueue.Enqueue(segment);
       }
@@ -71,13 +78,15 @@ namespace VitrivrVR.Query.Display
       // Determine position
       var row = _mediaDisplays.Count % rows;
       var column = _mediaDisplays.Count / rows;
-      var multiplier = 1 + padding;
+      var multiplier = resultSize + padding;
       var position = new Vector3(multiplier * column, multiplier * row, distance);
       var transform1 = transform;
       var targetPosition = transform1.position;
       position += targetPosition;
 
       var itemDisplay = Instantiate(mediaItemDisplay, position, Quaternion.identity, transform1);
+      // Adjust size
+      itemDisplay.transform.localScale *= resultSize;
 
       _mediaDisplays.Add((itemDisplay, (float) result.score));
 
