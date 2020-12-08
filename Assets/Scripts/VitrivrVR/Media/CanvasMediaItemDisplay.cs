@@ -10,6 +10,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using VitrivrVR.Config;
+using VitrivrVR.Util;
 
 namespace VitrivrVR.Media
 {
@@ -33,19 +34,6 @@ namespace VitrivrVR.Media
     private SegmentData _segment;
     private bool _videoInitialized;
     private VideoPlayerController _videoPlayerController;
-
-    /// <summary>
-    /// Tiny class for the sole purpose of enabling click events on <see cref="CanvasMediaItemDisplay"/> instances.
-    /// </summary>
-    private class ClickHandler : MonoBehaviour, IPointerClickHandler
-    {
-      public Action<PointerEventData> onClick;
-
-      public void OnPointerClick(PointerEventData eventData)
-      {
-        onClick(eventData);
-      }
-    }
 
     private void Awake()
     {
