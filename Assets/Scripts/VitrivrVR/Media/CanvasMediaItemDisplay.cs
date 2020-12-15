@@ -83,16 +83,21 @@ namespace VitrivrVR.Media
     {
       if (_videoInitialized)
       {
-        Destroy(_videoDisplay.gameObject);
-        _videoInitialized = false;
+        ClosePopoutVideo();
       }
       else
       {
         _videoInitialized = true;
         var t = transform;
         _videoDisplay = Instantiate(canvasVideoDisplay, t.position - 0.2f * t.forward, t.rotation);
-        _videoDisplay.Initialize(_scoredSegment);
+        _videoDisplay.Initialize(_scoredSegment, ClosePopoutVideo);
       }
+    }
+
+    private void ClosePopoutVideo()
+    {
+      Destroy(_videoDisplay.gameObject);
+      _videoInitialized = false;
     }
 
     /// <summary>

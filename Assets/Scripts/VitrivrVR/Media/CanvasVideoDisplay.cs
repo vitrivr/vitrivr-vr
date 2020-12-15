@@ -25,8 +25,9 @@ namespace VitrivrVR.Media
     private SegmentData _segment;
     private VideoPlayerController _videoPlayerController;
     private RectTransform _imageTransform;
+    private Action _onClose;
 
-    public async void Initialize(ScoredSegment segment)
+    public async void Initialize(ScoredSegment segment, Action onClose)
     {
       _scoredSegment = segment;
       _segment = _scoredSegment.segment;
@@ -68,6 +69,12 @@ namespace VitrivrVR.Media
       clickHandler.onClick = OnClickImage;
       var progressClickHandler = progressBar.gameObject.AddComponent<ClickHandler>();
       progressClickHandler.onClick = OnClickProgressBar;
+      _onClose = onClose;
+    }
+
+    public void Close()
+    {
+      _onClose();
     }
 
     private void Awake()
