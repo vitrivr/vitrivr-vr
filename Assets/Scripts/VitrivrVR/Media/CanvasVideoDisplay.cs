@@ -72,7 +72,7 @@ namespace VitrivrVR.Media
 
     private void Awake()
     {
-      GetComponent<Canvas>().worldCamera = Camera.main;
+      GetComponentInChildren<Canvas>().worldCamera = Camera.main;
       _imageTransform = previewImage.GetComponent<RectTransform>();
     }
     

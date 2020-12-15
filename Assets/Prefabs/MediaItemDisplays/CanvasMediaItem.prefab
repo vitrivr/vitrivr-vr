@@ -244,12 +244,8 @@ MonoBehaviour:
   previewImage: {fileID: 5129396410111740033}
   scoreFrame: {fileID: 4797499402522525822}
   imageFrame: {fileID: 7994159168318806018}
-  segmentDataText: {fileID: 0}
   scoreFrameSize: 25
-  progressBar: {fileID: 0}
-  progressIndicator: {fileID: 0}
-  segmentIndicator: {fileID: 0}
-  canvasVideoDisplay: {fileID: 3918609533969326429, guid: 04e47bd7a0ab0475b9b355456cc6f4bf,
+  canvasVideoDisplay: {fileID: 2954403938280973320, guid: 04e47bd7a0ab0475b9b355456cc6f4bf,
     type: 3}
 --- !u!1 &8715993880187611840
 GameObject:
