@@ -91,6 +91,7 @@ namespace VitrivrVR.Media
         var t = transform;
         _videoDisplay = Instantiate(canvasVideoDisplay, t.position - 0.2f * t.forward, t.rotation);
         _videoDisplay.Initialize(_scoredSegment, ClosePopoutVideo);
+        previewImage.color = new Color(.2f, .2f, .2f);
       }
     }
 
@@ -98,6 +99,7 @@ namespace VitrivrVR.Media
     {
       Destroy(_videoDisplay.gameObject);
       _videoInitialized = false;
+      previewImage.color = Color.white;
     }
 
     /// <summary>
