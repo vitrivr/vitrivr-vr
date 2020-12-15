@@ -8,20 +8,21 @@ namespace VitrivrVR.Media
   {
     private VideoPlayer _videoPlayer;
     private Action<RenderTexture> _prepareComplete;
+    private AudioSource _audioSource;
 
     public VideoPlayerController(GameObject gameObject, string mediaUrl, long startFrame,
       Action<RenderTexture> prepareComplete, VideoPlayer.ErrorEventHandler errorHandler)
     {
       _videoPlayer = gameObject.AddComponent<VideoPlayer>();
-      var audioSource = gameObject.AddComponent<AudioSource>();
-      audioSource.spatialize = true;
-      audioSource.spatialBlend = 1;
+      _audioSource = gameObject.AddComponent<AudioSource>();
+      _audioSource.spatialize = true;
+      _audioSource.spatialBlend = 1;
 
       _videoPlayer.isLooping = true;
       _videoPlayer.renderMode = VideoRenderMode.RenderTexture;
 
       _videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
-      _videoPlayer.SetTargetAudioSource(0, audioSource);
+      _videoPlayer.SetTargetAudioSource(0, _audioSource);
       _videoPlayer.prepareCompleted += PrepareCompleted;
       _prepareComplete = prepareComplete;
       _videoPlayer.errorReceived += errorHandler;
@@ -58,6 +59,11 @@ namespace VitrivrVR.Media
     public void SetTime(double time)
     {
       _videoPlayer.time = time;
+    }
+
+    public void SetVolume(float volume)
+    {
+      _audioSource.volume = volume;
     }
 
     private void PrepareCompleted(VideoPlayer videoPlayer)

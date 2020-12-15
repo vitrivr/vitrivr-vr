@@ -77,6 +77,11 @@ namespace VitrivrVR.Media
       _onClose();
     }
 
+    public void SetVolume(float volume)
+    {
+      _videoPlayerController.SetVolume(volume);
+    }
+
     private void Awake()
     {
       GetComponentInChildren<Canvas>().worldCamera = Camera.main;
