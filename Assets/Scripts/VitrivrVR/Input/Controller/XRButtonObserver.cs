@@ -55,6 +55,7 @@ namespace VitrivrVR.Input.Controller
       InputDevices.deviceDisconnected -= DeviceDisconnected;
       // Clear all device lists
       _devicesWithPrimaryButton.Clear();
+      _devicesWithSecondaryButton.Clear();
       _devicesWithPrimaryAxis.Clear();
     }
 
