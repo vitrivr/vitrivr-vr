@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
+using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using TMPro;
 using UnityEngine;
@@ -10,6 +12,9 @@ using VitrivrVR.Util;
 
 namespace VitrivrVR.Media
 {
+  /// <summary>
+  /// Canvas based video player.
+  /// </summary>
   public class CanvasVideoDisplay : MonoBehaviour
   {
     public Texture2D errorTexture;
@@ -87,7 +92,7 @@ namespace VitrivrVR.Media
       GetComponentInChildren<Canvas>().worldCamera = Camera.main;
       _imageTransform = previewImage.GetComponent<RectTransform>();
     }
-    
+
     private void Update()
     {
       if (_videoPlayerController != null && _videoPlayerController.IsPlaying)
@@ -107,7 +112,7 @@ namespace VitrivrVR.Media
         _videoPlayerController.Play();
       }
     }
-    
+
     private void OnClickProgressBar(PointerEventData pointerEventData)
     {
       var clickPosition = Quaternion.Inverse(Quaternion.LookRotation(progressBar.forward)) *
@@ -132,21 +137,21 @@ namespace VitrivrVR.Media
       UpdateProgressIndicator(newTime);
     }
 
-    private void PrepareCompleted(RenderTexture texture)
+    private async void PrepareCompleted(RenderTexture texture)
     {
       var width = _videoPlayerController.Width;
       var height = _videoPlayerController.Height;
       var factor = Mathf.Max(width, height);
       previewImage.texture = texture;
       _imageTransform.sizeDelta = new Vector2(1000f * width / factor, 1000f * height / factor);
-      
+
       segmentDataText.rectTransform.anchoredPosition -= new Vector2(0, progressBarSize);
 
-      var start = _segment.GetAbsoluteStart().Result;
-      var end = _segment.GetAbsoluteEnd().Result;
+      var start = await _segment.GetAbsoluteStart();
+      var end = await _segment.GetAbsoluteEnd();
       var length = _videoPlayerController.Length;
       UpdateProgressIndicator(start);
-      SetSegmentIndicator(start, end, length);
+      SetSegmentIndicator(start, end, length, segmentIndicator);
       // Set progress bar size
       var progressBarSizeDelta = progressBar.sizeDelta;
       progressBarSizeDelta.y = progressBarSize;
@@ -155,6 +160,23 @@ namespace VitrivrVR.Media
       progressBarPos.y = -progressBarSize / 2f;
       progressBar.anchoredPosition = progressBarPos;
       progressBar.gameObject.SetActive(true);
+
+      var mediaObject = ObjectRegistry.GetObject(await _segment.GetObjectId());
+      var segments = await mediaObject.GetSegments();
+      foreach (var segment in segments.Where(segment => segment != _segment))
+      {
+        var segStart = await segment.GetAbsoluteStart();
+
+        if (segStart == 0)
+          continue;
+
+        var indicator = Instantiate(progressIndicator, segmentIndicator.parent);
+        indicator.SetSiblingIndex(0);
+        indicator.anchoredPosition =
+          new Vector2((float) (progressBar.rect.width * segStart / _videoPlayerController.Length), 0);
+        indicator.sizeDelta = new Vector2(1, 0);
+        indicator.GetComponent<RawImage>().color = Color.black;
+      }
     }
 
     private void ErrorEncountered(VideoPlayer videoPlayer, string error)
@@ -162,18 +184,18 @@ namespace VitrivrVR.Media
       Debug.LogError(error);
       previewImage.texture = errorTexture;
     }
-    
+
     private void UpdateProgressIndicator(double time)
     {
       progressIndicator.anchoredPosition =
         new Vector2((float) (progressBar.rect.width * time / _videoPlayerController.Length), 0);
     }
 
-    private void SetSegmentIndicator(double start, double end, double length)
+    private void SetSegmentIndicator(double start, double end, double length, RectTransform rt)
     {
       var rect = progressBar.rect;
-      segmentIndicator.anchoredPosition = new Vector2((float) (rect.width * start / length), 0);
-      segmentIndicator.sizeDelta = new Vector2((float) (rect.width * (end - start) / length), 0);
+      rt.anchoredPosition = new Vector2((float) (rect.width * start / length), 0);
+      rt.sizeDelta = new Vector2((float) (rect.width * (end - start) / length), 0);
     }
   }
 }

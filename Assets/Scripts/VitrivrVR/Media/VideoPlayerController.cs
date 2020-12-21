@@ -4,11 +4,15 @@ using UnityEngine.Video;
 
 namespace VitrivrVR.Media
 {
+  /// <summary>
+  /// Wrapper class for the <see cref="VideoPlayer"/> class, combining all required logic into a single class.
+  /// Renders the loaded video to a <see cref="RenderTexture"/> returned on prepareComplete.
+  /// </summary>
   public class VideoPlayerController
   {
-    private VideoPlayer _videoPlayer;
-    private Action<RenderTexture> _prepareComplete;
-    private AudioSource _audioSource;
+    private readonly VideoPlayer _videoPlayer;
+    private readonly Action<RenderTexture> _prepareComplete;
+    private readonly AudioSource _audioSource;
 
     public VideoPlayerController(GameObject gameObject, string mediaUrl, long startFrame,
       Action<RenderTexture> prepareComplete, VideoPlayer.ErrorEventHandler errorHandler)
