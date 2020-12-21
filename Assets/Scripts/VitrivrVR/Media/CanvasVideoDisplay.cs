@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Registries;
@@ -28,6 +29,7 @@ namespace VitrivrVR.Media
 
     private ScoredSegment _scoredSegment;
     private SegmentData _segment;
+    private List<SegmentData> _segments;
     private VideoPlayerController _videoPlayerController;
     private RectTransform _imageTransform;
     private Action _onClose;
@@ -68,7 +70,7 @@ namespace VitrivrVR.Media
 
       var start = await _segment.GetAbsoluteStart();
       var end = await _segment.GetAbsoluteEnd();
-      segmentDataText.text = $"Segment {_segment.Id}: {start:F}s - {end:F}s\nScore: {_scoredSegment.score:F}";
+      segmentDataText.text = $"Segment {_segment.Id}:\n{start:F}s - {end:F}s\nScore: {_scoredSegment.score:F}";
 
       var clickHandler = previewImage.gameObject.AddComponent<ClickHandler>();
       clickHandler.onClick = OnClickImage;
@@ -97,7 +99,9 @@ namespace VitrivrVR.Media
     {
       if (_videoPlayerController != null && _videoPlayerController.IsPlaying)
       {
-        UpdateProgressIndicator(_videoPlayerController.ClockTime);
+        var time = _videoPlayerController.ClockTime;
+        UpdateProgressIndicator(time);
+        UpdateText(time);
       }
     }
 
@@ -135,6 +139,7 @@ namespace VitrivrVR.Media
       }
 
       UpdateProgressIndicator(newTime);
+      UpdateText(newTime);
     }
 
     private async void PrepareCompleted(RenderTexture texture)
@@ -162,8 +167,8 @@ namespace VitrivrVR.Media
       progressBar.gameObject.SetActive(true);
 
       var mediaObject = ObjectRegistry.GetObject(await _segment.GetObjectId());
-      var segments = await mediaObject.GetSegments();
-      foreach (var segment in segments.Where(segment => segment != _segment))
+      _segments = await mediaObject.GetSegments();
+      foreach (var segment in _segments.Where(segment => segment != _segment))
       {
         var segStart = await segment.GetAbsoluteStart();
 
@@ -189,6 +194,26 @@ namespace VitrivrVR.Media
     {
       progressIndicator.anchoredPosition =
         new Vector2((float) (progressBar.rect.width * time / _videoPlayerController.Length), 0);
+    }
+
+    private async void UpdateText(double time)
+    {
+      if (_segments == null)
+        return;
+      var mediaObjectId = await _segment.GetObjectId();
+      foreach (var segment in _segments)
+      {
+        var start = await segment.GetAbsoluteStart();
+        var end = await segment.GetAbsoluteEnd();
+
+        if (start <= time && time <= end)
+        {
+          var current = TimeSpan.FromSeconds(time).ToString("g");
+          segmentDataText.text =
+            $"{mediaObjectId}: {current}\nCurrent: {segment.Id}";
+          break;
+        }
+      }
     }
 
     private void SetSegmentIndicator(double start, double end, double length, RectTransform rt)
