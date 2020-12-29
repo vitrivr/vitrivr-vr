@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.Windows.Speech;
 using VitrivrVR.Config;
 
@@ -109,6 +110,12 @@ namespace VitrivrVR.Input.Text
         Debug.LogError($"{error}: {hresult}");
         onDictationError.Invoke(error, hresult);
       };
+    }
+
+    public void SetDictation(InputAction.CallbackContext context)
+    {
+      Debug.Log("Test!");
+      SetDictation(context.performed);
     }
 
     public void SetDictation(bool dictation)

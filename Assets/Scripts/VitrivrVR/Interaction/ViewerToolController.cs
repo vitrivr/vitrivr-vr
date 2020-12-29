@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 using VitrivrVR.Input.Controller;
 using VitrivrVR.Interaction.ViewerToolViews;
@@ -15,16 +16,6 @@ namespace VitrivrVR.Interaction
     private bool _justSwitched;
     private XRRayInteractor _rayInteractor;
     private XRInteractorLineVisual _rayRenderer;
-    private XRButtonObserver _buttonObserver;
-
-    private void Awake()
-    {
-      _buttonObserver = FindObjectOfType<XRButtonObserver>();
-      if (!_buttonObserver)
-      {
-        Debug.LogError("Could not find required XRButtonObserver in scene!");
-      }
-    }
 
     private void Start()
     {
@@ -37,15 +28,10 @@ namespace VitrivrVR.Interaction
         SetCurrentViewActive(true);
       }
     }
-    
-    private void OnEnable()
-    {
-      _buttonObserver.primaryAxisEvent.AddListener(AxisInput);
-    }
 
-    private void OnDisable()
+    public void AxisInput(InputAction.CallbackContext context)
     {
-      _buttonObserver.primaryAxisEvent.RemoveListener(AxisInput);
+      AxisInput(context.ReadValue<Vector2>());
     }
 
     public void AxisInput(Vector2 axis)

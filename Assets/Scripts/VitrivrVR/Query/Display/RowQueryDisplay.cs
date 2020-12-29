@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using VitrivrVR.Config;
 using VitrivrVR.Media;
 
@@ -30,9 +31,9 @@ namespace VitrivrVR.Query.Display
     private List<ScoredSegment> _results;
     private int _nResults;
 
-    private async void Update()
+    public void OnStick(InputAction.CallbackContext context)
     {
-      var scroll = UnityEngine.Input.GetAxisRaw("Horizontal");
+      var scroll = context.ReadValue<Vector2>().x;
       transform.Translate(Time.deltaTime * scrollSpeed * scroll * Vector3.left);
       // Start includes items in the instantiation queue, since these will be instantiated shortly
       var start = _mediaDisplays.Count + _instantiationQueue.Count;
@@ -49,7 +50,10 @@ namespace VitrivrVR.Query.Display
           }
         }
       }
+    }
 
+    private async void Update()
+    {
       if (_instantiationQueue.Count > 0)
       {
         await CreateResultObject(_instantiationQueue.Dequeue());
