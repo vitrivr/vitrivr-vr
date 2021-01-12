@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace VitrivrVR.Query.Display
     public float distance;
     public float resultSize;
     public float padding = 0.2f;
+    public InputAction horizontalScroll;
 
     /// <summary>
     /// Number of columns of results to display at a minimum.
@@ -31,9 +33,14 @@ namespace VitrivrVR.Query.Display
     private List<ScoredSegment> _results;
     private int _nResults;
 
-    public void OnStick(InputAction.CallbackContext context)
+    private void Start()
     {
-      var scroll = context.ReadValue<Vector2>().x;
+      horizontalScroll.Enable();
+    }
+
+    private async void Update()
+    {
+      var scroll = horizontalScroll.ReadValue<float>();
       transform.Translate(Time.deltaTime * scrollSpeed * scroll * Vector3.left);
       // Start includes items in the instantiation queue, since these will be instantiated shortly
       var start = _mediaDisplays.Count + _instantiationQueue.Count;
@@ -50,10 +57,7 @@ namespace VitrivrVR.Query.Display
           }
         }
       }
-    }
-
-    private async void Update()
-    {
+      
       if (_instantiationQueue.Count > 0)
       {
         await CreateResultObject(_instantiationQueue.Dequeue());
