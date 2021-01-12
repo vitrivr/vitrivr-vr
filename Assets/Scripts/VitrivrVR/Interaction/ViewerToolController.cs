@@ -17,6 +17,8 @@ namespace VitrivrVR.Interaction
     private XRRayInteractor _rayInteractor;
     private XRInteractorLineVisual _rayRenderer;
 
+    private float _horizontalInput;
+
     private void Start()
     {
       _rayInteractor = GetComponent<XRRayInteractor>();
@@ -29,27 +31,32 @@ namespace VitrivrVR.Interaction
       }
     }
 
-    public void AxisInput(InputAction.CallbackContext context)
+    private void Update()
     {
-      AxisInput(context.ReadValue<Vector2>());
+      AxisInput(_horizontalInput);
     }
 
-    public void AxisInput(Vector2 axis)
+    void OnRightHandAxis(InputValue value)
+    {
+      _horizontalInput = value.Get<Vector2>().x;
+    }
+
+    public void AxisInput(float horizontalInput)
     {
       if (_justSwitched)
       {
-        if (axis.Equals(Vector2.zero))
+        if (-axisDeadZone < horizontalInput && horizontalInput < axisDeadZone)
         {
           _justSwitched = false;
         }
       }
       else
       {
-        if (axis.x > axisDeadZone)
+        if (horizontalInput > axisDeadZone)
         {
           NextTool();
         }
-        else if (axis.x < -axisDeadZone)
+        else if (horizontalInput < -axisDeadZone)
         {
           PreviousTool();
         }

@@ -18,7 +18,6 @@ namespace VitrivrVR.Query.Display
     public float distance;
     public float resultSize;
     public float padding = 0.2f;
-    public InputAction horizontalScroll;
 
     /// <summary>
     /// Number of columns of results to display at a minimum.
@@ -33,15 +32,16 @@ namespace VitrivrVR.Query.Display
     private List<ScoredSegment> _results;
     private int _nResults;
 
-    private void Start()
+    private float _horizontalScroll;
+
+    void OnLeftHandAxis(InputValue value)
     {
-      horizontalScroll.Enable();
+      _horizontalScroll = value.Get<Vector2>().x;
     }
 
     private async void Update()
     {
-      var scroll = horizontalScroll.ReadValue<float>();
-      transform.Translate(Time.deltaTime * scrollSpeed * scroll * Vector3.left);
+      transform.Translate(Time.deltaTime * scrollSpeed * _horizontalScroll * Vector3.left);
       // Start includes items in the instantiation queue, since these will be instantiated shortly
       var start = _mediaDisplays.Count + _instantiationQueue.Count;
       var columns = start / rows;

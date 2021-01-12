@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1848194574185977825}
   - component: {fileID: 1449249513407713360}
+  - component: {fileID: 3293867579962984535}
   m_Layer: 0
   m_Name: RowQueryDisplay
   m_TagString: Untagged
@@ -91,3 +92,34 @@ MonoBehaviour:
       m_Action: Horizontal Scroll
       m_Flags: 0
   loadBuffer: 10
+--- !u!114 &3293867579962984535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975869973096077402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: fa1ea27f8e475394eb724e13fab25d5b,
+    type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: 5e498dd5-a9a3-450c-a5bb-c3c01fec51ca
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}

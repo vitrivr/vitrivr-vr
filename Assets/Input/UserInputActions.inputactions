@@ -783,7 +783,7 @@
             "id": "5e498dd5-a9a3-450c-a5bb-c3c01fec51ca",
             "actions": [
                 {
-                    "name": "LeftAxis",
+                    "name": "LeftHandAxis",
                     "type": "Value",
                     "id": "2bd90ba3-1366-4d01-8de1-c89365d88d98",
                     "expectedControlType": "Vector2",
@@ -791,7 +791,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "RightAxis",
+                    "name": "RightHandAxis",
                     "type": "Value",
                     "id": "d3a9af7f-4bf0-4535-bd71-153d678de08a",
                     "expectedControlType": "Vector2",
@@ -818,7 +818,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
-                    "action": "LeftAxis",
+                    "action": "LeftHandAxis",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -829,9 +829,119 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
-                    "action": "RightAxis",
+                    "action": "RightHandAxis",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "f6164f1b-552b-47eb-b22e-69f972f87244",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightHandAxis",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "0a2f87e8-522a-451c-8c22-dd423e6e3053",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "RightHandAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "d480a8bb-a2bd-4cab-9b8d-e2218745f07d",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "RightHandAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "86a98113-c09d-4eb9-9e57-4ef31838288b",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "RightHandAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "8fd56a5b-4985-4e44-8efa-178e586c92ba",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "RightHandAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "75c27749-7515-49cb-89a1-6f08bf909b5c",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftHandAxis",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "0e3b9bdc-a374-4f58-be98-1f87c4b69911",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "LeftHandAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "a5431000-428e-4d9c-a303-b7838588e57c",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "LeftHandAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "6a388e8d-e6a0-4c47-9976-b7737f40c489",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "LeftHandAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "fd9f3ffe-2f77-47f2-8886-321e1b54638d",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "LeftHandAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }
