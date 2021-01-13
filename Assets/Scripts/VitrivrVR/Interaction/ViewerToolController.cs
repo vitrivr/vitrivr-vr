@@ -33,7 +33,7 @@ namespace VitrivrVR.Interaction
       AxisInput(_horizontalInput);
     }
 
-    public void OnRightHandAxis(Vector2 value)
+    public void OnAxisInput(Vector2 value)
     {
       _horizontalInput = value.x;
     }

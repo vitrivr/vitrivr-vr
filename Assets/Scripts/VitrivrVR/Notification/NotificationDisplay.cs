@@ -17,7 +17,6 @@ namespace VitrivrVR.Notification
     private void Start()
     {
       _textDisplay = GetComponent<TextMeshPro>();
-      NotificationController.Notify("Test Notification!");
     }
 
     private void Update()

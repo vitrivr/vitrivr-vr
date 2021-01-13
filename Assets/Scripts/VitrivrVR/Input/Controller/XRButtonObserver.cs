@@ -121,12 +121,18 @@ namespace VitrivrVR.Input.Controller
       var leftHandPrimaryAxisState = leftHandDevices.Aggregate(Vector2.negativeInfinity,
         (current, device) =>
           device.TryGetFeatureValue(CommonUsages.primary2DAxis, out var tempState) ? tempState : current);
-      leftHandAxisEvent.Invoke(leftHandPrimaryAxisState);
-      
-      var rightHandAxisState = rightHandDevices.Aggregate(Vector2.negativeInfinity,
+      if (!float.IsNegativeInfinity(leftHandPrimaryAxisState.x))
+      {
+        leftHandAxisEvent.Invoke(leftHandPrimaryAxisState);
+      }
+
+      var rightHandPrimaryAxisState = rightHandDevices.Aggregate(Vector2.negativeInfinity,
         (current, device) =>
           device.TryGetFeatureValue(CommonUsages.primary2DAxis, out var tempState) ? tempState : current);
-      rightHandAxisEvent.Invoke(rightHandAxisState);
+      if (!float.IsNegativeInfinity(rightHandPrimaryAxisState.x))
+      {
+        rightHandAxisEvent.Invoke(rightHandPrimaryAxisState);
+      }
     }
   }
 }
