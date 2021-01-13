@@ -1,8 +1,5 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.InputSystem;
+﻿using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
-using VitrivrVR.Input.Controller;
 using VitrivrVR.Interaction.ViewerToolViews;
 
 namespace VitrivrVR.Interaction
@@ -36,9 +33,9 @@ namespace VitrivrVR.Interaction
       AxisInput(_horizontalInput);
     }
 
-    void OnRightHandAxis(InputValue value)
+    public void OnRightHandAxis(Vector2 value)
     {
-      _horizontalInput = value.Get<Vector2>().x;
+      _horizontalInput = value.x;
     }
 
     public void AxisInput(float horizontalInput)

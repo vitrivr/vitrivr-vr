@@ -27,13 +27,16 @@ namespace VitrivrVR.Input.Controller
 
     public XRButtonEvent primaryButtonEvent;
     public XRButtonEvent secondaryButtonEvent;
-    public XRAxisEvent primaryAxisEvent;
+    public XRAxisEvent leftHandAxisEvent;
+    public XRAxisEvent rightHandAxisEvent;
+    
+    public readonly List<InputDevice> leftHandDevices = new List<InputDevice>();
+    public readonly List<InputDevice> rightHandDevices = new List<InputDevice>();
 
     private bool _lastPrimaryButtonState;
     private bool _lastSecondaryButtonState;
     private readonly List<InputDevice> _devicesWithPrimaryButton = new List<InputDevice>();
     private readonly List<InputDevice> _devicesWithSecondaryButton = new List<InputDevice>();
-    private readonly List<InputDevice> _devicesWithPrimaryAxis = new List<InputDevice>();
 
     private void OnEnable()
     {
@@ -56,7 +59,8 @@ namespace VitrivrVR.Input.Controller
       // Clear all device lists
       _devicesWithPrimaryButton.Clear();
       _devicesWithSecondaryButton.Clear();
-      _devicesWithPrimaryAxis.Clear();
+      leftHandDevices.Clear();
+      rightHandDevices.Clear();
     }
 
     /// <summary>
@@ -69,8 +73,10 @@ namespace VitrivrVR.Input.Controller
         _devicesWithPrimaryButton.Add(device);
       if (device.TryGetFeatureValue(CommonUsages.secondaryButton, out _))
         _devicesWithSecondaryButton.Add(device);
-      if (device.TryGetFeatureValue(CommonUsages.primary2DAxis, out _))
-        _devicesWithPrimaryAxis.Add(device);
+      if ((device.characteristics & InputDeviceCharacteristics.Left) != 0)
+        leftHandDevices.Add(device);
+      if ((device.characteristics & InputDeviceCharacteristics.Right) != 0)
+        rightHandDevices.Add(device);
     }
 
     /// <summary>
@@ -83,8 +89,10 @@ namespace VitrivrVR.Input.Controller
         _devicesWithPrimaryButton.Remove(device);
       if (_devicesWithSecondaryButton.Contains(device))
         _devicesWithSecondaryButton.Remove(device);
-      if (_devicesWithPrimaryAxis.Contains(device))
-        _devicesWithPrimaryAxis.Remove(device);
+      if (leftHandDevices.Contains(device))
+        leftHandDevices.Remove(device);
+      if (rightHandDevices.Contains(device))
+        rightHandDevices.Remove(device);
     }
 
     private void Update()
@@ -96,28 +104,29 @@ namespace VitrivrVR.Input.Controller
       var secondaryButtonState = _devicesWithSecondaryButton.Aggregate(false, (current, device) =>
         device.TryGetFeatureValue(CommonUsages.secondaryButton, out var tempState) && tempState || current);
 
-      // Get axis states
-      var primaryAxisState = _devicesWithPrimaryAxis.Aggregate(Vector2.negativeInfinity,
-        (current, device) =>
-          device.TryGetFeatureValue(CommonUsages.primary2DAxis, out var tempState) ? tempState : current);
-
       // Invoke events for which state has changed
       if (primaryButtonState != _lastPrimaryButtonState)
       {
         primaryButtonEvent.Invoke(primaryButtonState);
         _lastPrimaryButtonState = primaryButtonState;
       }
-      
+
       if (secondaryButtonState != _lastSecondaryButtonState)
       {
         secondaryButtonEvent.Invoke(secondaryButtonState);
         _lastSecondaryButtonState = secondaryButtonState;
       }
-
-      if (!float.IsNegativeInfinity(primaryAxisState.x))
-      {
-        primaryAxisEvent.Invoke(primaryAxisState);
-      }
+      
+      // Axis events
+      var leftHandPrimaryAxisState = leftHandDevices.Aggregate(Vector2.negativeInfinity,
+        (current, device) =>
+          device.TryGetFeatureValue(CommonUsages.primary2DAxis, out var tempState) ? tempState : current);
+      leftHandAxisEvent.Invoke(leftHandPrimaryAxisState);
+      
+      var rightHandAxisState = rightHandDevices.Aggregate(Vector2.negativeInfinity,
+        (current, device) =>
+          device.TryGetFeatureValue(CommonUsages.primary2DAxis, out var tempState) ? tempState : current);
+      rightHandAxisEvent.Invoke(rightHandAxisState);
     }
   }
 }
