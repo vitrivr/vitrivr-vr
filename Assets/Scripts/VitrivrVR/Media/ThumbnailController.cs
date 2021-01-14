@@ -10,16 +10,15 @@ namespace VitrivrVR.Media
   public class ThumbnailController : MonoBehaviour
   {
     public Texture2D errorTexture;
-    public string URL { get; set; }
+    public string url;
 
     private void Start()
     {
-      Renderer renderer = GetComponent<Renderer>();
-      // TODO: It may be worth loading thumbnails in a separate thread rather than coroutine
-      StartCoroutine(DownloadTexture(URL, renderer));
+      var renderer = GetComponent<Renderer>();
+      StartCoroutine(DownloadTexture(renderer));
     }
 
-    private IEnumerator DownloadTexture(string url, Renderer renderer)
+    private IEnumerator DownloadTexture(Renderer renderer)
     {
       var www = UnityWebRequestTexture.GetTexture(url);
       yield return www.SendWebRequest();

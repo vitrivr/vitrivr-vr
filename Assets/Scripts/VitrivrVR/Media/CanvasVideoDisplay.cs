@@ -27,12 +27,15 @@ namespace VitrivrVR.Media
     public TextMeshProUGUI segmentDataText;
     public float progressBarSize = 100;
 
+    public MediaObjectSegmentView mediaObjectSegmentViewPrefab;
+
     private ScoredSegment _scoredSegment;
     private SegmentData _segment;
     private List<SegmentData> _segments;
     private VideoPlayerController _videoPlayerController;
     private RectTransform _imageTransform;
     private Action _onClose;
+    private MediaObjectSegmentView _objectSegmentView;
 
     public async void Initialize(ScoredSegment segment, Action onClose)
     {
@@ -82,6 +85,21 @@ namespace VitrivrVR.Media
     public void Close()
     {
       _onClose();
+    }
+
+    public async void ShowObjectSegmentView()
+    {
+      if (_objectSegmentView)
+      {
+        Destroy(_objectSegmentView.gameObject);
+      }
+      else
+      {
+        var t = transform;
+        var mediaObject = ObjectRegistry.GetObject(await _segment.GetObjectId());
+        _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.1f * t.forward, t.rotation, t);
+        _objectSegmentView.Initialize(mediaObject);
+      }
     }
 
     public void SetVolume(float volume)
@@ -166,6 +184,7 @@ namespace VitrivrVR.Media
       progressBar.anchoredPosition = progressBarPos;
       progressBar.gameObject.SetActive(true);
 
+      // Instantiate segment indicators
       var mediaObject = ObjectRegistry.GetObject(await _segment.GetObjectId());
       _segments = await mediaObject.GetSegments();
       foreach (var segment in _segments.Where(segment => segment != _segment))
