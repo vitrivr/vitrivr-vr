@@ -28,7 +28,6 @@ namespace VitrivrVR.Media
 
     private ScoredSegment _scoredSegment;
     private SegmentData _segment;
-    private bool _videoInitialized;
     private CanvasVideoDisplay _videoDisplay;
 
     private void Awake()
@@ -36,14 +35,6 @@ namespace VitrivrVR.Media
       GetComponent<Canvas>().worldCamera = Camera.main;
       var clickHandler = previewImage.gameObject.AddComponent<ClickHandler>();
       clickHandler.onClick = OnClickImage;
-    }
-
-    private void OnDestroy()
-    {
-      if (_videoInitialized)
-      {
-        Destroy(_videoDisplay.gameObject);
-      }
     }
 
     public override ScoredSegment ScoredSegment => _scoredSegment;
@@ -81,13 +72,12 @@ namespace VitrivrVR.Media
 
     private void OnClickImage(PointerEventData pointerEventData)
     {
-      if (_videoInitialized)
+      if (_videoDisplay)
       {
         ClosePopoutVideo();
       }
       else
       {
-        _videoInitialized = true;
         var t = transform;
         _videoDisplay = Instantiate(canvasVideoDisplay, t.position - 0.2f * t.forward, t.rotation);
         _videoDisplay.Initialize(_scoredSegment, ClosePopoutVideo);
@@ -98,7 +88,9 @@ namespace VitrivrVR.Media
     private void ClosePopoutVideo()
     {
       Destroy(_videoDisplay.gameObject);
-      _videoInitialized = false;
+      _videoDisplay = null;
+      if (!previewImage)
+        return;
       previewImage.color = Color.white;
     }
 
