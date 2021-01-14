@@ -97,7 +97,7 @@ namespace VitrivrVR.Media
       {
         var t = transform;
         var mediaObject = ObjectRegistry.GetObject(await _segment.GetObjectId());
-        _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.1f * t.forward, t.rotation, t);
+        _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.2f * t.forward, t.rotation, t);
         _objectSegmentView.Initialize(mediaObject);
       }
     }

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1064222993669077097}
   - component: {fileID: 8037957142017713750}
+  - component: {fileID: 5601182315712095947}
   m_Layer: 0
   m_Name: MediaObjectSegmentView
   m_TagString: Untagged
@@ -45,3 +46,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thumbnailPrefab: {fileID: 2550728198607861108, guid: df9e32658f9354bfb88abf111839f9cd,
     type: 3}
+  thumbnailHeight: 1
+--- !u!65 &5601182315712095947
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3816833972309262785}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

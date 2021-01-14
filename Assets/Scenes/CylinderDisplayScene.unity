@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.097119264, g: 0.10489691, b: 0.12250193, a: 1}
+  m_IndirectSpecularColor: {r: 0.09711928, g: 0.104896955, b: 0.12250199, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1993,6 +1993,7 @@ GameObject:
   - component: {fileID: 2137064906}
   - component: {fileID: 2137064905}
   - component: {fileID: 2137064904}
+  - component: {fileID: 2137064909}
   m_Layer: 0
   m_Name: RightHand Controller
   m_TagString: Untagged
@@ -2346,6 +2347,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axisDeadZone: 0.1
+--- !u!135 &2137064909
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137064902}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.01
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &2139883298
 PrefabInstance:
   m_ObjectHideFlags: 0
