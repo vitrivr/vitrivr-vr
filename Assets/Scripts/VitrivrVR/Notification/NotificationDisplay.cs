@@ -14,7 +14,7 @@ namespace VitrivrVR.Notification
     private TextMeshPro _textDisplay;
     private float _fadeTimer;
 
-    private void Start()
+    private void Awake()
     {
       _textDisplay = GetComponent<TextMeshPro>();
     }

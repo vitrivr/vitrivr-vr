@@ -1363,6 +1363,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1044972656002971644, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1606703275}
     - target: {fileID: 6189976340291869285, guid: e235f5ab5e2784c77b0286dfce26d663,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -1993,6 +1998,7 @@ GameObject:
   - component: {fileID: 2137064906}
   - component: {fileID: 2137064905}
   - component: {fileID: 2137064904}
+  - component: {fileID: 2137064909}
   m_Layer: 0
   m_Name: RightHand Controller
   m_TagString: Untagged
@@ -2346,6 +2352,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axisDeadZone: 0.1
+--- !u!135 &2137064909
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137064902}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.01
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &2139883298
 PrefabInstance:
   m_ObjectHideFlags: 0
