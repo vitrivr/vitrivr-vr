@@ -29,12 +29,16 @@ namespace VitrivrVR.Input.Controller
     public XRButtonEvent secondaryButtonEvent;
     public XRAxisEvent leftHandAxisEvent;
     public XRAxisEvent rightHandAxisEvent;
-    
+    public XRButtonEvent leftHandGripEvent;
+    public XRButtonEvent rightHandGripEvent;
+
     public readonly List<InputDevice> leftHandDevices = new List<InputDevice>();
     public readonly List<InputDevice> rightHandDevices = new List<InputDevice>();
 
     private bool _lastPrimaryButtonState;
     private bool _lastSecondaryButtonState;
+    private bool _lastLeftHandGripState;
+    private bool _lastRightHandGripState;
     private readonly List<InputDevice> _devicesWithPrimaryButton = new List<InputDevice>();
     private readonly List<InputDevice> _devicesWithSecondaryButton = new List<InputDevice>();
 
@@ -104,6 +108,13 @@ namespace VitrivrVR.Input.Controller
       var secondaryButtonState = _devicesWithSecondaryButton.Aggregate(false, (current, device) =>
         device.TryGetFeatureValue(CommonUsages.secondaryButton, out var tempState) && tempState || current);
 
+      var leftHandGripState = leftHandDevices.Aggregate(false, (current, device) =>
+        device.TryGetFeatureValue(CommonUsages.gripButton, out var tempState) && tempState || current);
+
+
+      var rightHandGripState = rightHandDevices.Aggregate(false, (current, device) =>
+        device.TryGetFeatureValue(CommonUsages.gripButton, out var tempState) && tempState || current);
+
       // Invoke events for which state has changed
       if (primaryButtonState != _lastPrimaryButtonState)
       {
@@ -116,7 +127,19 @@ namespace VitrivrVR.Input.Controller
         secondaryButtonEvent.Invoke(secondaryButtonState);
         _lastSecondaryButtonState = secondaryButtonState;
       }
-      
+
+      if (leftHandGripState != _lastLeftHandGripState)
+      {
+        leftHandGripEvent.Invoke(leftHandGripState);
+        _lastLeftHandGripState = leftHandGripState;
+      }
+
+      if (rightHandGripState != _lastRightHandGripState)
+      {
+        rightHandGripEvent.Invoke(rightHandGripState);
+        _lastRightHandGripState = rightHandGripState;
+      }
+
       // Axis events
       var leftHandPrimaryAxisState = leftHandDevices.Aggregate(Vector2.negativeInfinity,
         (current, device) =>

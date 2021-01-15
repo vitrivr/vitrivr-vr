@@ -497,12 +497,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
+      propertyPath: rightHandGripEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
       propertyPath: primaryButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandAxisEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: rightHandGripEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
@@ -517,12 +527,22 @@ PrefabInstance:
       objectReference: {fileID: 2137064908}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
+      propertyPath: rightHandGripEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2137064908}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
       propertyPath: primaryButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandAxisEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: rightHandGripEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
@@ -537,12 +557,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
+      propertyPath: rightHandGripEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnGripButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
       propertyPath: primaryButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandAxisEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: rightHandGripEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029567, guid: 21b21afd679d64060a1625eb72859aed,

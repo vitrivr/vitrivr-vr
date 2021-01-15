@@ -15,6 +15,7 @@ namespace VitrivrVR.Interaction
     private XRInteractorLineVisual _rayRenderer;
 
     private float _horizontalInput;
+    private bool _gripButton;
 
     private void Start()
     {
@@ -30,12 +31,20 @@ namespace VitrivrVR.Interaction
 
     private void Update()
     {
-      AxisInput(_horizontalInput);
+      if (!_gripButton)
+      {
+        AxisInput(_horizontalInput);
+      }
     }
 
     public void OnAxisInput(Vector2 value)
     {
       _horizontalInput = value.x;
+    }
+
+    public void OnGripButton(bool pressed)
+    {
+      _gripButton = pressed;
     }
 
     public void AxisInput(float horizontalInput)
