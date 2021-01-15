@@ -1393,11 +1393,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 861819214288286268, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1606703275}
     - target: {fileID: 1044972656002971644, guid: e235f5ab5e2784c77b0286dfce26d663,
         type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1606703275}
+    - target: {fileID: 4305194552120445388, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 132569255}
+    - target: {fileID: 4305194552120445388, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ClearQuery
+      objectReference: {fileID: 0}
     - target: {fileID: 6189976340291869285, guid: e235f5ab5e2784c77b0286dfce26d663,
         type: 3}
       propertyPath: m_AnchorMax.x

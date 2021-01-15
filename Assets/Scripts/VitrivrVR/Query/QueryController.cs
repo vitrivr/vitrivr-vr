@@ -3,6 +3,7 @@ using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
 using VitrivrVR.Config;
+using VitrivrVR.Notification;
 using VitrivrVR.Query.Display;
 using VitrivrVR.Query.Term;
 
@@ -33,7 +34,7 @@ namespace VitrivrVR.Query
 
       if (queryTerms.Count == 0)
       {
-        Debug.Log("Cannot run query: No terms specified.");
+        NotificationController.Notify("Cannot run query: No terms specified.");
         return;
       }
 
@@ -67,6 +68,13 @@ namespace VitrivrVR.Query
       if (_localQueryGuid != localGuid) return;
       timer.transform.localRotation = Quaternion.identity;
       timer.SetActive(false);
+    }
+
+    public void ClearQuery()
+    {
+      if (_currentDisplay == null) return;
+      Destroy(_currentDisplay.gameObject);
+      _currentDisplay = null;
     }
   }
 }
