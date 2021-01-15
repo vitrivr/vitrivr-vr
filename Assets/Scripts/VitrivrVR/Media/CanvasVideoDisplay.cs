@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
@@ -36,6 +38,11 @@ namespace VitrivrVR.Media
     private RectTransform _imageTransform;
     private Action _onClose;
     private MediaObjectSegmentView _objectSegmentView;
+
+    /// <summary>
+    /// Number of segment indicators to instantiate each frame in Coroutine.
+    /// </summary>
+    private const int InstantiationBatch = 100;
 
     public async void Initialize(ScoredSegment segment, Action onClose)
     {
@@ -187,20 +194,33 @@ namespace VitrivrVR.Media
       // Instantiate segment indicators
       var mediaObject = ObjectRegistry.GetObject(await _segment.GetObjectId());
       _segments = await mediaObject.GetSegments();
-      foreach (var segment in _segments.Where(segment => segment != _segment))
+      var segmentStarts = (await Task.WhenAll(
+          _segments.Where(segment => segment != _segment)
+            .Select(segment => segment.GetAbsoluteStart())))
+        .Where(segStart => segStart != 0);
+      StartCoroutine(InstantiateSegmentIndicators(segmentStarts));
+    }
+
+    private IEnumerator InstantiateSegmentIndicators(IEnumerable<float> segmentStarts)
+    {
+      var i = 0;
+      foreach (var segStart in segmentStarts)
       {
-        var segStart = await segment.GetAbsoluteStart();
-
-        if (segStart == 0)
-          continue;
-
         var indicator = Instantiate(progressIndicator, segmentIndicator.parent);
         indicator.SetSiblingIndex(0);
         indicator.anchoredPosition =
           new Vector2((float) (progressBar.rect.width * segStart / _videoPlayerController.Length), 0);
         indicator.sizeDelta = new Vector2(1, 0);
         indicator.GetComponent<RawImage>().color = Color.black;
+        i++;
+        if (i == InstantiationBatch)
+        {
+          i = 0;
+          yield return null;
+        }
       }
+
+      yield return null;
     }
 
     private void ErrorEncountered(VideoPlayer videoPlayer, string error)
