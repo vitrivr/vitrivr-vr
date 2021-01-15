@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using VitrivrVR.Input.Controller;
 
 namespace VitrivrVR.Interaction.ViewerToolViews
@@ -10,7 +11,6 @@ namespace VitrivrVR.Interaction.ViewerToolViews
     public float maxSegmentDistance = 0.02f;
     public float minCornerAngle = 10;
 
-    private XRButtonObserver _buttonObserver;
     private LineRenderer _currentLine;
     private LineRenderer _lineGameObject;
     private float _sqrMaxSegmentDistance;
@@ -18,11 +18,6 @@ namespace VitrivrVR.Interaction.ViewerToolViews
     private void Awake()
     {
       _sqrMaxSegmentDistance = maxSegmentDistance * maxSegmentDistance;
-      _buttonObserver = FindObjectOfType<XRButtonObserver>();
-      if (!_buttonObserver)
-      {
-        Debug.LogError("Could not find required XRButtonObserver in scene!");
-      }
 
       var go = new GameObject("DrawLine", typeof(LineRenderer));
       _lineGameObject = go.GetComponent<LineRenderer>();
@@ -68,19 +63,14 @@ namespace VitrivrVR.Interaction.ViewerToolViews
       }
     }
 
-    private void OnEnable()
-    {
-      _buttonObserver.secondaryButtonEvent.AddListener(OnButton);
-    }
-
     private void OnDisable()
     {
-      _buttonObserver.secondaryButtonEvent.RemoveListener(OnButton);
+      _currentLine = null;
     }
 
-    private void OnButton(bool state)
+    public override void OnTriggerButton(bool pressed)
     {
-      if (state)
+      if (pressed)
       {
         _currentLine = Instantiate(_lineGameObject);
         var position = transform.position;

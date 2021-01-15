@@ -42,6 +42,11 @@ namespace VitrivrVR.Interaction
       _horizontalInput = value.x;
     }
 
+    public void OnTriggerButton(bool pressed)
+    {
+      _views[_currentView].OnTriggerButton(pressed);
+    }
+
     public void OnGripButton(bool pressed)
     {
       _gripButton = pressed;

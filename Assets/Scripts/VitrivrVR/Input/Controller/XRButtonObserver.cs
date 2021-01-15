@@ -31,6 +31,8 @@ namespace VitrivrVR.Input.Controller
     public XRAxisEvent rightHandAxisEvent;
     public XRButtonEvent leftHandGripEvent;
     public XRButtonEvent rightHandGripEvent;
+    public XRButtonEvent leftHandTriggerButtonEvent;
+    public XRButtonEvent rightHandTriggerButtonEvent;
 
     public readonly List<InputDevice> leftHandDevices = new List<InputDevice>();
     public readonly List<InputDevice> rightHandDevices = new List<InputDevice>();
@@ -39,6 +41,8 @@ namespace VitrivrVR.Input.Controller
     private bool _lastSecondaryButtonState;
     private bool _lastLeftHandGripState;
     private bool _lastRightHandGripState;
+    private bool _lastLeftHandTriggerButtonState;
+    private bool _lastRightHandTriggerButtonState;
     private readonly List<InputDevice> _devicesWithPrimaryButton = new List<InputDevice>();
     private readonly List<InputDevice> _devicesWithSecondaryButton = new List<InputDevice>();
 
@@ -111,9 +115,14 @@ namespace VitrivrVR.Input.Controller
       var leftHandGripState = leftHandDevices.Aggregate(false, (current, device) =>
         device.TryGetFeatureValue(CommonUsages.gripButton, out var tempState) && tempState || current);
 
-
       var rightHandGripState = rightHandDevices.Aggregate(false, (current, device) =>
         device.TryGetFeatureValue(CommonUsages.gripButton, out var tempState) && tempState || current);
+
+      var leftHandTriggerButtonState = leftHandDevices.Aggregate(false, (current, device) =>
+        device.TryGetFeatureValue(CommonUsages.triggerButton, out var tempState) && tempState || current);
+
+      var rightHandTriggerButtonState = rightHandDevices.Aggregate(false, (current, device) =>
+        device.TryGetFeatureValue(CommonUsages.triggerButton, out var tempState) && tempState || current);
 
       // Invoke events for which state has changed
       if (primaryButtonState != _lastPrimaryButtonState)
@@ -138,6 +147,18 @@ namespace VitrivrVR.Input.Controller
       {
         rightHandGripEvent.Invoke(rightHandGripState);
         _lastRightHandGripState = rightHandGripState;
+      }
+
+      if (leftHandTriggerButtonState != _lastLeftHandTriggerButtonState)
+      {
+        leftHandTriggerButtonEvent.Invoke(leftHandTriggerButtonState);
+        _lastLeftHandTriggerButtonState = leftHandTriggerButtonState;
+      }
+
+      if (rightHandTriggerButtonState != _lastRightHandTriggerButtonState)
+      {
+        rightHandTriggerButtonEvent.Invoke(rightHandTriggerButtonState);
+        _lastRightHandTriggerButtonState = rightHandTriggerButtonState;
       }
 
       // Axis events
