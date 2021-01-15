@@ -25,7 +25,7 @@ namespace VitrivrVR.Media
 
       if (www.isNetworkError || www.isHttpError)
       {
-        Debug.LogError(www.error);
+        Debug.LogError($"{url}\n{www.error}");
         renderer.material.mainTexture = errorTexture;
       }
       else

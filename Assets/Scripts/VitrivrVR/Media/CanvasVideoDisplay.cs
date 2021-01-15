@@ -201,6 +201,11 @@ namespace VitrivrVR.Media
       StartCoroutine(InstantiateSegmentIndicators(segmentStarts));
     }
 
+    /// <summary>
+    /// Coroutine to batch instantiate segment indicators.
+    /// </summary>
+    /// <param name="segmentStarts">Segment start times in seconds</param>
+    /// <returns></returns>
     private IEnumerator InstantiateSegmentIndicators(IEnumerable<float> segmentStarts)
     {
       var i = 0;
@@ -219,8 +224,6 @@ namespace VitrivrVR.Media
           yield return null;
         }
       }
-
-      yield return null;
     }
 
     private void ErrorEncountered(VideoPlayer videoPlayer, string error)

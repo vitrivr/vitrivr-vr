@@ -1,4 +1,8 @@
-﻿using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
 
@@ -12,6 +16,11 @@ namespace VitrivrVR.Media
     private ThumbnailController[] _thumbnails;
 
     private int _selectedIndex = -1;
+
+    /// <summary>
+    /// Number of segment thumbnails to instantiate each frame in Coroutine.
+    /// </summary>
+    private const int InstantiationBatch = 100;
 
     private void OnTriggerStay(Collider other)
     {
@@ -46,21 +55,36 @@ namespace VitrivrVR.Media
       var segments = await mediaObject.GetSegments();
       _thumbnails = new ThumbnailController[segments.Count];
 
+      var segmentInfo =
+        await Task.WhenAll(segments.Select(async segment => (segment.Id, await segment.GetSequenceNumber() - 1)));
+
+      StartCoroutine(InstantiateSegmentIndicators(segmentInfo, segments.Count));
+    }
+
+    private IEnumerator InstantiateSegmentIndicators(IEnumerable<(string segId, int seqNum)> segmentInfo,
+      int numSegments)
+    {
+      var i = 0;
       var config = CineastConfigManager.Instance.Config;
 
-      foreach (var segment in segments)
+      foreach (var (segId, seqNum) in segmentInfo)
       {
-        var thumbnailPath = PathResolver.ResolvePath(config.thumbnailPath, _mediaObject.Id, segment.Id);
+        var thumbnailPath = PathResolver.ResolvePath(config.thumbnailPath, _mediaObject.Id, segId);
         var thumbnailUrl = $"{config.mediaHost}{thumbnailPath}{config.thumbnailExtension}";
-
-        var i = await segment.GetSequenceNumber() - 1;
 
         var thumbnail = Instantiate(thumbnailPrefab, transform);
         thumbnail.url = thumbnailUrl;
 
-        thumbnail.transform.localPosition = Vector3.forward * ((float) i / segments.Count - 0.5f);
+        thumbnail.transform.localPosition = Vector3.forward * ((float) seqNum / numSegments - 0.5f);
 
-        _thumbnails[i] = thumbnail;
+        _thumbnails[seqNum] = thumbnail;
+
+        i++;
+        if (i == InstantiationBatch)
+        {
+          i = 0;
+          yield return null;
+        }
       }
     }
 
