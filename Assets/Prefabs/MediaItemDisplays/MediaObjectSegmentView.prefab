@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8037957142017713750}
   - component: {fileID: 5601182315712095947}
   - component: {fileID: 7560961707122393670}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MediaObjectSegmentView
   m_TagString: Untagged
   m_Icon: {fileID: 0}

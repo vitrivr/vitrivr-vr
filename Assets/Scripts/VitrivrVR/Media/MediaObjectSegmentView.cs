@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,36 +16,44 @@ namespace VitrivrVR.Media
     private ObjectData _mediaObject;
     private ThumbnailController[] _thumbnails;
 
-    private int _selectedIndex = -1;
+    private readonly Dictionary<Collider, int> _enteredColliders = new Dictionary<Collider, int>();
 
     /// <summary>
     /// Number of segment thumbnails to instantiate each frame in Coroutine.
     /// </summary>
     private const int InstantiationBatch = 100;
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-      var localOther = transform.InverseTransformPoint(other.transform.position);
-      var index = (int) Mathf.Min(Mathf.Max((localOther.z + 0.5f) * _thumbnails.Length, 0), _thumbnails.Length - 1);
-
-      if (index != _selectedIndex)
-      {
-        SetThumbnailHeight(index, true);
-        if (_selectedIndex != -1)
-        {
-          SetThumbnailHeight(_selectedIndex, false);
-        }
-
-        _selectedIndex = index;
-      }
+      _enteredColliders.Add(other, -1);
     }
 
-    private void OnTriggerExit(Collider _)
+    private void OnTriggerExit(Collider other)
     {
-      if (_selectedIndex != -1)
+      var index = _enteredColliders[other];
+      if (index != -1)
       {
-        SetThumbnailHeight(_selectedIndex, false);
-        _selectedIndex = -1;
+        SetThumbnailHeight(index, false);
+      }
+
+      _enteredColliders.Remove(other);
+    }
+
+    private void FixedUpdate()
+    {
+      foreach (var index in _enteredColliders.Values.Where(index => index != -1))
+      {
+        SetThumbnailHeight(index, false);
+      }
+
+      foreach (var other in _enteredColliders.Keys.ToList())
+      {
+        var otherTransform = transform.InverseTransformPoint(other.transform.position);
+        var index = (int) Mathf.Min(Mathf.Max((otherTransform.z + 0.5f) * _thumbnails.Length, 0),
+          _thumbnails.Length - 1);
+
+        _enteredColliders[other] = index;
+        SetThumbnailHeight(index, true);
       }
     }
 
