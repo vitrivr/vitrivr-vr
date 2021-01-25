@@ -38,11 +38,6 @@ namespace VitrivrVR.Query
         return;
       }
 
-      if (_currentDisplay != null)
-      {
-        Destroy(_currentDisplay.gameObject);
-      }
-
       var query = QueryBuilder.BuildSimilarityQuery(queryTerms.ToArray());
 
       if (!timer.activeSelf)
@@ -59,6 +54,12 @@ namespace VitrivrVR.Query
       {
         // A new query has been started while this one was still busy, discard results
         return;
+      }
+      
+      if (_currentDisplay != null)
+      {
+        // TODO: Stash / disable existing query instead of destroying it immediately
+        Destroy(_currentDisplay.gameObject);
       }
 
       _currentDisplay = Instantiate(queryDisplay);
