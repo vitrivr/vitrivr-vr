@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
+using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
 using VitrivrVR.Config;
 using VitrivrVR.Notification;
@@ -14,7 +16,9 @@ namespace VitrivrVR.Query
   /// </summary>
   public class QueryController : MonoBehaviour
   {
-    public QueryTermProvider queryTermProvider;
+    public static QueryController Instance { get; protected set; }
+    
+    public QueryTermProvider defaultQueryTermProvider;
     public GameObject timer;
     public QueryDisplay queryDisplay;
 
@@ -25,12 +29,32 @@ namespace VitrivrVR.Query
     /// </summary>
     private Guid _localQueryGuid;
 
-    public async void RunQuery()
+    private void Awake()
+    {
+      if (Instance != null)
+      {
+        Debug.LogError("Multiple QueryControllers registered!");
+      }
+
+      Instance = this;
+    }
+
+    public void RunQuery()
+    {
+      RunQuery(defaultQueryTermProvider);
+    }
+
+
+    public void RunQuery(QueryTermProvider queryTermProvider)
+    {
+      var queryTerms = queryTermProvider.GetTerms();
+      RunQuery(queryTerms);
+    }
+
+    public async void RunQuery(List<QueryTerm> queryTerms)
     {
       var localGuid = Guid.NewGuid();
       _localQueryGuid = localGuid;
-
-      var queryTerms = queryTermProvider.GetTerms();
 
       if (queryTerms.Count == 0)
       {

@@ -37,13 +37,32 @@ namespace VitrivrVR.Media
       _videoPlayer.frame = startFrame;
     }
 
-    public int Width => (int)_videoPlayer.width;
-    public int Height => (int)_videoPlayer.height;
+    public int Width => (int) _videoPlayer.width;
+    public int Height => (int) _videoPlayer.height;
     public double Length => _videoPlayer.length;
-    public long FrameCount => (long)_videoPlayer.frameCount;
+    public long FrameCount => (long) _videoPlayer.frameCount;
     public bool IsPlaying => _videoPlayer.isPlaying;
     public double Time => _videoPlayer.time;
     public double ClockTime => _videoPlayer.clockTime;
+
+    public Texture2D GetCurrentFrame()
+    {
+      // Store active render texture
+      var activeTexture = RenderTexture.active;
+
+      var texture = _videoPlayer.targetTexture;
+
+      // Set video texture active
+      RenderTexture.active = texture;
+
+      var frame = new Texture2D(texture.width, texture.height);
+      frame.ReadPixels(new Rect(0, 0, frame.width, frame.height), 0, 0);
+      frame.Apply();
+
+      // Set active render texture back
+      RenderTexture.active = activeTexture;
+      return frame;
+    }
 
     public void Pause()
     {
@@ -59,7 +78,7 @@ namespace VitrivrVR.Media
     {
       _videoPlayer.frame = frame;
     }
-    
+
     public void SetTime(double time)
     {
       _videoPlayer.time = time;
