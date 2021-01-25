@@ -16,13 +16,16 @@ namespace VitrivrVR.Query
   /// </summary>
   public class QueryController : MonoBehaviour
   {
-    public static QueryController Instance { get; protected set; }
-    
+    public static QueryController Instance { get; private set; }
+
     public QueryTermProvider defaultQueryTermProvider;
     public GameObject timer;
     public QueryDisplay queryDisplay;
 
-    private QueryDisplay _currentDisplay;
+    public readonly List<(SimilarityQuery query, QueryDisplay display)> queries =
+      new List<(SimilarityQuery, QueryDisplay)>();
+
+    private int _currentQuery = -1;
 
     /// <summary>
     /// Keeps track of the latest query to determine if results of a returning query are still relevant.
@@ -79,17 +82,21 @@ namespace VitrivrVR.Query
         // A new query has been started while this one was still busy, discard results
         return;
       }
-      
-      if (_currentDisplay != null)
+
+      if (_currentQuery != -1)
       {
-        // TODO: Stash / disable existing query instead of destroying it immediately
-        Destroy(_currentDisplay.gameObject);
+        ClearQuery();
       }
 
-      _currentDisplay = Instantiate(queryDisplay);
+      var display = Instantiate(queryDisplay);
 
-      _currentDisplay.Initialize(queryData);
+      display.Initialize(queryData);
 
+      queries.Add((query, display));
+      _currentQuery = queries.Count - 1;
+
+      // Query display already created and initialized, but if this is no longer the newest query, do not disable query
+      // indicator
       if (_localQueryGuid != localGuid) return;
       timer.transform.localRotation = Quaternion.identity;
       timer.SetActive(false);
@@ -97,9 +104,9 @@ namespace VitrivrVR.Query
 
     public void ClearQuery()
     {
-      if (_currentDisplay == null) return;
-      Destroy(_currentDisplay.gameObject);
-      _currentDisplay = null;
+      if (_currentQuery == -1) return;
+      queries[_currentQuery].display.gameObject.SetActive(false);
+      _currentQuery = -1;
     }
   }
 }
