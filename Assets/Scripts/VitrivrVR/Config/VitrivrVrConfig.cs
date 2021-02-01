@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Config;
+using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
 
 namespace VitrivrVR.Config
@@ -51,6 +54,11 @@ namespace VitrivrVR.Config
     /// </summary>
     public bool dictationDebugOutput;
 
+    /// <summary>
+    /// The default categories for image query-by-example.
+    /// </summary>
+    public List<string> defaultImageCategories;
+
     private VitrivrVrConfig()
     {
       maxResults = 10000;
@@ -59,6 +67,12 @@ namespace VitrivrVR.Config
       dissimilarityColor = new ConfigColor(1, 0, 0);
       similarityColor = new ConfigColor(0, 1, 0);
       dictationDebugOutput = false;
+      var mapping = CineastConfigManager.Instance.Config.categoryMappings.mapping;
+      defaultImageCategories = new List<string>
+      {
+        mapping[CategoryMappings.GLOBAL_COLOR_CATEGORY],
+        mapping[CategoryMappings.EDGE_CATEGORY]
+      };
     }
 
     public static VitrivrVrConfig GetDefault()

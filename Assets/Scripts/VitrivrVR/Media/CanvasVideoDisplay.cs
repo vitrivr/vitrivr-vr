@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Config;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
@@ -13,6 +12,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using VitrivrVR.Config;
 using VitrivrVR.Query;
 using VitrivrVR.Util;
 
@@ -120,13 +120,7 @@ namespace VitrivrVR.Media
     public void QueryByCurrentFrame()
     {
       var frame = _videoPlayerController.GetCurrentFrame();
-      // TODO: Move selection of image features to vitrivr-VR config
-      var term = QueryTermBuilder.BuildImageTermForCategories(frame,
-        new List<string>
-        {
-          CineastConfigManager.Instance.Config.categoryMappings.mapping[CategoryMappings.GLOBAL_COLOR_CATEGORY],
-          CineastConfigManager.Instance.Config.categoryMappings.mapping[CategoryMappings.EDGE_CATEGORY]
-        });
+      var term = QueryTermBuilder.BuildImageTermForCategories(frame, ConfigManager.Config.defaultImageCategories);
       QueryController.Instance.RunQuery(new List<QueryTerm> {term});
     }
 
