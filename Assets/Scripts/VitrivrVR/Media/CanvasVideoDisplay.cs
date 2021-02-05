@@ -36,6 +36,7 @@ namespace VitrivrVR.Media
 
     private ScoredSegment _scoredSegment;
     private SegmentData _segment;
+    private ObjectData _mediaObject;
     private List<SegmentData> _segments;
     private VideoPlayerController _videoPlayerController;
     private RectTransform _imageTransform;
@@ -65,6 +66,8 @@ namespace VitrivrVR.Media
         }
       }
 
+      _mediaObject = ObjectRegistry.GetObject(await _segment.GetObjectId());
+
       // Change texture to loading texture and reset scale
       previewImage.texture = loadingTexture;
       _imageTransform.sizeDelta = new Vector2(1000, 1000);
@@ -72,7 +75,7 @@ namespace VitrivrVR.Media
       // Resolve media URL
       // TODO: Retrieve and / or apply all required media information, potentially from within PathResolver
       var config = CineastConfigManager.Instance.Config;
-      var objectId = await _segment.GetObjectId();
+      var objectId = _mediaObject.Id;
       var mediaPath = PathResolver.ResolvePath(config.mediaPath, objectId);
       var mediaUrl = $"{config.mediaHost}{mediaPath}";
 
@@ -97,7 +100,7 @@ namespace VitrivrVR.Media
       _onClose();
     }
 
-    public async void ShowObjectSegmentView()
+    public void ShowObjectSegmentView()
     {
       if (_objectSegmentView)
       {
@@ -106,9 +109,8 @@ namespace VitrivrVR.Media
       else
       {
         var t = transform;
-        var mediaObject = ObjectRegistry.GetObject(await _segment.GetObjectId());
         _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.2f * t.forward, t.rotation, t);
-        _objectSegmentView.Initialize(mediaObject);
+        _objectSegmentView.Initialize(_mediaObject);
       }
     }
 
