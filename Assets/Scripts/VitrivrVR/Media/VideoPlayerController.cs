@@ -47,20 +47,29 @@ namespace VitrivrVR.Media
 
     public Texture2D GetCurrentFrame()
     {
+      var texture = _videoPlayer.targetTexture;
+      var frame = new Texture2D(texture.width, texture.height, TextureFormat.RGBA32, false);
+
+      // TODO: Figure out how to use CopyTexture for efficient texture copying
+      // if (SystemInfo.copyTextureSupport == CopyTextureSupport.None)
+      // {
       // Store active render texture
       var activeTexture = RenderTexture.active;
-
-      var texture = _videoPlayer.targetTexture;
 
       // Set video texture active
       RenderTexture.active = texture;
 
-      var frame = new Texture2D(texture.width, texture.height);
       frame.ReadPixels(new Rect(0, 0, frame.width, frame.height), 0, 0);
       frame.Apply();
 
       // Set active render texture back
       RenderTexture.active = activeTexture;
+      // }
+      // else
+      // {
+      //   Graphics.CopyTexture(texture, frame);
+      // }
+
       return frame;
     }
 
@@ -91,7 +100,7 @@ namespace VitrivrVR.Media
 
     private void PrepareCompleted(VideoPlayer videoPlayer)
     {
-      var renderTex = new RenderTexture((int) videoPlayer.width, (int) videoPlayer.height, 24);
+      var renderTex = new RenderTexture((int) videoPlayer.width, (int) videoPlayer.height, 0);
       videoPlayer.targetTexture = renderTex;
 
       videoPlayer.Pause();
