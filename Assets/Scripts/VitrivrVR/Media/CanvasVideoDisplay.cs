@@ -30,7 +30,6 @@ namespace VitrivrVR.Media
     public RectTransform progressIndicator;
     public RectTransform segmentIndicator;
     public TextMeshProUGUI segmentDataText;
-    public float progressBarSize = 100;
 
     public MediaObjectSegmentView mediaObjectSegmentViewPrefab;
 
@@ -181,26 +180,19 @@ namespace VitrivrVR.Media
 
     private async void PrepareCompleted(RenderTexture texture)
     {
+      // Get video dimensions and scale preview image to fit video into 1x1 square
       var width = _videoPlayerController.Width;
       var height = _videoPlayerController.Height;
       var factor = Mathf.Max(width, height);
       previewImage.texture = texture;
       _imageTransform.sizeDelta = new Vector2(1000f * width / factor, 1000f * height / factor);
 
-      segmentDataText.rectTransform.anchoredPosition -= new Vector2(0, progressBarSize);
-
       var start = await _segment.GetAbsoluteStart();
       var end = await _segment.GetAbsoluteEnd();
       var length = _videoPlayerController.Length;
       UpdateProgressIndicator(start);
       SetSegmentIndicator(start, end, length, segmentIndicator);
-      // Set progress bar size
-      var progressBarSizeDelta = progressBar.sizeDelta;
-      progressBarSizeDelta.y = progressBarSize;
-      progressBar.sizeDelta = progressBarSizeDelta;
-      var progressBarPos = progressBar.anchoredPosition;
-      progressBarPos.y = -progressBarSize / 2f;
-      progressBar.anchoredPosition = progressBarPos;
+      // Set progress bar active
       progressBar.gameObject.SetActive(true);
 
       // Instantiate segment indicators
