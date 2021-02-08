@@ -13,6 +13,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using VitrivrVR.Config;
+using VitrivrVR.Data;
 using VitrivrVR.Query;
 using VitrivrVR.Util;
 
@@ -30,6 +31,8 @@ namespace VitrivrVR.Media
     public RectTransform progressIndicator;
     public RectTransform segmentIndicator;
     public TextMeshProUGUI segmentDataText;
+    public GameObject scrollableUITable;
+    public GameObject metadataButton;
 
     public MediaObjectSegmentView mediaObjectSegmentViewPrefab;
 
@@ -41,6 +44,7 @@ namespace VitrivrVR.Media
     private RectTransform _imageTransform;
     private Action _onClose;
     private MediaObjectSegmentView _objectSegmentView;
+    private bool _metadataShown;
 
     /// <summary>
     /// Number of segment indicators to instantiate each frame in Coroutine.
@@ -111,6 +115,46 @@ namespace VitrivrVR.Media
         _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.2f * t.forward, t.rotation, t);
         _objectSegmentView.Initialize(_mediaObject);
       }
+    }
+
+    public async void ShowMetadata()
+    {
+      if (_metadataShown)
+      {
+        return;
+      }
+
+      _metadataShown = true;
+      Destroy(metadataButton);
+
+      var metadata = await _mediaObject.Metadata.GetAll();
+      var rows = metadata.Values.Select(domain => domain.Count).Aggregate(0, (x, y) => x + y);
+      var table = new string[rows, 3];
+      var i = 0;
+      foreach (var domain in metadata.Where(domain => domain.Value.Count != 0))
+      {
+        // Fill first column
+        table[i, 0] = domain.Key;
+        for (var j = 1; j < domain.Value.Count; j++)
+        {
+          table[i + j, 0] = "";
+        }
+
+        // Fill key-value pairs
+        foreach (var (pair, index) in domain.Value.Select((pair, index) => (pair, index)))
+        {
+          table[i + index, 1] = pair.Key;
+          table[i + index, 2] = pair.Value;
+        }
+
+        i += domain.Value.Count;
+      }
+      
+      var uiTable = Instantiate(scrollableUITable, progressBar.parent);
+      var uiTableController = uiTable.GetComponentInChildren<UITableController>();
+      uiTableController.table = table;
+      var uiTableTransform = uiTable.GetComponent<RectTransform>();
+      uiTableTransform.sizeDelta = new Vector2(100, 200); // x is completely irrelevant here, since width is auto
     }
 
     public void SetVolume(float volume)

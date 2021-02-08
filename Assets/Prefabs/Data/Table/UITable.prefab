@@ -54,6 +54,8 @@ MonoBehaviour:
   columnPadding: 20
   cellPrefab: {fileID: 1753905920069711662, guid: f3d3682e4b75e4f34aeb1db05369f868,
     type: 3}
+  columnPrefab: {fileID: 6464711071071102886, guid: c79cdfa51265b45069b27e32d25a1180,
+    type: 3}
 --- !u!114 &2827321110933836353
 MonoBehaviour:
   m_ObjectHideFlags: 0

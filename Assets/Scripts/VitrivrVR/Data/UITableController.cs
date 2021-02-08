@@ -10,6 +10,7 @@ namespace VitrivrVR.Data
     public float minimumColumnWidth = 50;
     public float columnPadding = 20;
     public GameObject cellPrefab;
+    public GameObject columnPrefab;
 
     private void Start()
     {
@@ -21,15 +22,11 @@ namespace VitrivrVR.Data
 
     public void Initialize()
     {
-      var columnGameObject = new GameObject("Column", typeof(VerticalLayoutGroup));
-      var layoutGroup = columnGameObject.GetComponent<VerticalLayoutGroup>();
-      layoutGroup.childControlHeight = false;
-
       var cellHeight = cellPrefab.GetComponent<RectTransform>().sizeDelta.y;
 
       for (var i = 0; i < table.GetLength(1); i++)
       {
-        var column = Instantiate(columnGameObject, transform);
+        var column = Instantiate(columnPrefab, transform);
         var columnWidth = minimumColumnWidth;
         for (var j = 0; j < table.GetLength(0); j++)
         {
