@@ -15,12 +15,11 @@ namespace VitrivrVR.Interaction.ViewerToolViews
       var uiTableController = uiTable.GetComponentInChildren<UITableController>();
       uiTableController.table = new[,]
       {
-        {"Cineast Host", "Media Host", "Thumbnail Path", "Thumbnail Extension", "Media Path"},
-        {
-          CineastConfigManager.Instance.Config.cineastHost, CineastConfigManager.Instance.Config.mediaHost,
-          CineastConfigManager.Instance.Config.thumbnailPath, CineastConfigManager.Instance.Config.thumbnailExtension,
-          CineastConfigManager.Instance.Config.mediaPath
-        }
+        {"Cineast Host", CineastConfigManager.Instance.Config.cineastHost},
+        {"Media Host", CineastConfigManager.Instance.Config.mediaHost},
+        {"Thumbnail Path", CineastConfigManager.Instance.Config.thumbnailPath},
+        {"Thumbnail Extension", CineastConfigManager.Instance.Config.thumbnailExtension},
+        {"Media Path", CineastConfigManager.Instance.Config.mediaPath}
       };
     }
   }

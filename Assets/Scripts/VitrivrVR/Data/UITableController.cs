@@ -27,15 +27,15 @@ namespace VitrivrVR.Data
 
       var cellHeight = cellPrefab.GetComponent<RectTransform>().sizeDelta.y;
 
-      for (var i = 0; i < table.GetLength(0); i++)
+      for (var i = 0; i < table.GetLength(1); i++)
       {
         var column = Instantiate(columnGameObject, transform);
         var columnWidth = minimumColumnWidth;
-        for (var j = 0; j < table.GetLength(1); j++)
+        for (var j = 0; j < table.GetLength(0); j++)
         {
           var cell = Instantiate(cellPrefab, column.transform);
           var tmp = cell.GetComponentInChildren<TextMeshProUGUI>();
-          tmp.text = table[i, j];
+          tmp.text = table[j, i];
           columnWidth = Mathf.Max(columnWidth, tmp.GetPreferredValues().x + columnPadding);
         }
 
