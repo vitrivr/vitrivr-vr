@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
+using UnityEngine.Events;
 using VitrivrVR.Config;
 using VitrivrVR.Notification;
 using VitrivrVR.Query.Display;
@@ -16,6 +18,11 @@ namespace VitrivrVR.Query
   /// </summary>
   public class QueryController : MonoBehaviour
   {
+    [Serializable]
+    public class QueryEvent : UnityEvent<int>
+    {
+    }
+
     public static QueryController Instance { get; private set; }
 
     public QueryTermProvider defaultQueryTermProvider;
@@ -24,6 +31,21 @@ namespace VitrivrVR.Query
 
     public readonly List<(SimilarityQuery query, QueryDisplay display)> queries =
       new List<(SimilarityQuery, QueryDisplay)>();
+
+    /// <summary>
+    /// Event is triggered when a new query is added to the query list. Argument is query index.
+    /// </summary>
+    public QueryEvent queryAddedEvent;
+
+    /// <summary>
+    /// Event is triggered when an existing query is removed from the query list. Argument is query index.
+    /// </summary>
+    public QueryEvent queryRemovedEvent;
+
+    /// <summary>
+    /// Event is triggered when the active query changes. Argument is query index, -1 means no focus.
+    /// </summary>
+    public QueryEvent queryFocusEvent;
 
     private int _currentQuery = -1;
 
@@ -94,6 +116,8 @@ namespace VitrivrVR.Query
 
       queries.Add((query, display));
       _currentQuery = queries.Count - 1;
+      queryAddedEvent.Invoke(_currentQuery);
+      queryFocusEvent.Invoke(_currentQuery);
 
       // Query display already created and initialized, but if this is no longer the newest query, do not disable query
       // indicator
@@ -102,11 +126,54 @@ namespace VitrivrVR.Query
       timer.SetActive(false);
     }
 
+    public void SelectQuery(int index)
+    {
+      if (0 > index || index >= queries.Count)
+      {
+        throw new ArgumentException($"Query selection index out of range: {index} (queries: {queries.Count})");
+      }
+
+      if (_currentQuery != -1)
+      {
+        SetQueryActive(_currentQuery, false);
+      }
+
+      _currentQuery = index;
+      SetQueryActive(_currentQuery, true);
+    }
+
+    /// <summary>
+    /// Removes the specified query from the query list and destroys the associated QueryDisplay (notifies event
+    /// subscribers before removal and destruction).
+    /// </summary>
+    public void RemoveQuery(SimilarityQuery query)
+    {
+      var index = queries.Select(pair => pair.query).ToList().IndexOf(query);
+      RemoveQuery(index);
+    }
+
+    /// <summary>
+    /// Removes the query at the specified index of the query list and destroys the associated QueryDisplay (notifies
+    /// event subscribers before removal and destruction).
+    /// </summary>
+    public void RemoveQuery(int index)
+    {
+      queryRemovedEvent.Invoke(index);
+      Destroy(queries[index].display.gameObject);
+      queries.RemoveAt(index);
+    }
+
     public void ClearQuery()
     {
       if (_currentQuery == -1) return;
-      queries[_currentQuery].display.gameObject.SetActive(false);
+      SetQueryActive(_currentQuery, false);
       _currentQuery = -1;
+      queryFocusEvent.Invoke(_currentQuery);
+    }
+
+    private void SetQueryActive(int index, bool active)
+    {
+      queries[index].display.gameObject.SetActive(active);
     }
   }
 }
