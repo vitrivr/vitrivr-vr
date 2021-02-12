@@ -874,4 +874,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textPrefab: {fileID: 8641239378260946358, guid: f3d3682e4b75e4f34aeb1db05369f868,
     type: 3}
+  buttonPrefab: {fileID: 5093143319636051185, guid: 4c611c97362654301a4ae21f3cb35f89,
+    type: 3}
   list: {fileID: 8443765038451469208}

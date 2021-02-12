@@ -23,6 +23,11 @@ namespace VitrivrVR.Query
     {
     }
 
+    [Serializable]
+    public class QueryChangeEvent : UnityEvent<int, int>
+    {
+    }
+
     public static QueryController Instance { get; private set; }
 
     public QueryTermProvider defaultQueryTermProvider;
@@ -43,9 +48,10 @@ namespace VitrivrVR.Query
     public QueryEvent queryRemovedEvent;
 
     /// <summary>
-    /// Event is triggered when the active query changes. Argument is query index, -1 means no focus.
+    /// Event is triggered when the active query changes. Argument is old query index, new query index, -1 means no
+    /// focus.
     /// </summary>
-    public QueryEvent queryFocusEvent;
+    public QueryChangeEvent queryFocusEvent;
 
     private int _currentQuery = -1;
 
@@ -115,15 +121,22 @@ namespace VitrivrVR.Query
       display.Initialize(queryData);
 
       queries.Add((query, display));
-      _currentQuery = queries.Count - 1;
-      queryAddedEvent.Invoke(_currentQuery);
-      queryFocusEvent.Invoke(_currentQuery);
+      var queryIndex = queries.Count - 1;
+      queryAddedEvent.Invoke(queryIndex);
+      queryFocusEvent.Invoke(_currentQuery, queryIndex);
+      _currentQuery = queryIndex;
 
       // Query display already created and initialized, but if this is no longer the newest query, do not disable query
       // indicator
       if (_localQueryGuid != localGuid) return;
       timer.transform.localRotation = Quaternion.identity;
       timer.SetActive(false);
+    }
+
+    public void SelectQuery(SimilarityQuery query)
+    {
+      var index = queries.Select(pair => pair.query).ToList().IndexOf(query);
+      SelectQuery(index);
     }
 
     public void SelectQuery(int index)
@@ -138,8 +151,9 @@ namespace VitrivrVR.Query
         SetQueryActive(_currentQuery, false);
       }
 
+      SetQueryActive(index, true);
+      queryFocusEvent.Invoke(_currentQuery, index);
       _currentQuery = index;
-      SetQueryActive(_currentQuery, true);
     }
 
     /// <summary>
@@ -167,8 +181,8 @@ namespace VitrivrVR.Query
     {
       if (_currentQuery == -1) return;
       SetQueryActive(_currentQuery, false);
+      queryFocusEvent.Invoke(_currentQuery, -1);
       _currentQuery = -1;
-      queryFocusEvent.Invoke(_currentQuery);
     }
 
     private void SetQueryActive(int index, bool active)

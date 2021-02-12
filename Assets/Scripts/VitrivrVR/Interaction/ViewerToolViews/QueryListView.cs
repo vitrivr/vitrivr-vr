@@ -5,6 +5,7 @@ using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using VitrivrVR.Query;
 
 namespace VitrivrVR.Interaction.ViewerToolViews
@@ -12,6 +13,7 @@ namespace VitrivrVR.Interaction.ViewerToolViews
   public class QueryListView : ViewerToolView
   {
     public RectTransform textPrefab;
+    public Button buttonPrefab;
     public Transform list;
 
     private readonly List<RectTransform> _queries = new List<RectTransform>();
@@ -35,9 +37,17 @@ namespace VitrivrVR.Interaction.ViewerToolViews
       Destroy(_queries[index].gameObject);
     }
 
-    private void OnQueryFocus(int index)
+    private void OnQueryFocus(int oldIndex, int newIndex)
     {
-      // TODO: Query focus
+      if (oldIndex != -1)
+      {
+        DeselectQuery(oldIndex);
+      }
+
+      if (newIndex != -1)
+      {
+        SelectQuery(newIndex);
+      }
     }
 
     private void Initialize()
@@ -61,16 +71,33 @@ namespace VitrivrVR.Interaction.ViewerToolViews
 
     private void AddQuery(SimilarityQuery query)
     {
+      const int padding = 20;
       if (_queries.Count == 0 && list.childCount > 0)
       {
         Destroy(list.GetChild(0).gameObject);
       }
 
-      var textRect = Instantiate(textPrefab, list);
-      var tmp = textRect.GetComponentInChildren<TextMeshProUGUI>();
+      var button = Instantiate(buttonPrefab, list);
+      var tmp = button.GetComponentInChildren<TextMeshProUGUI>();
       tmp.text = QueryToString(query);
-      textRect.sizeDelta = new Vector2(tmp.GetPreferredValues().x, textRect.sizeDelta.y);
-      _queries.Add(textRect);
+      var rect = button.GetComponent<RectTransform>();
+      rect.sizeDelta = new Vector2(tmp.GetPreferredValues().x + padding, rect.sizeDelta.y);
+      button.onClick.AddListener(() => QueryController.Instance.SelectQuery(query));
+      _queries.Add(rect);
+    }
+
+    private void DeselectQuery(int index)
+    {
+      // var image = _queries[index].GetComponent<Image>();
+      // TODO: Change color of this specific object
+      // image.material.color = Color.white;
+    }
+
+    private void SelectQuery(int index)
+    {
+      // var image = _queries[index].GetComponent<Image>();
+      // TODO: Change color of this specific object
+      // image.material.color = new Color(1f, .5f, .3f);
     }
 
     private static string QueryToString(SimilarityQuery query)
