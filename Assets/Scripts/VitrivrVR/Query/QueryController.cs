@@ -37,6 +37,8 @@ namespace VitrivrVR.Query
     public readonly List<(SimilarityQuery query, QueryDisplay display)> queries =
       new List<(SimilarityQuery, QueryDisplay)>();
 
+    public int CurrentQuery { get; private set; } = -1;
+
     /// <summary>
     /// Event is triggered when a new query is added to the query list. Argument is query index.
     /// </summary>
@@ -52,8 +54,6 @@ namespace VitrivrVR.Query
     /// focus.
     /// </summary>
     public QueryChangeEvent queryFocusEvent;
-
-    private int _currentQuery = -1;
 
     /// <summary>
     /// Keeps track of the latest query to determine if results of a returning query are still relevant.
@@ -111,7 +111,7 @@ namespace VitrivrVR.Query
         return;
       }
 
-      if (_currentQuery != -1)
+      if (CurrentQuery != -1)
       {
         ClearQuery();
       }
@@ -123,8 +123,8 @@ namespace VitrivrVR.Query
       queries.Add((query, display));
       var queryIndex = queries.Count - 1;
       queryAddedEvent.Invoke(queryIndex);
-      queryFocusEvent.Invoke(_currentQuery, queryIndex);
-      _currentQuery = queryIndex;
+      queryFocusEvent.Invoke(CurrentQuery, queryIndex);
+      CurrentQuery = queryIndex;
 
       // Query display already created and initialized, but if this is no longer the newest query, do not disable query
       // indicator
@@ -146,14 +146,14 @@ namespace VitrivrVR.Query
         throw new ArgumentException($"Query selection index out of range: {index} (queries: {queries.Count})");
       }
 
-      if (_currentQuery != -1)
+      if (CurrentQuery != -1)
       {
-        SetQueryActive(_currentQuery, false);
+        SetQueryActive(CurrentQuery, false);
       }
 
       SetQueryActive(index, true);
-      queryFocusEvent.Invoke(_currentQuery, index);
-      _currentQuery = index;
+      queryFocusEvent.Invoke(CurrentQuery, index);
+      CurrentQuery = index;
     }
 
     /// <summary>
@@ -179,10 +179,10 @@ namespace VitrivrVR.Query
 
     public void ClearQuery()
     {
-      if (_currentQuery == -1) return;
-      SetQueryActive(_currentQuery, false);
-      queryFocusEvent.Invoke(_currentQuery, -1);
-      _currentQuery = -1;
+      if (CurrentQuery == -1) return;
+      SetQueryActive(CurrentQuery, false);
+      queryFocusEvent.Invoke(CurrentQuery, -1);
+      CurrentQuery = -1;
     }
 
     private void SetQueryActive(int index, bool active)

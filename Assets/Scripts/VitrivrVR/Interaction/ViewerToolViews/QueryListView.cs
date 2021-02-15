@@ -66,6 +66,11 @@ namespace VitrivrVR.Interaction.ViewerToolViews
         {
           AddQuery(query);
         }
+
+        if (QueryController.Instance.CurrentQuery != -1)
+        {
+          SelectQuery(QueryController.Instance.CurrentQuery);
+        }
       }
     }
 
@@ -78,6 +83,12 @@ namespace VitrivrVR.Interaction.ViewerToolViews
       }
 
       var button = Instantiate(buttonPrefab, list);
+      // Set selected and highlighted color
+      var colors = button.colors;
+      colors.selectedColor = new Color(1f, .4f, .2f);
+      colors.highlightedColor = new Color(1f, .7f, .5f);
+      button.colors = colors;
+
       var tmp = button.GetComponentInChildren<TextMeshProUGUI>();
       tmp.text = QueryToString(query);
       var rect = button.GetComponent<RectTransform>();
@@ -88,16 +99,19 @@ namespace VitrivrVR.Interaction.ViewerToolViews
 
     private void DeselectQuery(int index)
     {
-      // var image = _queries[index].GetComponent<Image>();
-      // TODO: Change color of this specific object
-      // image.material.color = Color.white;
+      var button = _queries[index].GetComponent<Button>();
+      var colors = button.colors;
+      colors.normalColor = Color.white;
+      button.colors = colors;
     }
 
     private void SelectQuery(int index)
     {
-      // var image = _queries[index].GetComponent<Image>();
-      // TODO: Change color of this specific object
-      // image.material.color = new Color(1f, .5f, .3f);
+      var button = _queries[index].GetComponent<Button>();
+      button.Select();
+      var colors = button.colors;
+      colors.normalColor = new Color(1f, .5f, .3f);
+      button.colors = colors;
     }
 
     private static string QueryToString(SimilarityQuery query)
