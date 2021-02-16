@@ -13,7 +13,7 @@ namespace VitrivrVR.Interaction.ViewerToolViews
   public class QueryListView : ViewerToolView
   {
     public RectTransform textPrefab;
-    public Button buttonPrefab;
+    public RectTransform listItemPrefab;
     public Transform list;
 
     private readonly List<RectTransform> _queries = new List<RectTransform>();
@@ -82,24 +82,34 @@ namespace VitrivrVR.Interaction.ViewerToolViews
         Destroy(list.GetChild(0).gameObject);
       }
 
-      var button = Instantiate(buttonPrefab, list);
+      var listItem = Instantiate(listItemPrefab, list);
+
+      // Prepare text button
+      var textButton = listItem.GetChild(0).GetComponent<Button>();
       // Set selected and highlighted color
-      var colors = button.colors;
+      var colors = textButton.colors;
       colors.selectedColor = new Color(1f, .4f, .2f);
       colors.highlightedColor = new Color(1f, .7f, .5f);
-      button.colors = colors;
+      textButton.colors = colors;
 
-      var tmp = button.GetComponentInChildren<TextMeshProUGUI>();
+      var tmp = textButton.GetComponentInChildren<TextMeshProUGUI>();
       tmp.text = QueryToString(query);
-      var rect = button.GetComponent<RectTransform>();
-      rect.sizeDelta = new Vector2(tmp.GetPreferredValues().x + padding, rect.sizeDelta.y);
-      button.onClick.AddListener(() => QueryController.Instance.SelectQuery(query));
-      _queries.Add(rect);
+      var textRect = textButton.GetComponent<RectTransform>();
+      textRect.sizeDelta = new Vector2(tmp.GetPreferredValues().x + padding, textRect.sizeDelta.y);
+      textButton.onClick.AddListener(() => QueryController.Instance.SelectQuery(query));
+
+      // Prepare close button
+      var closeButton = listItem.GetChild(1).GetComponent<Button>();
+      closeButton.onClick.AddListener(() => QueryController.Instance.RemoveQuery(query));
+      var closeRect = closeButton.GetComponent<RectTransform>();
+
+      listItem.sizeDelta = new Vector2(textRect.sizeDelta.x + closeRect.sizeDelta.x, listItem.sizeDelta.y);
+      _queries.Add(listItem);
     }
 
     private void DeselectQuery(int index)
     {
-      var button = _queries[index].GetComponent<Button>();
+      var button = _queries[index].GetChild(0).GetComponent<Button>();
       var colors = button.colors;
       colors.normalColor = Color.white;
       button.colors = colors;
@@ -107,7 +117,7 @@ namespace VitrivrVR.Interaction.ViewerToolViews
 
     private void SelectQuery(int index)
     {
-      var button = _queries[index].GetComponent<Button>();
+      var button = _queries[index].GetChild(0).GetComponent<Button>();
       button.Select();
       var colors = button.colors;
       colors.normalColor = new Color(1f, .5f, .3f);

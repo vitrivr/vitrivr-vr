@@ -172,6 +172,11 @@ namespace VitrivrVR.Query
     /// </summary>
     public void RemoveQuery(int index)
     {
+      if (index == CurrentQuery)
+      {
+        ClearQuery();
+      }
+
       queryRemovedEvent.Invoke(index);
       Destroy(queries[index].display.gameObject);
       queries.RemoveAt(index);
