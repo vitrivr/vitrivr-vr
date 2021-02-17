@@ -5,6 +5,7 @@ using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
+using VitrivrVR.Util;
 using Button = UnityEngine.UI.Button;
 
 namespace VitrivrVR.Query.Term
@@ -18,6 +19,7 @@ namespace VitrivrVR.Query.Term
     public GameObject tagItemPrefab;
     public RectTransform searchScrollViewContent;
     public RectTransform tagScrollViewContent;
+    public RectTransform toolTipPanel;
     public int maxResults = 100;
 
     private readonly List<TagData> _tagItems = new List<TagData>();
@@ -38,12 +40,15 @@ namespace VitrivrVR.Query.Term
     private float _tagButtonHeight;
     private float _tagItemHeight;
 
+    private TextMeshProUGUI _tooltipText;
+
     private void Awake()
     {
       var tagButtonRect = tagButtonPrefab.GetComponent<RectTransform>();
       _tagButtonHeight = tagButtonRect.rect.height;
       var tagItemRect = tagItemPrefab.GetComponent<RectTransform>();
       _tagItemHeight = tagItemRect.rect.height;
+      _tooltipText = toolTipPanel.GetComponentInChildren<TextMeshProUGUI>();
     }
 
     public void SetTextSearchText(string text)
@@ -90,7 +95,7 @@ namespace VitrivrVR.Query.Term
       tags.Sort((t0, t1) => t0.Name.Length - t1.Name.Length);
       foreach (var resultTag in tags.Take(maxResults))
       {
-        CreateNewTagButton(resultTag.Name, resultTag.Id);
+        CreateNewTagButton(resultTag.Name, resultTag.Id, resultTag.Description);
       }
     }
 
@@ -105,7 +110,7 @@ namespace VitrivrVR.Query.Term
       searchScrollViewContent.sizeDelta = new Vector2(0, 0);
     }
 
-    private void CreateNewTagButton(string tagName, string tagId)
+    private void CreateNewTagButton(string tagName, string tagId, string tagDescription)
     {
       searchScrollViewContent.sizeDelta = new Vector2(0, searchScrollViewContent.sizeDelta.y + _tagButtonHeight);
       var buttonObject = Instantiate(tagButtonPrefab, searchScrollViewContent);
@@ -120,6 +125,10 @@ namespace VitrivrVR.Query.Term
       var button = buttonObject.GetComponent<Button>();
       button.onClick.AddListener(() => CreateNewTagItem(tagName, tagId));
       _searchViewChildCount++;
+      // Set hover text
+      var hoverHandler = buttonObject.AddComponent<HoverHandler>();
+      hoverHandler.onEnter = _ => SetTooltip(tagDescription);
+      hoverHandler.onExit = _ => DisableTooltip();
     }
 
     private void CreateNewTagItem(string tagName, string tagId)
@@ -164,6 +173,17 @@ namespace VitrivrVR.Query.Term
       }
 
       Destroy(tagData.gameObject);
+    }
+
+    private void SetTooltip(string tooltip)
+    {
+      _tooltipText.text = tooltip;
+      toolTipPanel.gameObject.SetActive(true);
+    }
+
+    private void DisableTooltip()
+    {
+      toolTipPanel.gameObject.SetActive(false);
     }
 
     public override List<QueryTerm> GetTerms()

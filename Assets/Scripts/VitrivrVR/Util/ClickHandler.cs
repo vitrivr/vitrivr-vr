@@ -10,7 +10,7 @@ namespace VitrivrVR.Util
   /// </summary>
   public class ClickHandler : MonoBehaviour, IPointerClickHandler
   {
-    public Action<PointerEventData> onClick;
+    public Action<PointerEventData> onClick = data => { };
 
     public void OnPointerClick(PointerEventData eventData)
     {
