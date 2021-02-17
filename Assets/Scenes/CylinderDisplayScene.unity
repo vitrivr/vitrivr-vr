@@ -502,8 +502,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
-      propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.size
+      propertyPath: leftHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
@@ -567,9 +572,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
+      propertyPath: leftHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
       propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: leftHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1684389147}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -577,13 +597,38 @@ PrefabInstance:
       objectReference: {fileID: 2137064908}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
+      propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1686424235}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: leftHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: leftHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Interact
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
       propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnTriggerButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: Interact
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
@@ -602,7 +647,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
+      propertyPath: leftHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
       propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029567, guid: 21b21afd679d64060a1625eb72859aed,
@@ -1551,6 +1606,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1684389145}
   - component: {fileID: 1684389146}
+  - component: {fileID: 1684389147}
   m_Layer: 8
   m_Name: Direct Interactor
   m_TagString: Untagged
@@ -1585,6 +1641,18 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.01
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1684389147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1684389144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fb2ea0848a7ce44ca66363c96c97b2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1686424232
 GameObject:
   m_ObjectHideFlags: 0
@@ -1595,6 +1663,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1686424233}
   - component: {fileID: 1686424234}
+  - component: {fileID: 1686424235}
   m_Layer: 8
   m_Name: Direct Interactor
   m_TagString: Untagged
@@ -1629,6 +1698,18 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.01
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1686424235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1686424232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fb2ea0848a7ce44ca66363c96c97b2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1758590911
 PrefabInstance:
   m_ObjectHideFlags: 0

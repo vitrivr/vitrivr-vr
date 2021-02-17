@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
+using VitrivrVR.Interaction;
 
 namespace VitrivrVR.Media
 {
-  public class MediaObjectSegmentView : MonoBehaviour
+  public class MediaObjectSegmentView : Interactable
   {
     public ThumbnailController thumbnailPrefab;
 
     private ObjectData _mediaObject;
     private ThumbnailController[] _thumbnails;
+    private Action<int> _onSegmentSelection;
 
     private readonly Dictionary<Collider, int> _enteredColliders = new Dictionary<Collider, int>();
 
@@ -48,18 +50,17 @@ namespace VitrivrVR.Media
 
       foreach (var other in _enteredColliders.Keys.ToList())
       {
-        var otherTransform = transform.InverseTransformPoint(other.transform.position);
-        var index = (int) Mathf.Min(Mathf.Max((otherTransform.z + 0.5f) * _thumbnails.Length, 0),
-          _thumbnails.Length - 1);
+        var index = GetSegmentIndex(other.transform);
 
         _enteredColliders[other] = index;
         SetThumbnailHeight(index, true);
       }
     }
 
-    public async void Initialize(ObjectData mediaObject)
+    public async void Initialize(ObjectData mediaObject, Action<int> onSegmentSelection)
     {
       _mediaObject = mediaObject;
+      _onSegmentSelection = onSegmentSelection;
 
       var segments = await mediaObject.GetSegments();
       _thumbnails = new ThumbnailController[segments.Count];
@@ -68,6 +69,12 @@ namespace VitrivrVR.Media
         await Task.WhenAll(segments.Select(async segment => (segment.Id, await segment.GetSequenceNumber() - 1)));
 
       StartCoroutine(InstantiateSegmentIndicators(segmentInfo, segments.Count));
+    }
+
+    public override void OnInteraction(Transform interactor)
+    {
+      var segmentIndex = GetSegmentIndex(interactor);
+      _onSegmentSelection(segmentIndex);
     }
 
     private IEnumerator InstantiateSegmentIndicators(IEnumerable<(string segId, int seqNum)> segmentInfo,
@@ -103,6 +110,12 @@ namespace VitrivrVR.Media
       var position = thumbnailTransform.localPosition;
       position.y = selected ? thumbnailTransform.localScale.y : 0;
       thumbnailTransform.localPosition = position;
+    }
+
+    private int GetSegmentIndex(Transform other)
+    {
+      var otherTransform = transform.InverseTransformPoint(other.position);
+      return (int) Mathf.Min(Mathf.Max((otherTransform.z + 0.5f) * _thumbnails.Length, 0), _thumbnails.Length - 1);
     }
   }
 }

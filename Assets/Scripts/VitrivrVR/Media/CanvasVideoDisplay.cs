@@ -113,7 +113,7 @@ namespace VitrivrVR.Media
       {
         var t = transform;
         _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.2f * t.forward, t.rotation, t);
-        _objectSegmentView.Initialize(_mediaObject);
+        _objectSegmentView.Initialize(_mediaObject, SkipToSegment);
       }
     }
 
@@ -149,7 +149,7 @@ namespace VitrivrVR.Media
 
         i += domain.Value.Count;
       }
-      
+
       var uiTable = Instantiate(scrollableUITable, progressBar.parent);
       var uiTableController = uiTable.GetComponentInChildren<UITableController>();
       uiTableController.table = table;
@@ -207,19 +207,31 @@ namespace VitrivrVR.Media
 
       var clickProgress = clickPosition.x / progressBarWidth + 0.5;
       var newTime = _videoPlayerController.Length * clickProgress;
+
+      SetVideoTime(newTime);
+
+      UpdateProgressIndicator(newTime);
+      UpdateText(newTime);
+    }
+
+    private void SetVideoTime(double time)
+    {
       if (_videoPlayerController.IsPlaying)
       {
         _videoPlayerController.Pause();
-        _videoPlayerController.SetTime(newTime);
+        _videoPlayerController.SetTime(time);
         _videoPlayerController.Play();
       }
       else
       {
-        _videoPlayerController.SetTime(newTime);
+        _videoPlayerController.SetTime(time);
       }
+    }
 
-      UpdateProgressIndicator(newTime);
-      UpdateText(newTime);
+    private async void SkipToSegment(int segmentIndex)
+    {
+      var segmentStart = await _segments[segmentIndex].GetAbsoluteStart();
+      SetVideoTime(segmentStart);
     }
 
     private async void PrepareCompleted(RenderTexture texture)
