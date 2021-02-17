@@ -34,7 +34,14 @@ namespace VitrivrVR.Interaction.ViewerToolViews
 
     private void OnQueryRemoved(int index)
     {
-      Destroy(_queries[index].gameObject);
+      var query = _queries[index].gameObject;
+      _queries.RemoveAt(index);
+      Destroy(query);
+
+      if (_queries.Count == 0)
+      {
+        AddQueriesEmptyText();
+      }
     }
 
     private void OnQueryFocus(int oldIndex, int newIndex)
@@ -55,10 +62,7 @@ namespace VitrivrVR.Interaction.ViewerToolViews
       var queries = QueryController.Instance.queries;
       if (queries.Count == 0)
       {
-        var textRect = Instantiate(textPrefab, list);
-        var tmp = textRect.GetComponentInChildren<TextMeshProUGUI>();
-        tmp.text = "No queries recorded.";
-        textRect.sizeDelta = new Vector2(tmp.GetPreferredValues().x, textRect.sizeDelta.y);
+        AddQueriesEmptyText();
       }
       else
       {
@@ -72,6 +76,17 @@ namespace VitrivrVR.Interaction.ViewerToolViews
           SelectQuery(QueryController.Instance.CurrentQuery);
         }
       }
+    }
+
+    /// <summary>
+    /// Adds the text indication that there are currently no queries in the history.
+    /// </summary>
+    private void AddQueriesEmptyText()
+    {
+      var textRect = Instantiate(textPrefab, list);
+      var tmp = textRect.GetComponentInChildren<TextMeshProUGUI>();
+      tmp.text = "No queries recorded.";
+      textRect.sizeDelta = new Vector2(tmp.GetPreferredValues().x, textRect.sizeDelta.y);
     }
 
     private void AddQuery(SimilarityQuery query)
