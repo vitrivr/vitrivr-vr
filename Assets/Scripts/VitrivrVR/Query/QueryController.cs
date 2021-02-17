@@ -172,9 +172,19 @@ namespace VitrivrVR.Query
     /// </summary>
     public void RemoveQuery(int index)
     {
+      if (0 > index || index >= queries.Count)
+      {
+        throw new ArgumentException($"Query selection index out of range: {index} (queries: {queries.Count})");
+      }
+
       if (index == CurrentQuery)
       {
         ClearQuery();
+      }
+
+      if (index < CurrentQuery)
+      {
+        CurrentQuery--;
       }
 
       queryRemovedEvent.Invoke(index);
