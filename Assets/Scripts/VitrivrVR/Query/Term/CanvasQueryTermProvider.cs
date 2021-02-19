@@ -36,16 +36,12 @@ namespace VitrivrVR.Query.Term
     /// </summary>
     private string _latestInput;
 
-    private int _searchViewChildCount;
-    private float _tagButtonHeight;
     private float _tagItemHeight;
 
     private TextMeshProUGUI _tooltipText;
 
     private void Awake()
     {
-      var tagButtonRect = tagButtonPrefab.GetComponent<RectTransform>();
-      _tagButtonHeight = tagButtonRect.rect.height;
       var tagItemRect = tagItemPrefab.GetComponent<RectTransform>();
       _tagItemHeight = tagItemRect.rect.height;
       _tooltipText = toolTipPanel.GetComponentInChildren<TextMeshProUGUI>();
@@ -105,29 +101,21 @@ namespace VitrivrVR.Query.Term
       {
         Destroy(child.gameObject);
       }
-
-      _searchViewChildCount = 0;
-      searchScrollViewContent.sizeDelta = new Vector2(0, 0);
     }
 
     private void CreateNewTagButton(string tagName, string tagId, string tagDescription)
     {
-      searchScrollViewContent.sizeDelta = new Vector2(0, searchScrollViewContent.sizeDelta.y + _tagButtonHeight);
       var buttonObject = Instantiate(tagButtonPrefab, searchScrollViewContent);
-      // Set button position
-      var buttonTransform = buttonObject.GetComponent<RectTransform>();
-      buttonTransform.anchoredPosition = new Vector2(buttonTransform.anchoredPosition.x, -_tagButtonHeight *
-        _searchViewChildCount - _tagButtonHeight / 2);
       // Set button text
       var textMesh = buttonObject.GetComponentInChildren<TextMeshProUGUI>();
       textMesh.text = tagName;
       // Set button action
       var button = buttonObject.GetComponent<Button>();
       button.onClick.AddListener(() => CreateNewTagItem(tagName, tagId));
-      _searchViewChildCount++;
       // Set hover text
       var hoverHandler = buttonObject.AddComponent<HoverHandler>();
-      hoverHandler.onEnter = _ => SetTooltip(tagDescription);
+      var tooltip = tagDescription.Length == 0 ? "Description missing." : tagDescription;
+      hoverHandler.onEnter = _ => SetTooltip(tooltip);
       hoverHandler.onExit = _ => DisableTooltip();
     }
 
@@ -139,12 +127,7 @@ namespace VitrivrVR.Query.Term
         return;
       }
 
-      tagScrollViewContent.sizeDelta = new Vector2(0, tagScrollViewContent.sizeDelta.y + _tagItemHeight);
       var item = Instantiate(tagItemPrefab, tagScrollViewContent);
-      // Set item position
-      var itemTransform = item.GetComponent<RectTransform>();
-      itemTransform.anchoredPosition = new Vector2(itemTransform.anchoredPosition.x, -_tagItemHeight *
-        _tagItems.Count);
       // Set item text
       var textMesh = item.GetComponentInChildren<TextMeshProUGUI>();
       textMesh.text = tagName;
@@ -166,7 +149,7 @@ namespace VitrivrVR.Query.Term
       _tagItems.RemoveAt(index);
       foreach (var item in _tagItems.Skip(index))
       {
-        RectTransform itemTransform = item.GetComponent<RectTransform>();
+        var itemTransform = item.GetComponent<RectTransform>();
         var anchoredPosition = itemTransform.anchoredPosition;
         anchoredPosition = new Vector2(anchoredPosition.x, anchoredPosition.y + _tagItemHeight);
         itemTransform.anchoredPosition = anchoredPosition;
