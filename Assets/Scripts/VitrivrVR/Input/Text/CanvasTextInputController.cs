@@ -58,7 +58,8 @@ namespace VitrivrVR.Input.Text
         return; // No text field selected, nothing to do
       }
 
-      textField.text += text;
+      textField.ProcessEvent(Event.KeyboardEvent(text));
+      textField.ForceLabelUpdate();
     }
 
     public void ReceiveBackspace()
@@ -70,15 +71,8 @@ namespace VitrivrVR.Input.Text
         return; // No text field selected, nothing to do
       }
 
-      if (textField.text.Length <= 0) return;
-      var caretPosition = textField.caretPosition;
-      if (caretPosition == 0)
-      {
-        caretPosition = textField.text.Length;
-      }
-
-      textField.text = textField.text.Remove(caretPosition - 1, 1);
-      textField.caretPosition = Mathf.Max(caretPosition - 1, 0);
+      textField.ProcessEvent(Event.KeyboardEvent("backspace"));
+      textField.ForceLabelUpdate();
     }
 
     private TMP_InputField GetSelectedTextField()
