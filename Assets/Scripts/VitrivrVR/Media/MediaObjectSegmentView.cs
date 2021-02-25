@@ -18,6 +18,11 @@ namespace VitrivrVR.Media
     private ThumbnailController[] _thumbnails;
     private Action<int> _onSegmentSelection;
 
+    /// <summary>
+    /// Store reference of grabbing transform while grabbed
+    /// </summary>
+    private Transform _grabber;
+
     private readonly Dictionary<Collider, int> _enteredColliders = new Dictionary<Collider, int>();
 
     /// <summary>
@@ -39,6 +44,18 @@ namespace VitrivrVR.Media
       }
 
       _enteredColliders.Remove(other);
+    }
+
+    private void Update()
+    {
+      // Move along Y axis if grabbed
+      if (_grabber)
+      {
+        var t = transform;
+        var pos = t.localPosition;
+        pos.y = t.parent.InverseTransformPoint(_grabber.position).y;
+        t.localPosition = pos;
+      }
     }
 
     private void FixedUpdate()
@@ -76,6 +93,11 @@ namespace VitrivrVR.Media
       if (!start) return;
       var segmentIndex = GetSegmentIndex(interactor);
       _onSegmentSelection(segmentIndex);
+    }
+
+    public override void OnGrab(Transform interactor, bool start)
+    {
+      _grabber = start ? interactor : null;
     }
 
     private IEnumerator InstantiateSegmentIndicators(IEnumerable<(string segId, int seqNum)> segmentInfo,

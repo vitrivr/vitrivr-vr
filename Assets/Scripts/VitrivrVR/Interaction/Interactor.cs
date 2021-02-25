@@ -15,6 +15,14 @@ namespace VitrivrVR.Interaction
       }
     }
 
+    public void Grab(bool start)
+    {
+      foreach (var interactable in _interactables)
+      {
+        interactable.OnGrab(transform, start);
+      }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
       if (other.TryGetComponent<Interactable>(out var interactable))
