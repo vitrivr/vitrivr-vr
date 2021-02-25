@@ -49,6 +49,38 @@ namespace VitrivrVR.Input.Text
       textField.text += text;
     }
 
+    public void ReceiveTextInput(string text)
+    {
+      var textField = GetSelectedTextField();
+
+      if (textField == null)
+      {
+        return; // No text field selected, nothing to do
+      }
+
+      textField.text += text;
+    }
+
+    public void ReceiveBackspace()
+    {
+      var textField = GetSelectedTextField();
+
+      if (textField == null)
+      {
+        return; // No text field selected, nothing to do
+      }
+
+      if (textField.text.Length <= 0) return;
+      var caretPosition = textField.caretPosition;
+      if (caretPosition == 0)
+      {
+        caretPosition = textField.text.Length;
+      }
+
+      textField.text = textField.text.Remove(caretPosition - 1, 1);
+      textField.caretPosition = Mathf.Max(caretPosition - 1, 0);
+    }
+
     private TMP_InputField GetSelectedTextField()
     {
       return tagTextField.isFocused ? tagTextField : textTextField.isFocused ? textTextField : null;

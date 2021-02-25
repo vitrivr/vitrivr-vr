@@ -37,7 +37,7 @@ namespace VitrivrVR.Input.Text
         Debug.LogError("No keyboard key prefab specified!");
         return;
       }
-      
+
       var originY = (keys.Count - 1) * (keySize + keyPadding) / 2f;
 
       for (var y = 0; y < keys.Count; y++)
@@ -53,10 +53,17 @@ namespace VitrivrVR.Input.Text
           transform1.localPosition = new Vector3(x * (keySize + keyPadding) - originX, 0, rowDepth);
           transform1.localScale = new Vector3(keyWidth, keySize, keySize);
           // Set up action
-          var y1 = y;
-          var x1 = x;
-          key.onPress = () => KeyPressed(keys[y1][x1].ToString());
-          key.SetText(keys[y][x].ToString());
+          var character = keys[y][x].ToString();
+          if (character == "<")
+          {
+            key.onPress = BackspacePressed;
+          }
+          else
+          {
+            key.onPress = () => KeyPressed(character);
+          }
+
+          key.SetText(character);
         }
       }
     }
