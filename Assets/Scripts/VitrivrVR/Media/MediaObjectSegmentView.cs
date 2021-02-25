@@ -22,6 +22,7 @@ namespace VitrivrVR.Media
     /// Store reference of grabbing transform while grabbed
     /// </summary>
     private Transform _grabber;
+    private Vector3 _grabAnchor;
 
     private readonly Dictionary<Collider, int> _enteredColliders = new Dictionary<Collider, int>();
 
@@ -52,9 +53,7 @@ namespace VitrivrVR.Media
       if (_grabber)
       {
         var t = transform;
-        var pos = t.localPosition;
-        pos.y = t.parent.InverseTransformPoint(_grabber.position).y;
-        t.localPosition = pos;
+        t.localPosition = t.parent.InverseTransformPoint(_grabber.position) + _grabAnchor;
       }
     }
 
@@ -98,6 +97,11 @@ namespace VitrivrVR.Media
     public override void OnGrab(Transform interactor, bool start)
     {
       _grabber = start ? interactor : null;
+      if (start)
+      {
+        var t = transform;
+        _grabAnchor = t.localPosition - t.parent.InverseTransformPoint(interactor.position);
+      }
     }
 
     private IEnumerator InstantiateSegmentIndicators(IEnumerable<(string segId, int seqNum)> segmentInfo,
