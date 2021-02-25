@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using VitrivrVR.Config;
 using VitrivrVR.Media;
 using VitrivrVR.Notification;
@@ -18,6 +19,8 @@ namespace VitrivrVR.Query.Display
     public float distance;
     public float resultSize;
     public float padding = 0.2f;
+
+    public InputAction rotationAction;
 
     private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays =
       new List<(MediaItemDisplay, float)>();
@@ -46,9 +49,19 @@ namespace VitrivrVR.Query.Display
       _columnAngle = Mathf.Rad2Deg * (2 * Mathf.PI / _maxColumns);
     }
 
+    private void OnEnable()
+    {
+      rotationAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+      rotationAction.Disable();
+    }
+
     private async void Update()
     {
-      Rotate(Time.deltaTime * rotationSpeed * UnityEngine.Input.GetAxisRaw("Horizontal"));
+      Rotate(Time.deltaTime * rotationSpeed * rotationAction.ReadValue<Vector2>().x);
 
       if (_instantiationQueue.Count > 0)
       {

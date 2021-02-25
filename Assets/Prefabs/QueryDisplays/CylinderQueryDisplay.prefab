@@ -50,3 +50,19 @@ MonoBehaviour:
   distance: 1
   resultSize: 0.2
   padding: 0.02
+  rotationAction:
+    m_Name: Rotation
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 4a2515ea-68c0-463d-a8d0-4c5faef2074f
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 59eb99a7-e838-4829-8167-ada48f371efa
+      m_Path: <XRController>{LeftHand}/primary2DAxis
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Rotation
+      m_Flags: 0
