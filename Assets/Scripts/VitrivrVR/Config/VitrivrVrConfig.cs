@@ -59,6 +59,11 @@ namespace VitrivrVR.Config
     /// </summary>
     public List<string> defaultImageCategories;
 
+    /// <summary>
+    /// The default volume [0, 1] to use for audio and video.
+    /// </summary>
+    public float defaultMediaVolume;
+
     private VitrivrVrConfig()
     {
       maxResults = 10000;
@@ -73,6 +78,7 @@ namespace VitrivrVR.Config
         mapping[CategoryMappings.GLOBAL_COLOR_CATEGORY],
         mapping[CategoryMappings.EDGE_CATEGORY]
       };
+      defaultMediaVolume = .5f;
     }
 
     public static VitrivrVrConfig GetDefault()

@@ -1591,6 +1591,7 @@ MonoBehaviour:
   metadataButton: {fileID: 2103391515301786338}
   mediaObjectSegmentViewPrefab: {fileID: 8037957142017713750, guid: abe582c94b4014ac2a4e7e72044b0fe4,
     type: 3}
+  volumeSlider: {fileID: 8529885628170766823}
 --- !u!1 &7750526513195147312
 GameObject:
   m_ObjectHideFlags: 0

@@ -36,6 +36,8 @@ namespace VitrivrVR.Media
 
     public MediaObjectSegmentView mediaObjectSegmentViewPrefab;
 
+    public Slider volumeSlider;
+
     private ScoredSegment _scoredSegment;
     private SegmentData _segment;
     private ObjectData _mediaObject;
@@ -86,6 +88,10 @@ namespace VitrivrVR.Media
 
       _videoPlayerController =
         new VideoPlayerController(gameObject, mediaUrl, startFrame, PrepareCompleted, ErrorEncountered);
+
+      var volume = ConfigManager.Config.defaultMediaVolume;
+      SetVolume(volume);
+      volumeSlider.value = volume;
 
       var start = await _segment.GetAbsoluteStart();
       var end = await _segment.GetAbsoluteEnd();
