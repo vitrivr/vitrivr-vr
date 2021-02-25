@@ -71,8 +71,9 @@ namespace VitrivrVR.Media
       StartCoroutine(InstantiateSegmentIndicators(segmentInfo, segments.Count));
     }
 
-    public override void OnInteraction(Transform interactor)
+    public override void OnInteraction(Transform interactor, bool start)
     {
+      if (!start) return;
       var segmentIndex = GetSegmentIndex(interactor);
       _onSegmentSelection(segmentIndex);
     }

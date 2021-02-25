@@ -7,11 +7,11 @@ namespace VitrivrVR.Interaction
   {
     private readonly List<Interactable> _interactables = new List<Interactable>();
 
-    public void Interact()
+    public void Interact(bool start)
     {
       foreach (var interactable in _interactables)
       {
-        interactable.OnInteraction(transform);
+        interactable.OnInteraction(transform, start);
       }
     }
 

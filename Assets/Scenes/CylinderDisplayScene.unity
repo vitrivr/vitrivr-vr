@@ -788,7 +788,7 @@ PrefabInstance:
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: leftHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
@@ -798,7 +798,7 @@ PrefabInstance:
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
