@@ -54,7 +54,7 @@ namespace VitrivrVR.Media
       scoreFrame.color = vrConfig.similarityColor.ToColor() * score +
                          vrConfig.dissimilarityColor.ToColor() * (1 - score);
       var rectTransform = scoreFrame.rectTransform;
-      rectTransform.offsetMin = new Vector2(-scoreFrameSize, 0);
+      rectTransform.offsetMin = new Vector2(-scoreFrameSize, -scoreFrameSize);
       rectTransform.offsetMax = new Vector2(scoreFrameSize, scoreFrameSize);
       scoreFrame.gameObject.SetActive(true);
       try

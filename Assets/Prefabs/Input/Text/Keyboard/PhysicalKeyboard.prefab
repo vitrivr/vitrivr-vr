@@ -51,7 +51,7 @@ MonoBehaviour:
   - zxcvbnm<
   - ' '
   keySize: 0.05
-  keyPadding: 0.015
+  keyPadding: 0.03
   spaceBarSize: 0.4
   onKeyPress:
     m_PersistentCalls:
