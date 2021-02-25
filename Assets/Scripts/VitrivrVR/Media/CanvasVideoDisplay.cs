@@ -216,6 +216,7 @@ namespace VitrivrVR.Media
 
     private void SetVideoTime(double time)
     {
+      UpdateProgressIndicator(time);
       if (_videoPlayerController.IsPlaying)
       {
         _videoPlayerController.Pause();
