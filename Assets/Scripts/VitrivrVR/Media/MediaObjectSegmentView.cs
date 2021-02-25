@@ -22,9 +22,10 @@ namespace VitrivrVR.Media
     /// Store reference of grabbing transform while grabbed
     /// </summary>
     private Transform _grabber;
+
     private Vector3 _grabAnchor;
 
-    private readonly Dictionary<Collider, int> _enteredColliders = new Dictionary<Collider, int>();
+    private readonly Dictionary<Interactor, int> _enteredInteractors = new Dictionary<Interactor, int>();
 
     /// <summary>
     /// Number of segment thumbnails to instantiate each frame in Coroutine.
@@ -33,18 +34,24 @@ namespace VitrivrVR.Media
 
     private void OnTriggerEnter(Collider other)
     {
-      _enteredColliders.Add(other, -1);
+      if (other.TryGetComponent<Interactor>(out var interactor))
+      {
+        _enteredInteractors.Add(interactor, -1);
+      }
     }
 
     private void OnTriggerExit(Collider other)
     {
-      var index = _enteredColliders[other];
-      if (index != -1)
+      if (other.TryGetComponent<Interactor>(out var interactor))
       {
-        SetThumbnailHeight(index, false);
-      }
+        var index = _enteredInteractors[interactor];
+        if (index != -1)
+        {
+          SetThumbnailHeight(index, false);
+        }
 
-      _enteredColliders.Remove(other);
+        _enteredInteractors.Remove(interactor);
+      }
     }
 
     private void Update()
@@ -55,20 +62,17 @@ namespace VitrivrVR.Media
         var t = transform;
         t.localPosition = t.parent.InverseTransformPoint(_grabber.position) + _grabAnchor;
       }
-    }
 
-    private void FixedUpdate()
-    {
-      foreach (var index in _enteredColliders.Values.Where(index => index != -1))
+      foreach (var index in _enteredInteractors.Values.Where(index => index != -1))
       {
         SetThumbnailHeight(index, false);
       }
 
-      foreach (var other in _enteredColliders.Keys.ToList())
+      foreach (var other in _enteredInteractors.Keys.ToList())
       {
         var index = GetSegmentIndex(other.transform);
 
-        _enteredColliders[other] = index;
+        _enteredInteractors[other] = index;
         SetThumbnailHeight(index, true);
       }
     }
