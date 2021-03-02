@@ -7,6 +7,7 @@ using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
 using VitrivrVR.Interaction;
+using VitrivrVR.Interaction.System;
 
 namespace VitrivrVR.Media
 {

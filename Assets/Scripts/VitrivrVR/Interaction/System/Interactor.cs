@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace VitrivrVR.Interaction
+namespace VitrivrVR.Interaction.System
 {
   public class Interactor : MonoBehaviour
   {
@@ -28,6 +28,7 @@ namespace VitrivrVR.Interaction
       if (other.TryGetComponent<Interactable>(out var interactable))
       {
         _interactables.Add(interactable);
+        interactable.OnHoverEnter(transform);
       }
     }
 
@@ -36,6 +37,7 @@ namespace VitrivrVR.Interaction
       if (other.TryGetComponent<Interactable>(out var interactable))
       {
         _interactables.Remove(interactable);
+        interactable.OnHoverExit(transform);
       }
     }
   }
