@@ -7,6 +7,8 @@ namespace VitrivrVR.Interaction.System
   {
     private readonly List<Interactable> _interactables = new List<Interactable>();
 
+    private List<Interactable> _grabbed;
+
     public void Interact(bool start)
     {
       foreach (var interactable in _interactables)
@@ -17,9 +19,22 @@ namespace VitrivrVR.Interaction.System
 
     public void Grab(bool start)
     {
-      foreach (var interactable in _interactables)
+      if (start)
       {
-        interactable.OnGrab(transform, start);
+        _grabbed = new List<Interactable>(_interactables);
+        foreach (var interactable in _interactables)
+        {
+          interactable.OnGrab(transform, true);
+        }
+      }
+      else
+      {
+        foreach (var interactable in _grabbed)
+        {
+          interactable.OnGrab(transform, false);
+        }
+
+        _grabbed = null;
       }
     }
 

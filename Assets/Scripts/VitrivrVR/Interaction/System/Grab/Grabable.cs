@@ -10,7 +10,6 @@ namespace VitrivrVR.Interaction.System.Grab
     public Transform grabTransform;
 
     protected Rigidbody rb;
-    protected bool grabbed;
 
     private void Awake()
     {
@@ -33,8 +32,6 @@ namespace VitrivrVR.Interaction.System.Grab
       {
         rb.isKinematic = start;
       }
-
-      grabbed = start;
     }
   }
 }
