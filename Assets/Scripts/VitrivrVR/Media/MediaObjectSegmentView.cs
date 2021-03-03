@@ -111,8 +111,7 @@ namespace VitrivrVR.Media
       _grabber = start ? interactor : null;
       if (start)
       {
-        var t = transform;
-        _grabAnchor = t.localPosition - t.parent.InverseTransformPoint(interactor.position);
+        _grabAnchor = root.localPosition - root.parent.InverseTransformPoint(interactor.position);
       }
     }
 
