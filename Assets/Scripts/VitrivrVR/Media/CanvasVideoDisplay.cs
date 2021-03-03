@@ -34,7 +34,7 @@ namespace VitrivrVR.Media
     public GameObject scrollableUITable;
     public GameObject metadataButton;
 
-    public MediaObjectSegmentView mediaObjectSegmentViewPrefab;
+    public GameObject mediaObjectSegmentViewPrefab;
 
     public Slider volumeSlider;
 
@@ -45,7 +45,7 @@ namespace VitrivrVR.Media
     private VideoPlayerController _videoPlayerController;
     private RectTransform _imageTransform;
     private Action _onClose;
-    private MediaObjectSegmentView _objectSegmentView;
+    private GameObject _objectSegmentView;
     private bool _metadataShown;
 
     /// <summary>
@@ -119,7 +119,7 @@ namespace VitrivrVR.Media
       {
         var t = transform;
         _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.2f * t.forward, t.rotation, t);
-        _objectSegmentView.Initialize(_mediaObject, SkipToSegment);
+        _objectSegmentView.GetComponentInChildren<MediaObjectSegmentView>().Initialize(_mediaObject, SkipToSegment);
       }
     }
 

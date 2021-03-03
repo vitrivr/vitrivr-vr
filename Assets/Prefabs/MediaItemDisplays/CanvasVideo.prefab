@@ -1507,16 +1507,41 @@ MonoBehaviour:
   m_InteractionLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  m_CustomReticle: {fileID: 0}
+  m_FirstHoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_LastHoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_HoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_HoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SelectEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SelectExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Activated:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Deactivated:
+    m_PersistentCalls:
+      m_Calls: []
   m_OnFirstHoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnLastHoverExited:
     m_PersistentCalls:
       m_Calls: []
   m_OnHoverEntered:
     m_PersistentCalls:
       m_Calls: []
   m_OnHoverExited:
-    m_PersistentCalls:
-      m_Calls: []
-  m_OnLastHoverExited:
     m_PersistentCalls:
       m_Calls: []
   m_OnSelectEntered:
@@ -1534,7 +1559,6 @@ MonoBehaviour:
   m_OnDeactivate:
     m_PersistentCalls:
       m_Calls: []
-  m_CustomReticle: {fileID: 0}
   m_AttachTransform: {fileID: 7945674406964260819}
   m_AttachEaseInTime: 0.15
   m_MovementType: 2
@@ -1565,7 +1589,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   m_ThrowVelocityScale: 1.5
   m_ThrowAngularVelocityScale: 0.25
-  m_GravityOnDetach: 0
+  m_ForceGravityOnDetach: 0
   m_RetainTransformParent: 1
 --- !u!114 &2954403938280973320
 MonoBehaviour:
@@ -1589,7 +1613,7 @@ MonoBehaviour:
   scrollableUITable: {fileID: 8791042073019561513, guid: ec7b8d050e5be4866828273d41564928,
     type: 3}
   metadataButton: {fileID: 2103391515301786338}
-  mediaObjectSegmentViewPrefab: {fileID: 8037957142017713750, guid: abe582c94b4014ac2a4e7e72044b0fe4,
+  mediaObjectSegmentViewPrefab: {fileID: 3816833972309262785, guid: abe582c94b4014ac2a4e7e72044b0fe4,
     type: 3}
   volumeSlider: {fileID: 8529885628170766823}
 --- !u!1 &7750526513195147312

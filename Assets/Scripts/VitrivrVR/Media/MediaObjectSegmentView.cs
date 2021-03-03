@@ -14,6 +14,8 @@ namespace VitrivrVR.Media
   public class MediaObjectSegmentView : Interactable
   {
     public ThumbnailController thumbnailPrefab;
+    public Transform root;
+    public Transform grabHandle;
 
     private ObjectData _mediaObject;
     private ThumbnailController[] _thumbnails;
@@ -57,11 +59,16 @@ namespace VitrivrVR.Media
 
     private void Update()
     {
-      // Move along Y axis if grabbed
+      var t = transform.parent;
+      // Scale according to grab handle
+      var scale = t.localScale;
+      scale.z = 1 - grabHandle.localPosition.z;
+      t.localScale = scale;
+      
+      // Move if grabbed
       if (_grabber)
       {
-        var t = transform;
-        t.localPosition = t.parent.InverseTransformPoint(_grabber.position) + _grabAnchor;
+        root.localPosition = root.parent.InverseTransformPoint(_grabber.position) + _grabAnchor;
       }
 
       foreach (var index in _enteredInteractors.Values.Where(index => index != -1))
