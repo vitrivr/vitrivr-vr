@@ -100,7 +100,7 @@
       "url": "https://packages.unity.com"
     },
     "org.vitrivr.unityinterface.cineastapi": {
-      "version": "https://github.com/vitrivr/UnityInterface.git#dev-all",
+      "version": "https://github.com/vitrivr/CineastUnityInterface.git#dev-all",
       "depth": 0,
       "source": "git",
       "dependencies": {},
