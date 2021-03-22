@@ -91,5 +91,9 @@ crashlytics-build.properties
 #------------------------
 Assets/cineastapi.json
 Assets/cineastapi.json.meta
+Assets/credentials.json
+Assets/credentials.json.meta
+Assets/dresapi.json
+Assets/dresapi.json.meta
 Assets/vitrivr-vr.json
 Assets/vitrivr-vr.json.meta

@@ -12,9 +12,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using Vitrivr.UnityInterface.DresApi;
 using VitrivrVR.Config;
 using VitrivrVR.Data;
+using VitrivrVR.Notification;
 using VitrivrVR.Query;
+using VitrivrVR.Submission;
 using VitrivrVR.Util;
 
 namespace VitrivrVR.Media
@@ -33,6 +36,7 @@ namespace VitrivrVR.Media
     public TextMeshProUGUI segmentDataText;
     public GameObject scrollableUITable;
     public GameObject metadataButton;
+    public GameObject submitButton;
 
     public GameObject mediaObjectSegmentViewPrefab;
 
@@ -102,6 +106,12 @@ namespace VitrivrVR.Media
       var progressClickHandler = progressBar.gameObject.AddComponent<ClickHandler>();
       progressClickHandler.onClick = OnClickProgressBar;
       _onClose = onClose;
+      
+      // Enable DRES submission button
+      if (ConfigManager.Config.dresEnabled)
+      {
+        submitButton.SetActive(true);
+      }
     }
 
     public void Close()
@@ -161,6 +171,14 @@ namespace VitrivrVR.Media
       uiTableController.table = table;
       var uiTableTransform = uiTable.GetComponent<RectTransform>();
       uiTableTransform.sizeDelta = new Vector2(100, 200); // x is completely irrelevant here, since width is auto
+    }
+
+    public async void SubmitCurrentFrame()
+    {
+      var frame = _videoPlayerController.Frame;
+
+      var result = await DresClientManager.instance.SubmitResult(_mediaObject.Id, (int) frame);
+      NotificationController.Notify($"Submission: {result.Submission}");
     }
 
     public void SetVolume(float volume)

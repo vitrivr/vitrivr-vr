@@ -44,6 +44,7 @@ namespace VitrivrVR.Media
     public bool IsPlaying => _videoPlayer.isPlaying;
     public double Time => _videoPlayer.time;
     public double ClockTime => _videoPlayer.clockTime;
+    public long Frame => _videoPlayer.frame;
 
     public Texture2D GetCurrentFrame()
     {

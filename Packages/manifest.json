@@ -10,6 +10,7 @@
     "com.unity.xr.interaction.toolkit": "1.0.0-pre.2",
     "com.unity.xr.openvr.standalone": "2.0.5",
     "org.vitrivr.unityinterface.cineastapi": "https://github.com/vitrivr/CineastUnityInterface.git#dev-all",
+    "org.vitrivr.unityinterface.dresapi": "https://github.com/vitrivr/DresUnityInterface.git#no-dependencies",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",

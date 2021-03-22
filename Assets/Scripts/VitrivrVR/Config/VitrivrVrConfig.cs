@@ -64,6 +64,11 @@ namespace VitrivrVR.Config
     /// </summary>
     public float defaultMediaVolume;
 
+    /// <summary>
+    /// Enables or disables DRES submission system integration and all associated functionality.
+    /// </summary>
+    public bool dresEnabled;
+
     private VitrivrVrConfig()
     {
       maxResults = 10000;
@@ -79,6 +84,7 @@ namespace VitrivrVR.Config
         mapping[CategoryMappings.EDGE_CATEGORY]
       };
       defaultMediaVolume = .5f;
+      dresEnabled = false;
     }
 
     public static VitrivrVrConfig GetDefault()

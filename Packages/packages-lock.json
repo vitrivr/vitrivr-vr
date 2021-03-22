@@ -106,6 +106,13 @@
       "dependencies": {},
       "hash": "f270a0cc14b4a75526792cdf73529f74dc387ab4"
     },
+    "org.vitrivr.unityinterface.dresapi": {
+      "version": "https://github.com/vitrivr/DresUnityInterface.git#no-dependencies",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f231757fb2ac80000996468d654b7c4d8b821dc2"
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,
