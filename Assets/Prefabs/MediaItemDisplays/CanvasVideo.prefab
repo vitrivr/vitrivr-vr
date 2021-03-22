@@ -1617,6 +1617,10 @@ MonoBehaviour:
   submitButton: {fileID: 6959233241561244974}
   mediaObjectSegmentViewPrefab: {fileID: 3816833972309262785, guid: abe582c94b4014ac2a4e7e72044b0fe4,
     type: 3}
+  scrollableListPrefab: {fileID: 5664318009189944088, guid: c0f12a2207ad34e92baaa6ebc6f5b80f,
+    type: 3}
+  listItemPrefab: {fileID: 5321778176243085016, guid: 57132fe2a3a6f4f6296483a62d9ab15e,
+    type: 3}
   volumeSlider: {fileID: 8529885628170766823}
 --- !u!1 &6959233241561244974
 GameObject:

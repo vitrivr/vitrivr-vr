@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
@@ -12,7 +13,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.Video;
-using Vitrivr.UnityInterface.DresApi;
 using VitrivrVR.Config;
 using VitrivrVR.Data;
 using VitrivrVR.Notification;
@@ -39,6 +39,8 @@ namespace VitrivrVR.Media
     public GameObject submitButton;
 
     public GameObject mediaObjectSegmentViewPrefab;
+    public ScrollRect scrollableListPrefab;
+    public GameObject listItemPrefab;
 
     public Slider volumeSlider;
 
@@ -106,7 +108,7 @@ namespace VitrivrVR.Media
       var progressClickHandler = progressBar.gameObject.AddComponent<ClickHandler>();
       progressClickHandler.onClick = OnClickProgressBar;
       _onClose = onClose;
-      
+
       // Enable DRES submission button
       if (ConfigManager.Config.dresEnabled)
       {
@@ -166,11 +168,33 @@ namespace VitrivrVR.Media
         i += domain.Value.Count;
       }
 
-      var uiTable = Instantiate(scrollableUITable, progressBar.parent);
+      var bottomStack = progressBar.parent;
+
+      var uiTable = Instantiate(scrollableUITable, bottomStack);
       var uiTableController = uiTable.GetComponentInChildren<UITableController>();
       uiTableController.table = table;
       var uiTableTransform = uiTable.GetComponent<RectTransform>();
       uiTableTransform.sizeDelta = new Vector2(100, 200); // x is completely irrelevant here, since width is auto
+
+      // Segment tags
+      var tagList = Instantiate(scrollableListPrefab, bottomStack);
+      var listRect = tagList.GetComponent<RectTransform>();
+      listRect.anchorMin = new Vector2(0, .5f);
+      listRect.anchorMax = new Vector2(0, .5f);
+      listRect.sizeDelta = new Vector2(100, 200);
+
+      var listContent = tagList.content;
+
+      // TODO: Preload or cache for all results
+      var tagIds = await CineastWrapper.MetadataApi.FindTagsByIdAsync(_segment.Id);
+
+      var tags = await CineastWrapper.TagApi.FindTagsByIdAsync(new IdList(tagIds.TagIDs));
+
+      foreach (var tagData in tags.Tags)
+      {
+        var tagItem = Instantiate(listItemPrefab, listContent);
+        tagItem.GetComponentInChildren<TextMeshProUGUI>().text = tagData.Name;
+      }
     }
 
     public async void SubmitCurrentFrame()
