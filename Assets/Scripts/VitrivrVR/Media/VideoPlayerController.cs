@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -32,6 +33,7 @@ namespace VitrivrVR.Media
       _videoPlayer.errorReceived += errorHandler;
 
       _videoPlayer.playOnAwake = true;
+      _videoPlayer.waitForFirstFrame = true;
 
       _videoPlayer.url = mediaUrl;
       _videoPlayer.frame = startFrame;
@@ -99,8 +101,20 @@ namespace VitrivrVR.Media
       _audioSource.volume = volume;
     }
 
-    private void PrepareCompleted(VideoPlayer videoPlayer)
+    private async void PrepareCompleted(VideoPlayer videoPlayer)
     {
+      for (var i = 0; i < 500 && (videoPlayer.width == 0 || videoPlayer.height == 0); i++)
+      {
+        // Video player did not fully prepare yet, waiting for delay
+        await Task.Delay(1);
+      }
+
+      if (videoPlayer.width == 0 || videoPlayer.height == 0)
+      {
+        Debug.LogError($"Could not correctly load video: {videoPlayer.url}");
+        return;
+      }
+
       var renderTex = new RenderTexture((int) videoPlayer.width, (int) videoPlayer.height, 0);
       videoPlayer.targetTexture = renderTex;
 
