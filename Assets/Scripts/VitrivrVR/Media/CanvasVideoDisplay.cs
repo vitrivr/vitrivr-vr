@@ -84,11 +84,7 @@ namespace VitrivrVR.Media
       _imageTransform.sizeDelta = new Vector2(1000, 1000);
 
       // Resolve media URL
-      // TODO: Retrieve and / or apply all required media information, potentially from within PathResolver
-      var config = CineastConfigManager.Instance.Config;
-      var objectId = _mediaObject.Id;
-      var mediaPath = PathResolver.ResolvePath(config.mediaPath, objectId);
-      var mediaUrl = $"{config.mediaHost}{mediaPath}";
+      var mediaUrl = await CineastWrapper.GetMediaUrlOfAsync(_mediaObject, _segment.Id);
 
       var startFrame = await _segment.GetStart();
 

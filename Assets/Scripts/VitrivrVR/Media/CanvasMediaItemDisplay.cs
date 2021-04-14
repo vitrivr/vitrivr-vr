@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using Vitrivr.UnityInterface.CineastApi;
 using VitrivrVR.Config;
 using VitrivrVR.Util;
 
@@ -47,7 +48,6 @@ namespace VitrivrVR.Media
     {
       _scoredSegment = segment;
       _segment = segment.segment;
-      var config = CineastConfigManager.Instance.Config;
       var vrConfig = ConfigManager.Config;
       var score = (float) _scoredSegment.score;
       // Score frame
@@ -59,9 +59,7 @@ namespace VitrivrVR.Media
       scoreFrame.gameObject.SetActive(true);
       try
       {
-        var objectId = await _segment.GetObjectId();
-        var thumbnailPath = PathResolver.ResolvePath(config.thumbnailPath, objectId, _segment.Id);
-        var thumbnailUrl = $"{config.mediaHost}{thumbnailPath}{config.thumbnailExtension}";
+        var thumbnailUrl = await CineastWrapper.GetThumbnailUrlOfAsync(_segment);
         StartCoroutine(DownloadThumbnailTexture(thumbnailUrl));
       }
       catch (Exception)
