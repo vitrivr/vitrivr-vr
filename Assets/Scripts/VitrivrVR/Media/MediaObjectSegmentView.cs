@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
-using Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
-using VitrivrVR.Interaction;
+using Vitrivr.UnityInterface.CineastApi;
 using VitrivrVR.Interaction.System;
 
 namespace VitrivrVR.Media
@@ -17,7 +16,6 @@ namespace VitrivrVR.Media
     public Transform root;
     public Transform grabHandle;
 
-    private ObjectData _mediaObject;
     private ThumbnailController[] _thumbnails;
     private Action<int> _onSegmentSelection;
 
@@ -64,7 +62,7 @@ namespace VitrivrVR.Media
       var scale = t.localScale;
       scale.z = 1 - grabHandle.localPosition.z;
       t.localScale = scale;
-      
+
       // Move if grabbed
       if (_grabber)
       {
@@ -87,14 +85,13 @@ namespace VitrivrVR.Media
 
     public async void Initialize(ObjectData mediaObject, Action<int> onSegmentSelection)
     {
-      _mediaObject = mediaObject;
       _onSegmentSelection = onSegmentSelection;
 
       var segments = await mediaObject.GetSegments();
       _thumbnails = new ThumbnailController[segments.Count];
 
       var segmentInfo =
-        await Task.WhenAll(segments.Select(async segment => (segment.Id, await segment.GetSequenceNumber() - 1)));
+        await Task.WhenAll(segments.Select(async segment => (segment, await segment.GetSequenceNumber() - 1)));
 
       StartCoroutine(InstantiateSegmentIndicators(segmentInfo, segments.Count));
     }
@@ -115,16 +112,13 @@ namespace VitrivrVR.Media
       }
     }
 
-    private IEnumerator InstantiateSegmentIndicators(IEnumerable<(string segId, int seqNum)> segmentInfo,
+    private IEnumerator InstantiateSegmentIndicators(IEnumerable<(SegmentData segment, int seqNum)> segmentInfo,
       int numSegments)
     {
       var i = 0;
-      var config = CineastConfigManager.Instance.Config;
-
-      foreach (var (segId, seqNum) in segmentInfo)
+      foreach (var (segment, seqNum) in segmentInfo)
       {
-        var thumbnailPath = PathResolver.ResolvePath(config.thumbnailPath, _mediaObject.Id, segId);
-        var thumbnailUrl = $"{config.mediaHost}{thumbnailPath}{config.thumbnailExtension}";
+        var thumbnailUrl = CineastWrapper.GetThumbnailUrlOf(segment);
 
         var thumbnail = Instantiate(thumbnailPrefab, transform);
         thumbnail.url = thumbnailUrl;
