@@ -1,4 +1,4 @@
-﻿using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
+﻿using Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
 using VitrivrVR.Data;
 

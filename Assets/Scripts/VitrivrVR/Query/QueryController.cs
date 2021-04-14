@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi;
-using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
+using Vitrivr.UnityInterface.CineastApi;
+using Vitrivr.UnityInterface.CineastApi.Utils;
 using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
 using UnityEngine.Events;

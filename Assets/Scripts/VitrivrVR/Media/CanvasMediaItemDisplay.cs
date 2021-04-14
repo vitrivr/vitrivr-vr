@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Threading.Tasks;
-using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Data;
-using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
+using Vitrivr.UnityInterface.CineastApi.Model.Data;
+using Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;

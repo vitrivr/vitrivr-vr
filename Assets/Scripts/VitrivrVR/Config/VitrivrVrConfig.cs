@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Model.Config;
-using CineastUnityInterface.Runtime.Vitrivr.UnityInterface.CineastApi.Utils;
+using Vitrivr.UnityInterface.CineastApi.Model.Config;
+using Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
 
 namespace VitrivrVR.Config
