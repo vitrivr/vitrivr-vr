@@ -99,8 +99,6 @@ namespace VitrivrVR.Media
       var end = await _segment.GetAbsoluteEnd();
       segmentDataText.text = $"Segment {_segment.Id}:\n{start:F}s - {end:F}s\nScore: {_scoredSegment.score:F}";
 
-      var clickHandler = previewImage.gameObject.AddComponent<ClickHandler>();
-      clickHandler.onClick = OnClickImage;
       var progressClickHandler = progressBar.gameObject.AddComponent<ClickHandler>();
       progressClickHandler.onClick = OnClickProgressBar;
       _onClose = onClose;
@@ -229,7 +227,7 @@ namespace VitrivrVR.Media
       }
     }
 
-    private void OnClickImage(PointerEventData pointerEventData)
+    public void OnClick(PointerEventData pointerEventData)
     {
       if (_videoPlayerController.IsPlaying)
       {
