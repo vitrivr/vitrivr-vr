@@ -22,7 +22,7 @@ namespace VitrivrVR.Util
     public void OnPointerClick(PointerEventData eventData)
     {
       onClick(eventData);
-      onClickEvent.Invoke(eventData);
+      onClickEvent?.Invoke(eventData);
     }
   }
 }

@@ -32,11 +32,13 @@ namespace VitrivrVR.Media
       _prepareComplete = prepareComplete;
       _videoPlayer.errorReceived += errorHandler;
 
-      _videoPlayer.playOnAwake = true;
+      _videoPlayer.playOnAwake = false;
       _videoPlayer.waitForFirstFrame = true;
 
       _videoPlayer.url = mediaUrl;
       _videoPlayer.frame = startFrame;
+      
+      _videoPlayer.Prepare();
     }
 
     public int Width => (int) _videoPlayer.width;
