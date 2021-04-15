@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1994142194011412251}
   - component: {fileID: 1994142194011412248}
   - component: {fileID: 1994142194011412249}
-  - component: {fileID: 1994142194011412246}
   - component: {fileID: 1994142194011412247}
   m_Layer: 0
   m_Name: Notification Controller
@@ -69,6 +68,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1994142194011412251}
+        m_TargetAssemblyTypeName: 
         m_MethodName: SetNotification
         m_Mode: 0
         m_Arguments:
@@ -94,6 +94,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -118,14 +119,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!222 &1994142194011412246
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1994142194011412245}
-  m_CullTransparentMesh: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &1994142194011412247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,6 +135,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
