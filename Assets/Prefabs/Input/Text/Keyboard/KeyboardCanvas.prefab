@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 287035826496090039}
   - component: {fileID: 287035826496090038}
   m_Layer: 0
-  m_Name: Keyboard Canvas
+  m_Name: KeyboardCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82,6 +82,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 1
 --- !u!114 &287035826496090039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,3 +118,4 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 2147483647
+  m_RaycastTriggerInteraction: 1

@@ -23,7 +23,7 @@ namespace VitrivrVR.Media
       var www = UnityWebRequestTexture.GetTexture(url);
       yield return www.SendWebRequest();
 
-      if (www.isNetworkError || www.isHttpError)
+      if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
       {
         Debug.LogError($"{url}\n{www.error}");
         renderer.material.mainTexture = errorTexture;
