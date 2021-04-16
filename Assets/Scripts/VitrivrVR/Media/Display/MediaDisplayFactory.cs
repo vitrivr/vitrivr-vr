@@ -52,6 +52,7 @@ namespace VitrivrVR.Media.Display
     }
 
     public MediaDisplay videoDisplayPrefab;
+    public MediaDisplay imageSequenceDisplayPrefab;
 
     public static MediaDisplayFactory Instance { get; private set; }
 
@@ -90,19 +91,17 @@ namespace VitrivrVR.Media.Display
           videoDisplay.Initialize(scoredSegment, onClose);
           return videoDisplay;
         case MediaObjectDescriptor.MediatypeEnum.IMAGE:
-          throw new UnsupportedMediaTypeException(
-            $"{mediaType} support is not yet implemented (oID: {mediaObject.Id})");
+          throw new NotImplementedException($"{mediaType} support is not yet implemented (oID: {mediaObject.Id})");
         case MediaObjectDescriptor.MediatypeEnum.AUDIO:
-          throw new UnsupportedMediaTypeException(
-            $"{mediaType} support is not yet implemented (oID: {mediaObject.Id})");
+          throw new NotImplementedException($"{mediaType} support is not yet implemented (oID: {mediaObject.Id})");
         case MediaObjectDescriptor.MediatypeEnum.MODEL3D:
-          throw new UnsupportedMediaTypeException(
-            $"{mediaType} support is not yet implemented (oID: {mediaObject.Id})");
+          throw new NotImplementedException($"{mediaType} support is not yet implemented (oID: {mediaObject.Id})");
         case MediaObjectDescriptor.MediatypeEnum.IMAGESEQUENCE:
-          throw new UnsupportedMediaTypeException(
-            $"{mediaType} support is not yet implemented (oID: {mediaObject.Id})");
+          var imageSequenceDisplay = Instantiate(imageSequenceDisplayPrefab, position, rotation);
+          imageSequenceDisplay.Initialize(scoredSegment, onClose);
+          return imageSequenceDisplay;
         case MediaObjectDescriptor.MediatypeEnum.UNKNOWN:
-          throw new UnsupportedMediaTypeException($"Media object {mediaObject.Id} has unknown MediaType: {mediaType}");
+          throw new UnknownMediaTypeException($"Media object {mediaObject.Id} has unknown MediaType: {mediaType}");
         case null:
           throw new NullReferenceException($"Media object {mediaObject.Id} has no media type!");
         default:

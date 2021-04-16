@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Networking;
 using UnityEngine.UI;
 using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
@@ -57,7 +55,7 @@ namespace VitrivrVR.Media.Display
       try
       {
         var thumbnailUrl = await CineastWrapper.GetThumbnailUrlOfAsync(_segment);
-        StartCoroutine(DownloadThumbnailTexture(thumbnailUrl));
+        StartCoroutine(DownloadHelper.DownloadTexture(thumbnailUrl, OnDownloadError, OnDownloadSuccess));
       }
       catch (Exception)
       {
@@ -89,28 +87,17 @@ namespace VitrivrVR.Media.Display
       previewImage.color = Color.white;
     }
 
-    /// <summary>
-    /// Method to download and apply the thumbnail texture from the given URL. Start as <see cref="Coroutine"/>.
-    /// </summary>
-    /// <param name="url">The URL to the thumbnail file</param>
-    private IEnumerator DownloadThumbnailTexture(string url)
+    private void OnDownloadError()
     {
-      var www = UnityWebRequestTexture.GetTexture(url);
-      yield return www.SendWebRequest();
+      previewImage.texture = errorTexture;
+    }
 
-      if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
-      {
-        Debug.LogError(www.error);
-        previewImage.texture = errorTexture;
-      }
-      else
-      {
-        var loadedTexture = ((DownloadHandlerTexture) www.downloadHandler).texture;
-        previewImage.texture = loadedTexture;
-        float factor = Mathf.Max(loadedTexture.width, loadedTexture.height);
-        imageFrame.sizeDelta =
-          new Vector2(1000 * loadedTexture.width / factor, 1000 * loadedTexture.height / factor);
-      }
+    private void OnDownloadSuccess(Texture2D loadedTexture)
+    {
+      previewImage.texture = loadedTexture;
+      float factor = Mathf.Max(loadedTexture.width, loadedTexture.height);
+      imageFrame.sizeDelta =
+        new Vector2(1000 * loadedTexture.width / factor, 1000 * loadedTexture.height / factor);
     }
   }
 }

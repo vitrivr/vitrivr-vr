@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.Networking;
+﻿using UnityEngine;
+using VitrivrVR.Util;
 
 namespace VitrivrVR.Media.Controller
 {
@@ -14,28 +13,22 @@ namespace VitrivrVR.Media.Controller
 
     private void Start()
     {
-      var renderer = GetComponent<Renderer>();
-      StartCoroutine(DownloadTexture(renderer));
+      StartCoroutine(DownloadHelper.DownloadTexture(url, OnDownloadError, OnDownloadSuccess));
     }
 
-    private IEnumerator DownloadTexture(Renderer renderer)
+    private void OnDownloadError()
     {
-      var www = UnityWebRequestTexture.GetTexture(url);
-      yield return www.SendWebRequest();
+      var rend = GetComponent<Renderer>();
+      rend.material.mainTexture = errorTexture;
+    }
 
-      if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
-      {
-        Debug.LogError($"{url}\n{www.error}");
-        renderer.material.mainTexture = errorTexture;
-      }
-      else
-      {
-        var loadedTexture = ((DownloadHandlerTexture) www.downloadHandler).texture;
-        renderer.material.mainTexture = loadedTexture;
-        float factor = Mathf.Max(loadedTexture.width, loadedTexture.height);
-        var scale = new Vector3(loadedTexture.width / factor, loadedTexture.height / factor, 1);
-        renderer.transform.localScale = scale;
-      }
+    private void OnDownloadSuccess(Texture2D loadedTexture)
+    {
+      var rend = GetComponent<Renderer>();
+      rend.material.mainTexture = loadedTexture;
+      float factor = Mathf.Max(loadedTexture.width, loadedTexture.height);
+      var scale = new Vector3(loadedTexture.width / factor, loadedTexture.height / factor, 1);
+      rend.transform.localScale = scale;
     }
   }
 }
