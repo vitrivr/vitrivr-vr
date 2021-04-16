@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
+using Vitrivr.UnityInterface.CineastApi.Model.Data;
 
-namespace VitrivrVR.Media
+namespace VitrivrVR.Media.Display
 {
   /// <summary>
   /// Abstract class for media display items representing a media segment.

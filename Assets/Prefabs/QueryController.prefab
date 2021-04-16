@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8661397611067853842}
   - component: {fileID: 8661397611067853843}
+  - component: {fileID: 7681770014933336791}
   m_Layer: 0
   m_Name: QueryController
   m_TagString: Untagged
@@ -43,6 +44,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e6fee3701cd34a799ec5a464e08ddca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  queryTermProvider: {fileID: 0}
+  defaultQueryTermProvider: {fileID: 0}
   timer: {fileID: 0}
   queryDisplay: {fileID: 0}
+  queryAddedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  queryRemovedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  queryFocusEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &7681770014933336791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8661397611067853840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0edced72480ff46a382a0a01395c1f3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoDisplayPrefab: {fileID: 2954403938280973320, guid: 04e47bd7a0ab0475b9b355456cc6f4bf,
+    type: 3}

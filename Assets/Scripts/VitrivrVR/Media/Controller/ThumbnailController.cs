@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace VitrivrVR.Media
+namespace VitrivrVR.Media.Controller
 {
   /// <summary>
   /// Legacy media display exclusively for thumbnails.

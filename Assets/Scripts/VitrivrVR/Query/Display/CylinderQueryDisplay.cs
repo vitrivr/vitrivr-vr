@@ -6,7 +6,7 @@ using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VitrivrVR.Config;
-using VitrivrVR.Media;
+using VitrivrVR.Media.Display;
 using VitrivrVR.Notification;
 
 namespace VitrivrVR.Query.Display

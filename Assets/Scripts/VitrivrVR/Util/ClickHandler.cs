@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using VitrivrVR.Media;
+using VitrivrVR.Media.Display;
 
 namespace VitrivrVR.Util
 {

@@ -3,29 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Vitrivr.UnityInterface.CineastApi;
-using Vitrivr.UnityInterface.CineastApi.Model.Data;
-using Vitrivr.UnityInterface.CineastApi.Model.Registries;
-using Vitrivr.UnityInterface.CineastApi.Utils;
 using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using Vitrivr.UnityInterface.CineastApi;
+using Vitrivr.UnityInterface.CineastApi.Model.Data;
+using Vitrivr.UnityInterface.CineastApi.Model.Registries;
+using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Config;
 using VitrivrVR.Data;
+using VitrivrVR.Media.Controller;
 using VitrivrVR.Notification;
 using VitrivrVR.Query;
 using VitrivrVR.Submission;
 using VitrivrVR.Util;
 
-namespace VitrivrVR.Media
+namespace VitrivrVR.Media.Display
 {
   /// <summary>
   /// Canvas based video player.
   /// </summary>
-  public class CanvasVideoDisplay : MonoBehaviour
+  public class CanvasVideoDisplay : MediaDisplay
   {
     public Texture2D errorTexture;
     public Texture2D loadingTexture;
@@ -59,7 +60,7 @@ namespace VitrivrVR.Media
     /// </summary>
     private const int InstantiationBatch = 100;
 
-    public async void Initialize(ScoredSegment segment, Action onClose)
+    public override async void Initialize(ScoredSegment segment, Action onClose)
     {
       _scoredSegment = segment;
       _segment = _scoredSegment.segment;
@@ -219,7 +220,7 @@ namespace VitrivrVR.Media
 
     private void Update()
     {
-      if (_videoPlayerController != null && _videoPlayerController.IsPlaying)
+      if (_videoPlayerController is {IsPlaying: true})
       {
         var time = _videoPlayerController.ClockTime;
         UpdateProgressIndicator(time);

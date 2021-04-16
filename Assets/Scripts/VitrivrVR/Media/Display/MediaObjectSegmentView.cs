@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
 using Vitrivr.UnityInterface.CineastApi;
+using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Interaction.System;
+using VitrivrVR.Media.Controller;
 
-namespace VitrivrVR.Media
+namespace VitrivrVR.Media.Display
 {
   public class MediaObjectSegmentView : Interactable
   {

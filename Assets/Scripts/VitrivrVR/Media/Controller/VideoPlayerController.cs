@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Video;
 
-namespace VitrivrVR.Media
+namespace VitrivrVR.Media.Controller
 {
   /// <summary>
   /// Wrapper class for the <see cref="VideoPlayer"/> class, combining all required logic into a single class.

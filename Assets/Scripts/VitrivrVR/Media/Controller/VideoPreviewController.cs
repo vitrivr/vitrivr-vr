@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Video;
 
-namespace VitrivrVR.Media
+namespace VitrivrVR.Media.Controller
 {
   /// <summary>
   /// Legacy media display exclusively for videos.

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
 using VitrivrVR.Config;
-using VitrivrVR.Media;
+using VitrivrVR.Media.Display;
 
 namespace VitrivrVR.Query.Display
 {

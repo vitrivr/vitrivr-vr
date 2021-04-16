@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 
-namespace VitrivrVR.Media
+namespace VitrivrVR.Media.Display
 {
   /// <summary>
   /// Can be used to pass along media item display parameters.

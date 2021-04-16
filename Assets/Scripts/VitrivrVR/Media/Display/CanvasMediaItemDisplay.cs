@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Threading.Tasks;
-using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using Vitrivr.UnityInterface.CineastApi;
+using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Config;
 using VitrivrVR.Util;
 
-namespace VitrivrVR.Media
+namespace VitrivrVR.Media.Display
 {
   /// <summary>
   /// Canvas based <see cref="MediaItemDisplay"/>.
@@ -24,11 +24,9 @@ namespace VitrivrVR.Media
     public RectTransform imageFrame;
     public int scoreFrameSize = 25;
 
-    public CanvasVideoDisplay canvasVideoDisplay;
-
     private ScoredSegment _scoredSegment;
     private SegmentData _segment;
-    private CanvasVideoDisplay _videoDisplay;
+    private MediaDisplay _mediaDisplay;
 
     private void Awake()
     {
@@ -67,25 +65,25 @@ namespace VitrivrVR.Media
       }
     }
 
-    private void OnClickImage(PointerEventData pointerEventData)
+    private async void OnClickImage(PointerEventData pointerEventData)
     {
-      if (_videoDisplay)
+      if (_mediaDisplay)
       {
-        ClosePopoutVideo();
+        CloseMediaDisplay();
       }
       else
       {
         var t = transform;
-        _videoDisplay = Instantiate(canvasVideoDisplay, t.position - 0.2f * t.forward, t.rotation);
-        _videoDisplay.Initialize(_scoredSegment, ClosePopoutVideo);
+        _mediaDisplay = await MediaDisplayFactory.CreateDisplay(_scoredSegment, CloseMediaDisplay,
+          t.position - 0.2f * t.forward, t.rotation);
         previewImage.color = new Color(.2f, .2f, .2f);
       }
     }
 
-    private void ClosePopoutVideo()
+    private void CloseMediaDisplay()
     {
-      Destroy(_videoDisplay.gameObject);
-      _videoDisplay = null;
+      Destroy(_mediaDisplay.gameObject);
+      _mediaDisplay = null;
       if (!previewImage)
         return;
       previewImage.color = Color.white;
