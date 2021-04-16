@@ -9,6 +9,48 @@ namespace VitrivrVR.Media.Display
 {
   public class MediaDisplayFactory : MonoBehaviour
   {
+    [Serializable]
+    public class UnknownMediaTypeException : Exception
+    {
+      public UnknownMediaTypeException()
+      {
+      }
+
+      public UnknownMediaTypeException(string message) : base(message)
+      {
+      }
+
+      public UnknownMediaTypeException(string message, Exception inner) : base(message, inner)
+      {
+      }
+
+      protected UnknownMediaTypeException(System.Runtime.Serialization.SerializationInfo info,
+        System.Runtime.Serialization.StreamingContext context) : base(info, context)
+      {
+      }
+    }
+
+    [Serializable]
+    public class UnsupportedMediaTypeException : Exception
+    {
+      public UnsupportedMediaTypeException()
+      {
+      }
+
+      public UnsupportedMediaTypeException(string message) : base(message)
+      {
+      }
+
+      public UnsupportedMediaTypeException(string message, Exception inner) : base(message, inner)
+      {
+      }
+
+      protected UnsupportedMediaTypeException(System.Runtime.Serialization.SerializationInfo info,
+        System.Runtime.Serialization.StreamingContext context) : base(info, context)
+      {
+      }
+    }
+
     public MediaDisplay videoDisplayPrefab;
 
     public static MediaDisplayFactory Instance { get; private set; }
@@ -47,9 +89,25 @@ namespace VitrivrVR.Media.Display
           var videoDisplay = Instantiate(videoDisplayPrefab, position, rotation);
           videoDisplay.Initialize(scoredSegment, onClose);
           return videoDisplay;
+        case MediaObjectDescriptor.MediatypeEnum.IMAGE:
+          throw new UnsupportedMediaTypeException(
+            $"{mediaType} support is not yet implemented (oID: {mediaObject.Id})");
+        case MediaObjectDescriptor.MediatypeEnum.AUDIO:
+          throw new UnsupportedMediaTypeException(
+            $"{mediaType} support is not yet implemented (oID: {mediaObject.Id})");
+        case MediaObjectDescriptor.MediatypeEnum.MODEL3D:
+          throw new UnsupportedMediaTypeException(
+            $"{mediaType} support is not yet implemented (oID: {mediaObject.Id})");
+        case MediaObjectDescriptor.MediatypeEnum.IMAGESEQUENCE:
+          throw new UnsupportedMediaTypeException(
+            $"{mediaType} support is not yet implemented (oID: {mediaObject.Id})");
+        case MediaObjectDescriptor.MediatypeEnum.UNKNOWN:
+          throw new UnsupportedMediaTypeException($"Media object {mediaObject.Id} has unknown MediaType: {mediaType}");
+        case null:
+          throw new NullReferenceException($"Media object {mediaObject.Id} has no media type!");
         default:
-          Debug.LogError($"Encountered unsupported MediaType: {mediaType}");
-          return null;
+          throw new UnsupportedMediaTypeException(
+            $"Media object {mediaObject.Id} has unknown, unsupported MediaType: {mediaType}");
       }
     }
   }
