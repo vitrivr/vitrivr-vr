@@ -27,6 +27,8 @@ namespace VitrivrVR.Media.Display
 
     private Vector3 _grabAnchor;
 
+    private int _minIndex;
+
     private readonly Dictionary<Interactor, int> _enteredInteractors = new Dictionary<Interactor, int>();
 
     /// <summary>
@@ -84,23 +86,30 @@ namespace VitrivrVR.Media.Display
       }
     }
 
-    public async void Initialize(ObjectData mediaObject, Action<int> onSegmentSelection)
+    public async void Initialize(ObjectData mediaObject, Action<int> onSegmentSelection, int min = 0, int max = -1)
     {
       _onSegmentSelection = onSegmentSelection;
+      _minIndex = min;
 
       var segments = await mediaObject.GetSegments();
-      _thumbnails = new ThumbnailController[segments.Count];
 
       var segmentInfo =
-        await Task.WhenAll(segments.Select(async segment => (segment, await segment.GetSequenceNumber() - 1)));
+        await Task.WhenAll(segments.Select(async segment =>
+          (segment, index: await segment.GetSequenceNumber() - 1)));
 
-      StartCoroutine(InstantiateSegmentIndicators(segmentInfo, segments.Count));
+      if (max > min)
+      {
+        segmentInfo = segmentInfo.Where(item => min <= item.index && item.index <= max).ToArray();
+      }
+
+      _thumbnails = new ThumbnailController[segmentInfo.Length];
+      StartCoroutine(InstantiateSegmentIndicators(segmentInfo, segmentInfo.Length));
     }
 
     public override void OnInteraction(Transform interactor, bool start)
     {
       if (!start) return;
-      var segmentIndex = GetSegmentIndex(interactor);
+      var segmentIndex = GetSegmentIndex(interactor) + _minIndex;
       _onSegmentSelection(segmentIndex);
     }
 
@@ -124,9 +133,9 @@ namespace VitrivrVR.Media.Display
         var thumbnail = Instantiate(thumbnailPrefab, transform);
         thumbnail.url = thumbnailUrl;
 
-        thumbnail.transform.localPosition = Vector3.forward * ((float) seqNum / numSegments - 0.5f);
+        thumbnail.transform.localPosition = Vector3.forward * ((float) (seqNum - _minIndex) / numSegments - 0.5f);
 
-        _thumbnails[seqNum] = thumbnail;
+        _thumbnails[seqNum - _minIndex] = thumbnail;
 
         i++;
         if (i == InstantiationBatch)

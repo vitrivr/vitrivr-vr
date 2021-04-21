@@ -193,7 +193,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &1611233960861917339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,8 +248,6 @@ MonoBehaviour:
   scoreFrame: {fileID: 4797499402522525822}
   imageFrame: {fileID: 7994159168318806018}
   scoreFrameSize: 25
-  canvasVideoDisplay: {fileID: 2954403938280973320, guid: 04e47bd7a0ab0475b9b355456cc6f4bf,
-    type: 3}
 --- !u!1 &8715993880187611840
 GameObject:
   m_ObjectHideFlags: 0
