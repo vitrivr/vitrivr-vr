@@ -40,7 +40,6 @@ namespace VitrivrVR.Media.Display
       _scoredSegment = scoredSegment;
       _onClose = onClose;
       _mediaObject = ObjectRegistry.GetObject(await Segment.GetObjectId());
-      Debug.Log(_mediaObject.Id);
 
       // Resolve media URL
       var mediaUrl = await CineastWrapper.GetMediaUrlOfAsync(_mediaObject, Segment.Id);

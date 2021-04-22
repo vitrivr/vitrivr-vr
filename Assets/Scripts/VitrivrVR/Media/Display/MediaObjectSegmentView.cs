@@ -97,10 +97,14 @@ namespace VitrivrVR.Media.Display
         await Task.WhenAll(segments.Select(async segment =>
           (segment, index: await segment.GetSequenceNumber() - 1)));
 
+      // Filter to specified segment range
       if (max > min)
       {
         segmentInfo = segmentInfo.Where(item => min <= item.index && item.index <= max).ToArray();
       }
+      
+      // Make sure segments are unique (this may be removed if it can be guaranteed on server side)
+      segmentInfo = segmentInfo.Distinct().ToArray();
 
       _thumbnails = new ThumbnailController[segmentInfo.Length];
       StartCoroutine(InstantiateSegmentIndicators(segmentInfo, segmentInfo.Length));
