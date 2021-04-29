@@ -73,17 +73,17 @@ MonoBehaviour:
   m_Name: Standalone
   m_EditorClassIdentifier: 
   features:
-  - {fileID: -5119761766022074247}
   - {fileID: 7245929082623806731}
   - {fileID: -5908952636817001208}
   - {fileID: 6262431592714622994}
   - {fileID: 620765758618025907}
   - {fileID: 3752470703972617474}
   - {fileID: 9145248235802846490}
-  - {fileID: 4507186444612237014}
-  - {fileID: -6166557315096496252}
-  - {fileID: 1539971882102613362}
+  - {fileID: -5119761766022074247}
   - {fileID: 4520887733868034511}
+  - {fileID: 4507186444612237014}
+  - {fileID: 1539971882102613362}
+  - {fileID: -6166557315096496252}
   m_renderMode: 1
   m_depthSubmissionMode: 0
 --- !u!114 &11400000
@@ -197,7 +197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_enabled: 0
   nameUi: Mock Runtime
-  version: 0.0.1
+  version: 0.0.2
   featureIdInternal: com.unity.openxr.feature.mockruntime
   openxrExtensionStrings: XR_UNITY_null_gfx
   company: Unity
