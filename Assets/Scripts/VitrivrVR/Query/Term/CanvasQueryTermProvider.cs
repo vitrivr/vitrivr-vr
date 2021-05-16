@@ -26,9 +26,11 @@ namespace VitrivrVR.Query.Term
     private readonly HashSet<string> _tagIds = new HashSet<string>();
 
     // Text input data
+    // TODO: Restructure to be modular and configurable
     private bool _ocr;
     private bool _asr;
     private bool _sceneCaption;
+    private bool _visualTextCoEmbedding;
     private string _textSearchText;
 
     /// <summary>
@@ -65,6 +67,11 @@ namespace VitrivrVR.Query.Term
     public void SetSceneCaptionSearch(bool sceneCaption)
     {
       _sceneCaption = sceneCaption;
+    }
+
+    public void SetVisualTextCoEmbeddingSearch(bool visualTextCoEmbedding)
+    {
+      _visualTextCoEmbedding = visualTextCoEmbedding;
     }
 
     /// <summary>
@@ -178,12 +185,40 @@ namespace VitrivrVR.Query.Term
         terms.Add(QueryTermBuilder.BuildTagTerm(tags));
       }
 
-      if ((_ocr || _asr || _sceneCaption) && !string.IsNullOrEmpty(_textSearchText))
+      if ((_ocr || _asr || _sceneCaption || _visualTextCoEmbedding) && !string.IsNullOrEmpty(_textSearchText))
       {
-        terms.Add(QueryTermBuilder.BuildTextTerm(_textSearchText, _ocr, _asr, _sceneCaption));
+        terms.Add(BuildTextTerm());
       }
 
       return terms;
+    }
+
+    private QueryTerm BuildTextTerm()
+    {
+      // TODO: Move to Cineast Unity Interface in a more modular way
+      var categories = new List<string>();
+
+      if (_ocr)
+      {
+        categories.Add("ocr");
+      }
+
+      if (_asr)
+      {
+        categories.Add("asr");
+      }
+
+      if (_sceneCaption)
+      {
+        categories.Add("scenecaption");
+      }
+
+      if (_visualTextCoEmbedding)
+      {
+        categories.Add("visualtextcoembedding");
+      }
+
+      return new QueryTerm(QueryTerm.TypeEnum.TEXT, _textSearchText, categories);
     }
   }
 }
