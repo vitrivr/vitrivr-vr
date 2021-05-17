@@ -19,6 +19,7 @@ namespace VitrivrVR.Media.Display
 
     private ThumbnailController[] _thumbnails;
     private Action<int> _onSegmentSelection;
+    private ObjectData _mediaObject;
 
     /// <summary>
     /// Store reference of grabbing transform while grabbed
@@ -90,6 +91,7 @@ namespace VitrivrVR.Media.Display
     {
       _onSegmentSelection = onSegmentSelection;
       _minIndex = min;
+      _mediaObject = mediaObject;
 
       var segments = await mediaObject.GetSegments();
 
@@ -102,7 +104,7 @@ namespace VitrivrVR.Media.Display
       {
         segmentInfo = segmentInfo.Where(item => min <= item.index && item.index <= max).ToArray();
       }
-      
+
       // Make sure segments are unique (this may be removed if it can be guaranteed on server side)
       segmentInfo = segmentInfo.Distinct().ToArray();
 
@@ -148,11 +150,40 @@ namespace VitrivrVR.Media.Display
           yield return null;
         }
       }
+
+      VerifyMediaSegments();
+    }
+
+    /// <summary>
+    /// Verifies that the segment array is filled with instantiated segment prefabs.
+    /// 
+    /// In case not all array elements are correctly filled, an error message with debug information is printed.
+    /// </summary>
+    private void VerifyMediaSegments()
+    {
+      var missing = new List<int>();
+      for (var i = 0; i < _thumbnails.Length; i++)
+      {
+        var thumbnail = _thumbnails[i];
+        if (thumbnail == null)
+        {
+          missing.Add(i + _minIndex + 1);
+        }
+      }
+
+      if (missing.Count > 0)
+      {
+        var id = _mediaObject.Id;
+        var missingIndexes = string.Join(", ", missing);
+        Debug.LogError($"Some media object segments were not correctly instantiated for {id}." +
+                       $"\nMissing sequence numbers: {missingIndexes}");
+      }
     }
 
     private void SetThumbnailHeight(int index, bool selected)
     {
-      var thumbnailTransform = _thumbnails[index].transform;
+      var thumbnail = _thumbnails[index];
+      var thumbnailTransform = thumbnail.transform;
       var position = thumbnailTransform.localPosition;
       position.y = selected ? thumbnailTransform.localScale.y : 0;
       thumbnailTransform.localPosition = position;
