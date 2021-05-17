@@ -196,7 +196,11 @@ namespace VitrivrVR.Media.Display
     {
       var frame = _videoPlayerController.Frame;
 
-      var result = await DresClientManager.instance.SubmitResult(_mediaObject.Id, (int) frame);
+      // Remove media object ID prefix if configured
+      var prefixLength = ConfigManager.Config.submissionIdPrefixLength;
+      var mediaObjectId = prefixLength > 0 ? _mediaObject.Id.Substring(prefixLength) : _mediaObject.Id;
+      
+      var result = await DresClientManager.instance.SubmitResult(mediaObjectId, (int) frame);
       NotificationController.Notify($"Submission: {result.Submission}");
     }
 

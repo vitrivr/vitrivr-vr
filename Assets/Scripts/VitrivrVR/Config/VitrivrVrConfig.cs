@@ -69,6 +69,13 @@ namespace VitrivrVR.Config
     /// </summary>
     public bool dresEnabled;
 
+    /// <summary>
+    /// The length of the media object ID prefix to be removed before submission.
+    /// If e.g. internal IDs start with "v_" while competition IDs do not, this parameter may be set to 2 to remove this
+    /// for submission to the competition system only.
+    /// </summary>
+    public int submissionIdPrefixLength;
+
     private VitrivrVrConfig()
     {
       maxResults = 10000;
@@ -85,6 +92,7 @@ namespace VitrivrVR.Config
       };
       defaultMediaVolume = .5f;
       dresEnabled = false;
+      submissionIdPrefixLength = 0;
     }
 
     public static VitrivrVrConfig GetDefault()
