@@ -10,6 +10,8 @@ namespace VitrivrVR.Interaction.System.Grab
     public Transform grabTransform;
 
     protected Vector3 grabAnchor;
+    protected Quaternion rotationAnchor;
+    protected Quaternion inverseGrabberRotation;
     protected Transform grabber;
 
     private void Awake()
@@ -24,7 +26,9 @@ namespace VitrivrVR.Interaction.System.Grab
     {
       if (grabber)
       {
-        grabTransform.position = grabber.position + grabAnchor;
+        var rot = grabber.rotation;
+        grabTransform.position = grabber.position + rot * inverseGrabberRotation * grabAnchor;
+        grabTransform.rotation = rot * rotationAnchor;
       }
     }
 
@@ -35,6 +39,8 @@ namespace VitrivrVR.Interaction.System.Grab
       {
         // grabAnchor = grabTransform.localPosition - grabTransform.InverseTransformPoint(interactor.position);
         grabAnchor = grabTransform.position - interactor.position;
+        inverseGrabberRotation = Quaternion.Inverse(interactor.rotation);
+        rotationAnchor = inverseGrabberRotation * grabTransform.rotation;
       }
     }
   }
