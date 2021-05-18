@@ -9,7 +9,8 @@ namespace VitrivrVR.Interaction.System.Grab
     /// </summary>
     public Transform grabTransform;
 
-    protected Rigidbody rb;
+    protected Vector3 grabAnchor;
+    protected Transform grabber;
 
     private void Awake()
     {
@@ -17,20 +18,23 @@ namespace VitrivrVR.Interaction.System.Grab
       {
         grabTransform = transform;
       }
+    }
 
-      if (grabTransform.TryGetComponent<Rigidbody>(out var rb))
+    protected void Update()
+    {
+      if (grabber)
       {
-        this.rb = rb;
+        grabTransform.position = grabber.position + grabAnchor;
       }
     }
 
     public override void OnGrab(Transform interactor, bool start)
     {
-      grabTransform.SetParent(start ? interactor : null);
-
-      if (rb != null)
+      grabber = start ? interactor : null;
+      if (start)
       {
-        rb.isKinematic = start;
+        // grabAnchor = grabTransform.localPosition - grabTransform.InverseTransformPoint(interactor.position);
+        grabAnchor = grabTransform.position - interactor.position;
       }
     }
   }

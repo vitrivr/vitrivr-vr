@@ -116,6 +116,14 @@ namespace VitrivrVR.Media.Display
       _onClose();
     }
 
+    private void OnDestroy()
+    {
+      if (_objectSegmentView)
+      {
+        Destroy(_objectSegmentView);
+      }
+    }
+
     public void ShowObjectSegmentView()
     {
       if (_objectSegmentView)
@@ -125,7 +133,7 @@ namespace VitrivrVR.Media.Display
       else
       {
         var t = transform;
-        _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.2f * t.forward, t.rotation, t);
+        _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.2f * t.forward, t.rotation);
         _objectSegmentView.GetComponentInChildren<MediaObjectSegmentView>().Initialize(_mediaObject, SkipToSegment);
       }
     }

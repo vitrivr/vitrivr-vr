@@ -7,11 +7,12 @@ using UnityEngine;
 using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Interaction.System;
+using VitrivrVR.Interaction.System.Grab;
 using VitrivrVR.Media.Controller;
 
 namespace VitrivrVR.Media.Display
 {
-  public class MediaObjectSegmentView : Interactable
+  public class MediaObjectSegmentView : Grabable
   {
     public ThumbnailController thumbnailPrefab;
     public Transform root;
@@ -21,13 +22,6 @@ namespace VitrivrVR.Media.Display
     private Action<int> _onSegmentSelection;
     private ObjectData _mediaObject;
 
-    /// <summary>
-    /// Store reference of grabbing transform while grabbed
-    /// </summary>
-    private Transform _grabber;
-
-    private Vector3 _grabAnchor;
-
     private int _minIndex;
 
     private readonly Dictionary<Interactor, int> _enteredInteractors = new Dictionary<Interactor, int>();
@@ -36,6 +30,11 @@ namespace VitrivrVR.Media.Display
     /// Number of segment thumbnails to instantiate each frame in Coroutine.
     /// </summary>
     private const int InstantiationBatch = 100;
+
+    private void Awake()
+    {
+      grabTransform = root;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -59,19 +58,15 @@ namespace VitrivrVR.Media.Display
       }
     }
 
-    private void Update()
+    private new void Update()
     {
+      base.Update();
+      
       var t = transform.parent;
       // Scale according to grab handle
       var scale = t.localScale;
       scale.z = 1 - grabHandle.localPosition.z;
       t.localScale = scale;
-
-      // Move if grabbed
-      if (_grabber)
-      {
-        root.localPosition = root.parent.InverseTransformPoint(_grabber.position) + _grabAnchor;
-      }
 
       foreach (var index in _enteredInteractors.Values.Where(index => index != -1))
       {
@@ -117,15 +112,6 @@ namespace VitrivrVR.Media.Display
       if (!start) return;
       var segmentIndex = GetSegmentIndex(interactor) + _minIndex;
       _onSegmentSelection(segmentIndex);
-    }
-
-    public override void OnGrab(Transform interactor, bool start)
-    {
-      _grabber = start ? interactor : null;
-      if (start)
-      {
-        _grabAnchor = root.localPosition - root.parent.InverseTransformPoint(interactor.position);
-      }
     }
 
     private IEnumerator InstantiateSegmentIndicators(IEnumerable<(SegmentData segment, int seqNum)> segmentInfo,

@@ -10,9 +10,12 @@ namespace VitrivrVR.Interaction.System.Grab
 
     private int _currentIndex;
 
+    private Rigidbody _rb;
+
     private void Start()
     {
       _previousPositions = new Vector3[physicsSmoothingSteps];
+      _rb = GetComponent<Rigidbody>();
     }
 
     private void FixedUpdate()
@@ -31,7 +34,7 @@ namespace VitrivrVR.Interaction.System.Grab
         var t = transform;
         var velocity = (t.position - _previousPositions[_currentIndex]) /
                        (_previousPositions.Length * Time.fixedDeltaTime);
-        rb.velocity = velocity;
+        _rb.velocity = velocity;
       }
     }
   }

@@ -31,7 +31,10 @@ namespace VitrivrVR.Interaction.System
       {
         foreach (var interactable in _grabbed)
         {
-          interactable.OnGrab(transform, false);
+          if (interactable)
+          {
+            interactable.OnGrab(transform, false);
+          }
         }
 
         _grabbed = null;
