@@ -579,9 +579,10 @@ MonoBehaviour:
   m_RigBaseGameObject: {fileID: 881647751}
   m_CameraFloorOffsetObject: {fileID: 1798568052}
   m_CameraGameObject: {fileID: 1606703271}
-  m_TrackingOriginMode: 2
-  m_TrackingSpace: 3
+  m_RequestedTrackingOriginMode: 2
   m_CameraYOffset: 1.36144
+  m_TrackingSpace: 3
+  m_TrackingOriginMode: -2147483648
 --- !u!1001 &930317847
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1607,7 +1608,8 @@ MonoBehaviour:
   m_EnableInputActions: 1
   m_ModelPrefab: {fileID: 2148511394370237564, guid: 31949e373264ef744a493d978b599f85,
     type: 3}
-  m_ModelTransform: {fileID: 0}
+  m_ModelParent: {fileID: 0}
+  m_Model: {fileID: 0}
   m_AnimateModel: 0
   m_ModelSelectTransition: 
   m_ModelDeSelectTransition: 
@@ -3003,7 +3005,8 @@ MonoBehaviour:
   m_EnableInputActions: 1
   m_ModelPrefab: {fileID: 2148511394370237564, guid: 31949e373264ef744a493d978b599f85,
     type: 3}
-  m_ModelTransform: {fileID: 0}
+  m_ModelParent: {fileID: 0}
+  m_Model: {fileID: 0}
   m_AnimateModel: 0
   m_ModelSelectTransition: 
   m_ModelDeSelectTransition: 
