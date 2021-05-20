@@ -207,7 +207,7 @@ namespace VitrivrVR.Media.Display
       // Remove media object ID prefix if configured
       var prefixLength = ConfigManager.Config.submissionIdPrefixLength;
       var mediaObjectId = prefixLength > 0 ? _mediaObject.Id.Substring(prefixLength) : _mediaObject.Id;
-      
+
       var result = await DresClientManager.instance.SubmitResult(mediaObjectId, (int) frame);
       NotificationController.Notify($"Submission: {result.Submission}");
     }
@@ -324,22 +324,30 @@ namespace VitrivrVR.Media.Display
     /// <returns></returns>
     private IEnumerator InstantiateSegmentIndicators(IEnumerable<float> segmentStarts)
     {
+      var progressTexture = new Texture2D(1000, 1);
+      var colors = new Color[1000];
+      var backgroundColor = new Color(.39f, .39f, .39f);
+      for (var j = 0; j < colors.Length; j++)
+      {
+        colors[j] = backgroundColor;
+      }
+      progressTexture.SetPixels(0, 0, 1000, 1, colors);
+      progressTexture.Apply();
+      progressBar.GetComponent<RawImage>().texture = progressTexture;
       var i = 0;
       foreach (var segStart in segmentStarts)
       {
-        var indicator = Instantiate(progressIndicator, segmentIndicator.parent);
-        indicator.SetSiblingIndex(0);
-        indicator.anchoredPosition =
-          new Vector2((float) (progressBar.rect.width * segStart / _videoPlayerController.Length), 0);
-        indicator.sizeDelta = new Vector2(1, 0);
-        indicator.GetComponent<RawImage>().color = Color.black;
+        progressTexture.SetPixel((int) (999 * (segStart / _videoPlayerController.Length)), 0, Color.black);
         i++;
         if (i == InstantiationBatch)
         {
           i = 0;
+          progressTexture.Apply();
           yield return null;
         }
       }
+
+      progressTexture.Apply();
     }
 
     private void ErrorEncountered(VideoPlayer videoPlayer, string error)
