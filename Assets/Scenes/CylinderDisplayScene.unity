@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.009389741, g: 0.010874605, b: 0.014736945, a: 1}
+  m_IndirectSpecularColor: {r: 0.009389738, g: 0.010874599, b: 0.014736926, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1800,6 +1800,18 @@ PrefabInstance:
       objectReference: {fileID: 1758590912}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef63ab4df42c54592be7590645832b7e, type: 3}
+--- !u!114 &1549049000 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2730910231105014784, guid: ef63ab4df42c54592be7590645832b7e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1549048999}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8ffcc47c57d24f25b529c34ae3bacf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1576683213
 GameObject:
   m_ObjectHideFlags: 0
@@ -2366,6 +2378,76 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1606703275}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onKeyPress.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onBackspace.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onKeyPress.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onBackspace.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onKeyPress.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1549049000}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onBackspace.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1549049000}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onKeyPress.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onBackspace.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onKeyPress.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: InputText
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onBackspace.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: InputBackspace
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onKeyPress.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VitrivrVR.Input.Text.SceneTextInputController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onBackspace.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VitrivrVR.Input.Text.SceneTextInputController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onKeyPress.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412808105294494899, guid: e235f5ab5e2784c77b0286dfce26d663,
+        type: 3}
+      propertyPath: onBackspace.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e235f5ab5e2784c77b0286dfce26d663, type: 3}
 --- !u!114 &1758590912 stripped
@@ -2378,18 +2460,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdbb8013b66694f049396728e3918d3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1758590913 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6189976341056184501, guid: e235f5ab5e2784c77b0286dfce26d663,
-    type: 3}
-  m_PrefabInstance: {fileID: 1758590911}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcbcea6e796eb1f4c90c9907b2b74ae8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1781603499 stripped
@@ -2532,7 +2602,7 @@ PrefabInstance:
         type: 3}
       propertyPath: onDictationResult.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1758590913}
+      objectReference: {fileID: 1549049000}
     - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
       propertyPath: onDictationComplete.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2597,6 +2667,11 @@ PrefabInstance:
         type: 3}
       propertyPath: onDictationStateChange.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
+        type: 3}
+      propertyPath: onDictationResult.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VitrivrVR.Input.Text.SceneTextInputController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}

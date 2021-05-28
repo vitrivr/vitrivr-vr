@@ -1254,6 +1254,7 @@ GameObject:
   - component: {fileID: 6189976340302162144}
   - component: {fileID: 6189976340302162147}
   - component: {fileID: 6189976340302162146}
+  - component: {fileID: 1149847834839095981}
   - component: {fileID: 6189976340302162145}
   m_Layer: 5
   m_Name: Tag InputField (TMP)
@@ -1320,6 +1321,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1149847834839095981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6189976340302162151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00ed039f162c74fc8986368788e958eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6189976340302162145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1815,6 +1828,7 @@ GameObject:
   - component: {fileID: 6189976340476712975}
   - component: {fileID: 6189976340476712970}
   - component: {fileID: 6189976340476712969}
+  - component: {fileID: 457691045342942255}
   - component: {fileID: 6189976340476712968}
   m_Layer: 0
   m_Name: Text InputField (TMP)
@@ -1881,6 +1895,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &457691045342942255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6189976340476712974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00ed039f162c74fc8986368788e958eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6189976340476712968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3131,7 +3157,6 @@ GameObject:
   - component: {fileID: 6189976341056184506}
   - component: {fileID: 6189976341056184505}
   - component: {fileID: 6189976341056184504}
-  - component: {fileID: 6189976341056184501}
   m_Layer: 0
   m_Name: Text UI Canvas
   m_TagString: Untagged
@@ -3243,28 +3268,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2147483647
   m_RaycastTriggerInteraction: 1
---- !u!114 &6189976341056184501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6189976341056184511}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcbcea6e796eb1f4c90c9907b2b74ae8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tagTextField: {fileID: 6189976340302162145}
-  textTextField: {fileID: 6189976340476712968}
-  keyboardButtonPrefab: {fileID: 2088159314671751484, guid: 88f216670d9cca946b6486a7eb50b0d9,
-    type: 3}
-  keyboardCanvasPrefab: {fileID: 287035826496090033, guid: fe1277b1b48f6574aa0a9eb7efa95330,
-    type: 3}
-  keys:
-  - qwertyuiop
-  - asdfghjkl
-  - zxcvbnm<
 --- !u!1 &6189976341125762960
 GameObject:
   m_ObjectHideFlags: 0
@@ -6610,66 +6613,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6189976341000526341}
     m_Modifications:
-    - target: {fileID: 517957450905013632, guid: a28b7a9b029034b8697e53af14f601ed,
-        type: 3}
-      propertyPath: onKeyPress.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 517957450905013632, guid: a28b7a9b029034b8697e53af14f601ed,
-        type: 3}
-      propertyPath: onBackspace.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 517957450905013632, guid: a28b7a9b029034b8697e53af14f601ed,
-        type: 3}
-      propertyPath: onKeyPress.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 517957450905013632, guid: a28b7a9b029034b8697e53af14f601ed,
-        type: 3}
-      propertyPath: onBackspace.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 517957450905013632, guid: a28b7a9b029034b8697e53af14f601ed,
-        type: 3}
-      propertyPath: onKeyPress.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 6189976341056184501}
-    - target: {fileID: 517957450905013632, guid: a28b7a9b029034b8697e53af14f601ed,
-        type: 3}
-      propertyPath: onBackspace.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 6189976341056184501}
-    - target: {fileID: 517957450905013632, guid: a28b7a9b029034b8697e53af14f601ed,
-        type: 3}
-      propertyPath: onKeyPress.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 517957450905013632, guid: a28b7a9b029034b8697e53af14f601ed,
-        type: 3}
-      propertyPath: onBackspace.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 517957450905013632, guid: a28b7a9b029034b8697e53af14f601ed,
-        type: 3}
-      propertyPath: onKeyPress.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ReceiveTextInput
-      objectReference: {fileID: 0}
-    - target: {fileID: 517957450905013632, guid: a28b7a9b029034b8697e53af14f601ed,
-        type: 3}
-      propertyPath: onBackspace.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ReceiveBackspace
-      objectReference: {fileID: 0}
-    - target: {fileID: 517957450905013632, guid: a28b7a9b029034b8697e53af14f601ed,
-        type: 3}
-      propertyPath: onKeyPress.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 517957450905013632, guid: a28b7a9b029034b8697e53af14f601ed,
-        type: 3}
-      propertyPath: onBackspace.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 6113745641864469411, guid: a28b7a9b029034b8697e53af14f601ed,
         type: 3}
       propertyPath: m_RootOrder
