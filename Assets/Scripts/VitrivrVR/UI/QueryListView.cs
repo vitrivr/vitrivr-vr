@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Vitrivr.UnityInterface.CineastApi.Utils;
 using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Query;
 
-namespace VitrivrVR.Interaction.ViewerToolViews
+namespace VitrivrVR.UI
 {
-  public class QueryListView : ViewerToolView
+  public class QueryListView : MonoBehaviour
   {
     public RectTransform textPrefab;
     public RectTransform listItemPrefab;

@@ -31,7 +31,7 @@ namespace VitrivrVR.Media.Display
     /// </summary>
     private const int InstantiationBatch = 100;
 
-    private void Awake()
+    private new void Awake()
     {
       grabTransform = root;
     }

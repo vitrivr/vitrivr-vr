@@ -28,9 +28,9 @@ namespace VitrivrVR.Interaction.System.Grab
     private Quaternion _inverseGrabberRotation;
     private Transform _grabber;
 
-    private List<Transform> _hovering = new List<Transform>();
+    private readonly List<Transform> _hovering = new List<Transform>();
 
-    private void Awake()
+    protected void Awake()
     {
       if (grabTransform == null)
       {

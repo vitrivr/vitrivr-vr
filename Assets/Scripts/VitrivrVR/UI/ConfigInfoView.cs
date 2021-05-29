@@ -1,10 +1,10 @@
-﻿using Vitrivr.UnityInterface.CineastApi.Utils;
-using UnityEngine;
+﻿using UnityEngine;
+using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Data;
 
-namespace VitrivrVR.Interaction.ViewerToolViews
+namespace VitrivrVR.UI
 {
-  public class ConfigInfoView : ViewerToolView
+  public class ConfigInfoView : MonoBehaviour
   {
     public GameObject scrollableUITable;
 
