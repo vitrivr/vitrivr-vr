@@ -133,18 +133,18 @@
       "url": "https://packages.unity.com"
     },
     "org.vitrivr.unityinterface.cineastapi": {
-      "version": "https://github.com/vitrivr/CineastUnityInterface.git#dev-all",
+      "version": "https://github.com/vitrivr/CineastUnityInterface.git#rename-dll",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "ad4a87cfa4bc660d8ebd5a425ca4a9664df58ea0"
+      "hash": "a9acafb48a19212a2e41cc36939e4d1a56d7471a"
     },
     "org.vitrivr.unityinterface.dresapi": {
-      "version": "https://github.com/vitrivr/DresUnityInterface.git#no-dependencies",
+      "version": "https://github.com/vitrivr/DresUnityInterface.git#rename-dll",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "f231757fb2ac80000996468d654b7c4d8b821dc2"
+      "hash": "93b1f793b2a990d9fbff5c9dec45737ac2420e4f"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
