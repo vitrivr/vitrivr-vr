@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace VitrivrVR.Interaction.System.Grab
 {
-  public class Grabable : Interactable
+  public class Grabable : EventInteractable
   {
     [Serializable]
     public class HoverEvent : UnityEvent<bool>

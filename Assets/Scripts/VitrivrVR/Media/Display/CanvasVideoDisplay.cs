@@ -202,6 +202,12 @@ namespace VitrivrVR.Media.Display
 
     public async void SubmitCurrentFrame()
     {
+      if (!ConfigManager.Config.dresEnabled)
+      {
+        NotificationController.Notify("Dres is disabled!");
+        return;
+      }
+      
       var frame = _videoPlayerController.Frame;
 
       // Remove media object ID prefix if configured
