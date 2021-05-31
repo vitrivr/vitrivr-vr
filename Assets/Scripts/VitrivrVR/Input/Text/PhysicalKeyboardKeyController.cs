@@ -1,10 +1,11 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
+using VitrivrVR.Interaction.System;
 
 namespace VitrivrVR.Input.Text
 {
-  public class PhysicalKeyboardKeyController : MonoBehaviour
+  public class PhysicalKeyboardKeyController : Interactable
   {
     public Color defaultColor;
     public Color pressedColor;
@@ -25,13 +26,13 @@ namespace VitrivrVR.Input.Text
       _tmp.text = text;
     }
 
-    public void OnTriggerEnter(Collider other)
+    public override void OnHoverEnter(Transform interactor)
     {
       onPress();
       _renderer.material.color = pressedColor;
     }
 
-    public void OnTriggerExit(Collider other)
+    public override void OnHoverExit(Transform interactor)
     {
       _renderer.material.color = defaultColor;
     }
