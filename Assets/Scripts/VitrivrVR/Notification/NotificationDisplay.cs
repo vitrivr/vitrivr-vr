@@ -32,7 +32,8 @@ namespace VitrivrVR.Notification
 
     public void SetNotification(string notification)
     {
-      _textDisplay.text = notification;
+      var time = DateTime.Now.ToString("T");
+      _textDisplay.text = $"[{time}] {notification}";
       _fadeTimer = fadeTime;
     }
   }
