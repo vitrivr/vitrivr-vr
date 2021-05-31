@@ -80,7 +80,6 @@ namespace VitrivrVR.Media.Display
 
     private void CloseMediaDisplay()
     {
-      Destroy(_mediaDisplay.gameObject);
       _mediaDisplay = null;
       if (!previewImage)
         return;
