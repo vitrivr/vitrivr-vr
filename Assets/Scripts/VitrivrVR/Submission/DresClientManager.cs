@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Vitrivr.UnityInterface.DresApi;
 using VitrivrVR.Config;
+using VitrivrVR.Notification;
 
 namespace VitrivrVR.Submission
 {
@@ -14,6 +15,7 @@ namespace VitrivrVR.Submission
       {
         instance = new DresClient();
         await instance.Login();
+        NotificationController.Notify($"Dres connected: {instance.UserDetails.Username}");
       }
     }
   }

@@ -22,10 +22,13 @@ namespace VitrivrVR.UI
         {"", "Thumbnail Path", CineastConfigManager.Instance.Config.thumbnailPath},
         {"", "Thumbnail Extension", CineastConfigManager.Instance.Config.thumbnailExtension},
         {"", "Media Path", CineastConfigManager.Instance.Config.mediaPath},
+        {"", "", ""},
         
         {"Dres", "Host", DresConfigManager.Instance.Config.host},
         {"", "Port", DresConfigManager.Instance.Config.port.ToString()},
         {"", "tls", DresConfigManager.Instance.Config.tls.ToString()},
+        {"", "User", DresConfigManager.Instance.Config.user},
+        {"", "", ""},
         
         {"vitrivr-VR", "Max Results", ConfigManager.Config.maxResults.ToString()},
         {"", "Max Prefetch", ConfigManager.Config.maxPrefetch.ToString()},
