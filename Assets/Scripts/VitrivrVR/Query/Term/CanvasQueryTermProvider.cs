@@ -22,16 +22,10 @@ namespace VitrivrVR.Query.Term
     public RectTransform toolTipPanel;
     public int maxResults = 100;
 
+    public CanvasTextTermProvider textTermProvider;
+
     private readonly List<TagData> _tagItems = new List<TagData>();
     private readonly HashSet<string> _tagIds = new HashSet<string>();
-
-    // Text input data
-    // TODO: Restructure to be modular and configurable
-    private bool _ocr;
-    private bool _asr;
-    private bool _sceneCaption;
-    private bool _visualTextCoEmbedding;
-    private string _textSearchText;
 
     /// <summary>
     /// Stores the latest tag search input to determine if search results are still relevant.
@@ -47,31 +41,6 @@ namespace VitrivrVR.Query.Term
       var tagItemRect = tagItemPrefab.GetComponent<RectTransform>();
       _tagItemHeight = tagItemRect.rect.height;
       _tooltipText = toolTipPanel.GetComponentInChildren<TextMeshProUGUI>();
-    }
-
-    public void SetTextSearchText(string text)
-    {
-      _textSearchText = text;
-    }
-
-    public void SetOcrSearch(bool ocr)
-    {
-      _ocr = ocr;
-    }
-
-    public void SetAsrSearch(bool asr)
-    {
-      _asr = asr;
-    }
-
-    public void SetSceneCaptionSearch(bool sceneCaption)
-    {
-      _sceneCaption = sceneCaption;
-    }
-
-    public void SetVisualTextCoEmbeddingSearch(bool visualTextCoEmbedding)
-    {
-      _visualTextCoEmbedding = visualTextCoEmbedding;
     }
 
     /// <summary>
@@ -185,40 +154,9 @@ namespace VitrivrVR.Query.Term
         terms.Add(QueryTermBuilder.BuildTagTerm(tags));
       }
 
-      if ((_ocr || _asr || _sceneCaption || _visualTextCoEmbedding) && !string.IsNullOrEmpty(_textSearchText))
-      {
-        terms.Add(BuildTextTerm());
-      }
+      terms.AddRange(textTermProvider.GetTerms());
 
       return terms;
-    }
-
-    private QueryTerm BuildTextTerm()
-    {
-      // TODO: Move to Cineast Unity Interface in a more modular way
-      var categories = new List<string>();
-
-      if (_ocr)
-      {
-        categories.Add("ocr");
-      }
-
-      if (_asr)
-      {
-        categories.Add("asr");
-      }
-
-      if (_sceneCaption)
-      {
-        categories.Add("scenecaption");
-      }
-
-      if (_visualTextCoEmbedding)
-      {
-        categories.Add("visualtextcoembedding");
-      }
-
-      return new QueryTerm(QueryTerm.TypeEnum.TEXT, _textSearchText, categories);
     }
   }
 }
