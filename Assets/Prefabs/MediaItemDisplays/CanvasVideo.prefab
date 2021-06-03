@@ -491,8 +491,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2954403938280973320}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: ShowMetadata
+        m_TargetAssemblyTypeName: VitrivrVR.Media.Display.CanvasVideoDisplay, Assembly-CSharp
+        m_MethodName: ToggleMetadata
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

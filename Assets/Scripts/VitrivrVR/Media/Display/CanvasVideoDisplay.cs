@@ -36,7 +36,6 @@ namespace VitrivrVR.Media.Display
     public RectTransform segmentIndicator;
     public TextMeshProUGUI segmentDataText;
     public GameObject scrollableUITable;
-    public GameObject metadataButton;
     public GameObject submitButton;
 
     public GameObject mediaObjectSegmentViewPrefab;
@@ -54,6 +53,8 @@ namespace VitrivrVR.Media.Display
     private Action _onClose;
     private GameObject _objectSegmentView;
     private bool _metadataShown;
+    private GameObject _metadataTable;
+    private ScrollRect _tagList;
 
     /// <summary>
     /// Number of segment indicators to instantiate each frame in Coroutine.
@@ -139,15 +140,17 @@ namespace VitrivrVR.Media.Display
       }
     }
 
-    public async void ShowMetadata()
+    public async void ToggleMetadata()
     {
       if (_metadataShown)
       {
+        Destroy(_metadataTable);
+        Destroy(_tagList.gameObject);
+        _metadataShown = false;
         return;
       }
 
       _metadataShown = true;
-      Destroy(metadataButton);
 
       var metadata = await _mediaObject.Metadata.GetAll();
       var rows = metadata.Values.Select(domain => domain.Count).Aggregate(0, (x, y) => x + y);
@@ -174,20 +177,20 @@ namespace VitrivrVR.Media.Display
 
       var bottomStack = progressBar.parent;
 
-      var uiTable = Instantiate(scrollableUITable, bottomStack);
-      var uiTableController = uiTable.GetComponentInChildren<UITableController>();
+      _metadataTable = Instantiate(scrollableUITable, bottomStack);
+      var uiTableController = _metadataTable.GetComponentInChildren<UITableController>();
       uiTableController.table = table;
-      var uiTableTransform = uiTable.GetComponent<RectTransform>();
+      var uiTableTransform = _metadataTable.GetComponent<RectTransform>();
       uiTableTransform.sizeDelta = new Vector2(100, 200); // x is completely irrelevant here, since width is auto
 
       // Segment tags
-      var tagList = Instantiate(scrollableListPrefab, bottomStack);
-      var listRect = tagList.GetComponent<RectTransform>();
+      _tagList = Instantiate(scrollableListPrefab, bottomStack);
+      var listRect = _tagList.GetComponent<RectTransform>();
       listRect.anchorMin = new Vector2(0, .5f);
       listRect.anchorMax = new Vector2(0, .5f);
-      listRect.sizeDelta = new Vector2(100, 200);
+      listRect.sizeDelta = new Vector2(100, 600);
 
-      var listContent = tagList.content;
+      var listContent = _tagList.content;
 
       // TODO: Preload or cache for all results
       var tagIds = await CineastWrapper.MetadataApi.FindTagsByIdAsync(_segment.Id);
@@ -208,7 +211,7 @@ namespace VitrivrVR.Media.Display
         NotificationController.Notify("Dres is disabled!");
         return;
       }
-      
+
       var frame = _videoPlayerController.Frame;
 
       // Remove media object ID prefix if configured
@@ -338,6 +341,7 @@ namespace VitrivrVR.Media.Display
       {
         colors[j] = backgroundColor;
       }
+
       progressTexture.SetPixels(0, 0, 1000, 1, colors);
       progressTexture.Apply();
       progressBar.GetComponent<RawImage>().texture = progressTexture;
