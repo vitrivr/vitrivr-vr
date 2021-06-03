@@ -7,6 +7,7 @@ using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using Vitrivr.UnityInterface.CineastApi;
@@ -44,6 +45,9 @@ namespace VitrivrVR.Media.Display
 
     public Slider volumeSlider;
 
+    public InputAction skipAction;
+    public HoverHandler videoHoverHandler;
+
     private ScoredSegment _scoredSegment;
     private SegmentData _segment;
     private ObjectData _mediaObject;
@@ -55,6 +59,11 @@ namespace VitrivrVR.Media.Display
     private bool _metadataShown;
     private GameObject _metadataTable;
     private ScrollRect _tagList;
+
+    private bool _hovered;
+
+    // TODO: Move to configuration
+    private const float SkipSeconds = 5;
 
     /// <summary>
     /// Number of segment indicators to instantiate each frame in Coroutine.
@@ -239,6 +248,41 @@ namespace VitrivrVR.Media.Display
     {
       GetComponentInChildren<Canvas>().worldCamera = Camera.main;
       _imageTransform = previewImage.GetComponent<RectTransform>();
+
+      skipAction.started += Skip;
+      videoHoverHandler.onEnter += OnHoverEnter;
+      videoHoverHandler.onExit += OnHoverExit;
+    }
+
+    private void OnEnable()
+    {
+      skipAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+      skipAction.Disable();
+    }
+
+    private void OnHoverEnter(PointerEventData pointerEventData)
+    {
+      _hovered = true;
+    }
+
+    private void OnHoverExit(PointerEventData pointerEventData)
+    {
+      _hovered = false;
+    }
+
+    /// <summary>
+    /// Skips the set number of seconds forward or backward if this video is hovered.
+    /// </summary>
+    private void Skip(InputAction.CallbackContext context)
+    {
+      if (!_hovered) return;
+
+      var sign = Mathf.Sign(context.ReadValue<float>());
+      SetVideoTime(_videoPlayerController.ClockTime + sign * SkipSeconds);
     }
 
     private void Update()
@@ -382,7 +426,8 @@ namespace VitrivrVR.Media.Display
       var mediaObjectId = await _segment.GetObjectId();
       var current = TimeSpan.FromSeconds(time).ToString("g");
       var segment = await GetCurrentSegment(time);
-      segmentDataText.text = $"{mediaObjectId}: {current}\nCurrent: {segment.Id}";
+      var segId = segment != null ? segment.Id : "Unknown";
+      segmentDataText.text = $"{mediaObjectId}: {current}\nCurrent: {segId}";
     }
 
     private async Task<SegmentData> GetCurrentSegment(double time)

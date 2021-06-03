@@ -1505,7 +1505,6 @@ MonoBehaviour:
   segmentDataText: {fileID: 7411012077360367350}
   scrollableUITable: {fileID: 8791042073019561513, guid: ec7b8d050e5be4866828273d41564928,
     type: 3}
-  metadataButton: {fileID: 2103391515301786338}
   submitButton: {fileID: 6959233241561244974}
   mediaObjectSegmentViewPrefab: {fileID: 3816833972309262785, guid: abe582c94b4014ac2a4e7e72044b0fe4,
     type: 3}
@@ -1514,6 +1513,39 @@ MonoBehaviour:
   listItemPrefab: {fileID: 5321778176243085016, guid: 57132fe2a3a6f4f6296483a62d9ab15e,
     type: 3}
   volumeSlider: {fileID: 8529885628170766823}
+  skipAction:
+    m_Name: Skip
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 6a989481-a537-46c6-8f39-50edc87d76b5
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 1D Axis
+      m_Id: e8ff0cad-99c6-452e-a693-b55572da43ae
+      m_Path: 1DAxis
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Skip
+      m_Flags: 4
+    - m_Name: negative
+      m_Id: 744e9e31-528d-44bb-876b-87d57314b038
+      m_Path: <Keyboard>/downArrow
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Skip
+      m_Flags: 8
+    - m_Name: positive
+      m_Id: af43d34f-8bd6-4913-a97f-c6fd10dcb3f3
+      m_Path: <Keyboard>/upArrow
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Skip
+      m_Flags: 8
+  videoHoverHandler: {fileID: 7569357379765769196}
 --- !u!114 &4488891672446029487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1702,6 +1734,7 @@ GameObject:
   - component: {fileID: 4594933250863082740}
   - component: {fileID: 5064459230609502042}
   - component: {fileID: 901190169282689203}
+  - component: {fileID: 7569357379765769196}
   m_Layer: 0
   m_Name: Panel
   m_TagString: Untagged
@@ -1793,6 +1826,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7569357379765769196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7457689122056061006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d8e7798683c94d2a9feb7ba6332f047, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7750526513195147312
 GameObject:
   m_ObjectHideFlags: 0
