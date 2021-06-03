@@ -22,7 +22,7 @@ namespace VitrivrVR.Query.Term
     public RectTransform toolTipPanel;
     public int maxResults = 100;
 
-    public CanvasTextTermProvider textTermProvider;
+    public CanvasTextTermManager textTermProvider;
 
     private readonly List<TagData> _tagItems = new List<TagData>();
     private readonly HashSet<string> _tagIds = new HashSet<string>();
