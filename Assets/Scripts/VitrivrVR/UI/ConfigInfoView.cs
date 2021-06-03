@@ -36,7 +36,8 @@ namespace VitrivrVR.UI
         {"", "Dres enabled", ConfigManager.Config.dresEnabled.ToString()},
         {"", "Submission Prefix Length", ConfigManager.Config.submissionIdPrefixLength.ToString()},
         {"", "Dictation Debug", ConfigManager.Config.dictationDebugOutput.ToString()},
-        {"", "Default Volume", ConfigManager.Config.defaultMediaVolume.ToString("F")}
+        {"", "Default Volume", ConfigManager.Config.defaultMediaVolume.ToString("F")},
+        {"", "Skip Length", ConfigManager.Config.skipLength.ToString("F")}
       };
     }
   }

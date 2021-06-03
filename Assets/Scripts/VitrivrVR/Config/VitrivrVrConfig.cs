@@ -65,6 +65,11 @@ namespace VitrivrVR.Config
     public float defaultMediaVolume;
 
     /// <summary>
+    /// The default length in seconds to skip using the skip controls for audio and video.
+    /// </summary>
+    public float skipLength;
+
+    /// <summary>
     /// Enables or disables DRES submission system integration and all associated functionality.
     /// </summary>
     public bool dresEnabled;
@@ -91,6 +96,7 @@ namespace VitrivrVR.Config
         mapping[CategoryMappings.EDGE_CATEGORY]
       };
       defaultMediaVolume = .5f;
+      skipLength = 5f;
       dresEnabled = false;
       submissionIdPrefixLength = 0;
     }

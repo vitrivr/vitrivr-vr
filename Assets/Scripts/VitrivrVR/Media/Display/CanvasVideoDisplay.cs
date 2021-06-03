@@ -62,9 +62,6 @@ namespace VitrivrVR.Media.Display
 
     private bool _hovered;
 
-    // TODO: Move to configuration
-    private const float SkipSeconds = 5;
-
     /// <summary>
     /// Number of segment indicators to instantiate each frame in Coroutine.
     /// </summary>
@@ -281,8 +278,15 @@ namespace VitrivrVR.Media.Display
     {
       if (!_hovered) return;
 
-      var sign = Mathf.Sign(context.ReadValue<float>());
-      SetVideoTime(_videoPlayerController.ClockTime + sign * SkipSeconds);
+      var sign = Mathf.Sign(context.ReadValue<Vector2>().x);
+      var time = _videoPlayerController.ClockTime + sign * ConfigManager.Config.skipLength;
+      time = Math.Max(Math.Min(time, _videoPlayerController.Length), 0);
+      SetVideoTime(time);
+      if (!_videoPlayerController.IsPlaying)
+      {
+        UpdateProgressIndicator(time);
+        UpdateText(time);
+      }
     }
 
     private void Update()
