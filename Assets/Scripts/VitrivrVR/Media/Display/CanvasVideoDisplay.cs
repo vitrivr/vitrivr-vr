@@ -193,7 +193,8 @@ namespace VitrivrVR.Media.Display
       var listContent = _tagList.content;
 
       // TODO: Preload or cache for all results
-      var tagIds = await CineastWrapper.MetadataApi.FindTagsByIdAsync(_segment.Id);
+      var segment = await GetCurrentSegment(_videoPlayerController.ClockTime);
+      var tagIds = await CineastWrapper.MetadataApi.FindTagsByIdAsync(segment.Id);
 
       var tags = await CineastWrapper.TagApi.FindTagsByIdAsync(new IdList(tagIds.TagIDs));
 
@@ -377,7 +378,15 @@ namespace VitrivrVR.Media.Display
     {
       if (_segments == null)
         return;
+
       var mediaObjectId = await _segment.GetObjectId();
+      var current = TimeSpan.FromSeconds(time).ToString("g");
+      var segment = await GetCurrentSegment(time);
+      segmentDataText.text = $"{mediaObjectId}: {current}\nCurrent: {segment.Id}";
+    }
+
+    private async Task<SegmentData> GetCurrentSegment(double time)
+    {
       foreach (var segment in _segments)
       {
         var start = await segment.GetAbsoluteStart();
@@ -385,12 +394,11 @@ namespace VitrivrVR.Media.Display
 
         if (start <= time && time <= end)
         {
-          var current = TimeSpan.FromSeconds(time).ToString("g");
-          segmentDataText.text =
-            $"{mediaObjectId}: {current}\nCurrent: {segment.Id}";
-          break;
+          return segment;
         }
       }
+
+      return null;
     }
 
     private void SetSegmentIndicator(double start, double end, double length, RectTransform rt)
