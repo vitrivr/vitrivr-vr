@@ -71,6 +71,37 @@ namespace VitrivrVR.Input.Text
 
     private void Awake()
     {
+      SetUpDictationRecognizer();
+    }
+
+    public void SetDictation(InputAction.CallbackContext context)
+    {
+      Debug.Log("Test!");
+      SetDictation(context.performed);
+    }
+
+    public void SetDictation(bool dictation)
+    {
+      if (dictation)
+      {
+        StartDictation();
+      }
+      else
+      {
+        StopDictation();
+      }
+    }
+
+    public bool IsListening => _dictationRecognizer.Status == SpeechSystemStatus.Running;
+
+    public void ResetDictation()
+    {
+      TearDownDictationRecognizer();
+      SetUpDictationRecognizer();
+    }
+
+    private void SetUpDictationRecognizer()
+    {
       // Set up dictation
       _dictationRecognizer = new DictationRecognizer();
 
@@ -112,32 +143,20 @@ namespace VitrivrVR.Input.Text
       };
     }
 
-    public void SetDictation(InputAction.CallbackContext context)
+    private void TearDownDictationRecognizer()
     {
-      Debug.Log("Test!");
-      SetDictation(context.performed);
-    }
-
-    public void SetDictation(bool dictation)
-    {
-      if (dictation)
+      if (IsListening)
       {
-        StartDictation();
+        _dictationRecognizer.Stop();
       }
-      else
-      {
-        StopDictation();
-      }
-    }
-
-    public bool IsListening()
-    {
-      return _dictationRecognizer.Status == SpeechSystemStatus.Running;
+      
+      _dictationRecognizer.Dispose();
+      _dictationRecognizer = null;
     }
 
     private void StartDictation()
     {
-      if (_dictationRecognizer.Status == SpeechSystemStatus.Running)
+      if (IsListening)
       {
         Debug.LogError("Dictation already running!");
         return;
@@ -150,7 +169,7 @@ namespace VitrivrVR.Input.Text
 
     private void StopDictation()
     {
-      if (_dictationRecognizer.Status != SpeechSystemStatus.Running)
+      if (!IsListening)
       {
         Debug.LogError("Dictation not running, cannot stop!");
         return;
