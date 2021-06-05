@@ -93,16 +93,19 @@ namespace VitrivrVR.Query
         return;
       }
 
+      var config = ConfigManager.Config;
+      var maxResults = config.maxResults;
+      var prefetch = config.maxPrefetch;
+
       var query = QueryBuilder.BuildSimilarityQuery(queryTerms.ToArray());
+      // TODO: Move to QueryBuilder
+      query.Config = new QueryConfig(resultsPerModule: maxResults);
 
       if (!timer.activeSelf)
       {
         timer.SetActive(true);
       }
 
-      var config = ConfigManager.Config;
-      var maxResults = config.maxResults;
-      var prefetch = config.maxPrefetch;
       var queryData = await CineastWrapper.ExecuteQuery(query, maxResults, prefetch);
 
       if (_localQueryGuid != localGuid)
