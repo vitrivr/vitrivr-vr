@@ -1,5 +1,6 @@
 using UnityEngine;
 using VitrivrVR.Query;
+using VitrivrVR.Query.Display;
 
 namespace VitrivrVR.UI
 {
@@ -20,6 +21,25 @@ namespace VitrivrVR.UI
       {
         {"Results", results}
       };
+    }
+
+    public void SetObjectQueryDisplayMode()
+    {
+      SetQueryDisplayMode(QueryDisplay.DisplayMode.MediaObjectDisplay);
+    }
+
+    public void SetSegmentQueryDisplayMode()
+    {
+      SetQueryDisplayMode(QueryDisplay.DisplayMode.MediaSegmentDisplay);
+    }
+
+    private void SetQueryDisplayMode(QueryDisplay.DisplayMode displayMode)
+    {
+      var currentQuery = QueryController.Instance.CurrentQuery;
+      if (currentQuery != -1)
+      {
+        QueryController.Instance.queries[currentQuery].display.SwitchDisplayMode(displayMode);
+      }
     }
 
     private void OnQueryFocus(int oldIndex, int newIndex)

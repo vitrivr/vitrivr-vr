@@ -11,6 +11,9 @@ using VitrivrVR.Notification;
 
 namespace VitrivrVR.Query.Display
 {
+  /// <summary>
+  /// Displays queries as if on the surface of a cylinder in a grid.
+  /// </summary>
   public class CylinderQueryDisplay : QueryDisplay
   {
     public MediaItemDisplay mediaItemDisplay;
@@ -30,6 +33,14 @@ namespace VitrivrVR.Query.Display
     private readonly Queue<ScoredSegment> _instantiationQueue = new Queue<ScoredSegment>();
 
     private List<ScoredSegment> _results;
+
+    /// <summary>
+    /// Dictionary containing for each media object in the results the index in the media object display mode and the
+    /// number of segments belonging to it found in the results so far.
+    /// </summary>
+    private Dictionary<string, (int firstIndex, int segments)> _mediaObjectIndexes =
+      new Dictionary<string, (int firstIndex, int segments)>();
+
     private int _nResults;
     private float _columnAngle;
     private int _maxColumns;
@@ -37,6 +48,8 @@ namespace VitrivrVR.Query.Display
     private float _currentRotation;
     private int _currentStart;
     private int _currentEnd;
+
+    private DisplayMode _currentDisplayMode = DisplayMode.MediaSegmentDisplay;
 
     private void Awake()
     {
@@ -88,6 +101,56 @@ namespace VitrivrVR.Query.Display
       }
     }
 
+    public override async void SwitchDisplayMode(DisplayMode mode)
+    {
+      if (mode == _currentDisplayMode)
+      {
+        return;
+      }
+
+      switch (mode)
+      {
+        case DisplayMode.MediaSegmentDisplay:
+          for (var i = 0; i < _mediaDisplays.Count; i++)
+          {
+            var (position, rotation) = GetResultLocalPosRot(i);
+            var displayTransform = _mediaDisplays[i].display.transform;
+            displayTransform.localPosition = position;
+            displayTransform.localRotation = rotation;
+          }
+
+          break;
+        case DisplayMode.MediaObjectDisplay:
+          for (var i = 0; i < _mediaDisplays.Count; i++)
+          {
+            var objectId = await _results[i].segment.GetObjectId();
+            int index;
+            var count = 0;
+            if (_mediaObjectIndexes.ContainsKey(objectId))
+            {
+              (index, count) = _mediaObjectIndexes[objectId];
+            }
+            else
+            {
+              index = _mediaObjectIndexes.Count;
+            }
+
+            _mediaObjectIndexes[objectId] = (index, count + 1);
+
+            var (position, rotation) = GetResultLocalPosRot(index, count * padding);
+            var displayTransform = _mediaDisplays[i].display.transform;
+            displayTransform.localPosition = position;
+            displayTransform.localRotation = rotation;
+          }
+
+          break;
+        default:
+          throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+      }
+
+      _currentDisplayMode = mode;
+    }
+
     private void Rotate(float degrees)
     {
       transform.Rotate(degrees * Vector3.up);
@@ -126,12 +189,8 @@ namespace VitrivrVR.Query.Display
     {
       // Determine position
       var index = _mediaDisplays.Count;
-      var row = index % rows;
-      var column = index / rows;
-      var multiplier = resultSize + padding;
-      var position = new Vector3(0, multiplier * row, distance);
-      var rotation = Quaternion.Euler(0, column * _columnAngle, 0);
-      position = rotation * position;
+
+      var (position, rotation) = GetResultLocalPosRot(index);
 
       var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, Quaternion.identity, transform);
       var transform2 = itemDisplay.transform;
@@ -146,6 +205,22 @@ namespace VitrivrVR.Query.Display
       await itemDisplay.Initialize(result);
 
       itemDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
+    }
+
+    /// <summary>
+    /// Calculates and returns the local position and rotation of a result display based on its index.
+    /// The distanceDelta parameter can be used to specify additional distance from the display cylinder.
+    /// </summary>
+    private (Vector3 position, Quaternion rotation) GetResultLocalPosRot(int index, float distanceDelta = 0)
+    {
+      var row = index % rows;
+      var column = index / rows;
+      var multiplier = resultSize + padding;
+      var position = new Vector3(0, multiplier * row, distance + distanceDelta);
+      var rotation = Quaternion.Euler(0, column * _columnAngle, 0);
+      position = rotation * position;
+
+      return (position, rotation);
     }
   }
 }
