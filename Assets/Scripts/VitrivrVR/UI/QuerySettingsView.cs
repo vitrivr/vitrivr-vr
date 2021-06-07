@@ -11,9 +11,14 @@ namespace VitrivrVR.UI
     {
       QueryController.Instance.queryFocusEvent.AddListener(OnQueryFocus);
 
+      var currentQuery = QueryController.Instance.CurrentQuery;
+      var results = currentQuery == -1
+        ? "-----"
+        : QueryController.Instance.queries[currentQuery].display.NumberOfResults.ToString();
+
       statisticsTable.table = new[,]
       {
-        {"Results", "-----"}
+        {"Results", results}
       };
     }
 
