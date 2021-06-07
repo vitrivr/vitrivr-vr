@@ -22,6 +22,8 @@ namespace VitrivrVR.Query.Display
 
     public InputAction rotationAction;
 
+    public override int NumberOfResults => _nResults;
+
     private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays =
       new List<(MediaItemDisplay, float)>();
 

@@ -2,7 +2,6 @@
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using Vitrivr.UnityInterface.DresApi;
 using VitrivrVR.Config;
-using VitrivrVR.Data;
 
 namespace VitrivrVR.UI
 {

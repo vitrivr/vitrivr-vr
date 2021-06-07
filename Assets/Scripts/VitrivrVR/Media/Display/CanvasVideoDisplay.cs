@@ -15,11 +15,11 @@ using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Config;
-using VitrivrVR.Data;
 using VitrivrVR.Media.Controller;
 using VitrivrVR.Notification;
 using VitrivrVR.Query;
 using VitrivrVR.Submission;
+using VitrivrVR.UI;
 using VitrivrVR.Util;
 
 namespace VitrivrVR.Media.Display
