@@ -24,15 +24,16 @@ namespace VitrivrVR.UI
 
     private void OnQueryFocus(int oldIndex, int newIndex)
     {
-      if (newIndex != -1)
-      {
-        var nResults = QueryController.Instance.queries[newIndex].display.NumberOfResults;
-        statisticsTable.SetCell(0, 1, nResults.ToString());
-      }
-      else
-      {
-        statisticsTable.SetCell(0, 1, "-----");
-      }
+      UpdateQueryStatistics(newIndex);
+    }
+
+    private void UpdateQueryStatistics(int queryIndex)
+    {
+      var results = queryIndex == -1
+        ? "-----"
+        : QueryController.Instance.queries[queryIndex].display.NumberOfResults.ToString();
+
+      statisticsTable.SetCell(0, 1, results);
     }
   }
 }
