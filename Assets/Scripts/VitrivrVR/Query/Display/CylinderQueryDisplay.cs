@@ -119,6 +119,7 @@ namespace VitrivrVR.Query.Display
             var displayTransform = _mediaDisplays[i].transform;
             displayTransform.localPosition = position;
             displayTransform.localRotation = rotation;
+            _mediaDisplays[i].gameObject.SetActive(CheckDisplayEnabled(i));
           }
 
           break;
@@ -132,6 +133,7 @@ namespace VitrivrVR.Query.Display
               var displayTransform = displays[order].transform;
               displayTransform.localPosition = position;
               displayTransform.localRotation = rotation;
+              displays[order].gameObject.SetActive(CheckDisplayEnabled(objectIndex));
             }
           }
 
@@ -167,13 +169,30 @@ namespace VitrivrVR.Query.Display
 
       // Check enabled
       var enabledStart = Math.Max(rawColumnIndex * rows, 0);
+      var displayEndIndex = _currentDisplayMode switch
+      {
+        DisplayMode.MediaSegmentDisplay => _mediaDisplays.Count,
+        DisplayMode.MediaObjectDisplay => _mediaObjectSegmentDisplays.Count,
+        _ => throw new ArgumentOutOfRangeException()
+      };
       if (enabledStart != _currentStart || enabledEnd != _currentEnd)
       {
         var start = Mathf.Min(enabledStart, _currentStart);
-        var end = Mathf.Min(Mathf.Max(enabledEnd, _currentEnd), _mediaDisplays.Count);
+        var end = Mathf.Min(Mathf.Max(enabledEnd, _currentEnd), displayEndIndex);
         for (var i = start; i < end; i++)
         {
-          _mediaDisplays[i].gameObject.SetActive(enabledStart <= i && i < enabledEnd);
+          var active = enabledStart <= i && i < enabledEnd;
+          switch (_currentDisplayMode)
+          {
+            case DisplayMode.MediaSegmentDisplay:
+              _mediaDisplays[i].gameObject.SetActive(active);
+              break;
+            case DisplayMode.MediaObjectDisplay:
+              _mediaObjectSegmentDisplays[i].ForEach(display => display.gameObject.SetActive(active));
+              break;
+            default:
+              throw new ArgumentOutOfRangeException();
+          }
         }
 
         _currentStart = enabledStart;
@@ -184,6 +203,7 @@ namespace VitrivrVR.Query.Display
     private async Task CreateResultObject(ScoredSegment result)
     {
       var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, Quaternion.identity, transform);
+      await itemDisplay.Initialize(result);
 
       // Add to media displays list
       var displayIndex = _mediaDisplays.Count;
@@ -197,7 +217,7 @@ namespace VitrivrVR.Query.Display
         DisplayMode.MediaSegmentDisplay => GetResultLocalPosRot(displayIndex),
         DisplayMode.MediaObjectDisplay => GetResultLocalPosRot(objectIndex,
           _mediaObjectSegmentDisplays[objectIndex].Count * padding),
-        _ => (Vector3.zero, Quaternion.identity)
+        _ => throw new ArgumentOutOfRangeException()
       };
 
       var transform2 = itemDisplay.transform;
@@ -206,13 +226,11 @@ namespace VitrivrVR.Query.Display
       // Adjust size
       transform2.localScale *= resultSize;
 
-      await itemDisplay.Initialize(result);
-
       var index = _currentDisplayMode switch
       {
         DisplayMode.MediaSegmentDisplay => displayIndex,
         DisplayMode.MediaObjectDisplay => objectIndex,
-        _ => displayIndex
+        _ => throw new ArgumentOutOfRangeException()
       };
       itemDisplay.gameObject.SetActive(CheckDisplayEnabled(index));
     }
