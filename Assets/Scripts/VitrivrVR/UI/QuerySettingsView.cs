@@ -1,11 +1,14 @@
+using System.Collections.Generic;
 using UnityEngine;
 using VitrivrVR.Query;
+using VitrivrVR.Query.Display;
 
 namespace VitrivrVR.UI
 {
   public class QuerySettingsView : MonoBehaviour
   {
     public UITableController statisticsTable;
+    public List<QueryDisplay> queryDisplayPrefabs;
 
     private void Awake()
     {
@@ -20,6 +23,11 @@ namespace VitrivrVR.UI
       {
         {"Results", results}
       };
+    }
+
+    public void SetQueryDisplay(int displayPrefabIndex)
+    {
+      QueryController.Instance.queryDisplay = queryDisplayPrefabs[displayPrefabIndex];
     }
 
     public void SetObjectQueryDisplayMode()
