@@ -6,6 +6,7 @@ using Vitrivr.UnityInterface.CineastApi.Utils;
 using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
 using UnityEngine.Events;
+using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Config;
 using VitrivrVR.Notification;
 using VitrivrVR.Query.Display;
@@ -114,20 +115,7 @@ namespace VitrivrVR.Query
         return;
       }
 
-      if (CurrentQuery != -1)
-      {
-        ClearQuery();
-      }
-
-      var display = Instantiate(queryDisplay);
-
-      display.Initialize(queryData);
-
-      queries.Add((query, display));
-      var queryIndex = queries.Count - 1;
-      queryAddedEvent.Invoke(queryIndex);
-      queryFocusEvent.Invoke(CurrentQuery, queryIndex);
-      CurrentQuery = queryIndex;
+      InstantiateQueryDisplay(query, queryData);
 
       // Query display already created and initialized, but if this is no longer the newest query, do not disable query
       // indicator
@@ -136,9 +124,9 @@ namespace VitrivrVR.Query
       timer.SetActive(false);
     }
 
-    public void SelectQuery(SimilarityQuery query)
+    public void SelectQuery(QueryDisplay display)
     {
-      var index = queries.Select(pair => pair.query).ToList().IndexOf(query);
+      var index = queries.Select(pair => pair.display).ToList().IndexOf(display);
       SelectQuery(index);
     }
 
@@ -160,12 +148,12 @@ namespace VitrivrVR.Query
     }
 
     /// <summary>
-    /// Removes the specified query from the query list and destroys the associated QueryDisplay (notifies event
+    /// Removes the specified query display from the query list and destroys the associated QueryDisplay (notifies event
     /// subscribers before removal and destruction).
     /// </summary>
-    public void RemoveQuery(SimilarityQuery query)
+    public void RemoveQuery(QueryDisplay display)
     {
-      var index = queries.Select(pair => pair.query).ToList().IndexOf(query);
+      var index = queries.Select(pair => pair.display).ToList().IndexOf(display);
       RemoveQuery(index);
     }
 
@@ -203,9 +191,47 @@ namespace VitrivrVR.Query
       CurrentQuery = -1;
     }
 
+    /// <summary>
+    /// Creates a new query display from the current active query results.
+    /// </summary>
+    public void NewDisplayFromActive()
+    {
+      if (CurrentQuery == -1)
+      {
+        NotificationController.Notify("No query selected!");
+        return;
+      }
+      var (query, display) = queries[CurrentQuery];
+      if (display.GetType() == queryDisplay.GetType())
+      {
+        NotificationController.Notify($"Current query display already of type {display.GetType().Name}!");
+        return;
+      }
+
+      InstantiateQueryDisplay(query, display.QueryData);
+    }
+
     private void SetQueryActive(int index, bool active)
     {
       queries[index].display.gameObject.SetActive(active);
+    }
+
+    private void InstantiateQueryDisplay(SimilarityQuery query, QueryResponse queryData)
+    {
+      if (CurrentQuery != -1)
+      {
+        ClearQuery();
+      }
+
+      var display = Instantiate(queryDisplay);
+
+      display.Initialize(queryData);
+
+      queries.Add((query, display));
+      var queryIndex = queries.Count - 1;
+      queryAddedEvent.Invoke(queryIndex);
+      queryFocusEvent.Invoke(CurrentQuery, queryIndex);
+      CurrentQuery = queryIndex;
     }
   }
 }

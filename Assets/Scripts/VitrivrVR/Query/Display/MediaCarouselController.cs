@@ -74,7 +74,7 @@ namespace VitrivrVR.Query.Display
       _mediaDisplays.Clear();
     }
 
-    public override void Initialize(QueryResponse queryData)
+    protected override void Initialize()
     {
       var fusionResults = queryData.GetMeanFusionResults();
       foreach (var segment in fusionResults.Take(ConfigManager.Config.maxDisplay))

@@ -113,11 +113,11 @@ namespace VitrivrVR.UI
       tmp.text = $"[{display.GetType().Name}] {QueryToString(query)}";
       var textRect = textButton.GetComponent<RectTransform>();
       textRect.sizeDelta = new Vector2(tmp.GetPreferredValues().x + padding, textRect.sizeDelta.y);
-      textButton.onClick.AddListener(() => QueryController.Instance.SelectQuery(query));
+      textButton.onClick.AddListener(() => QueryController.Instance.SelectQuery(display));
 
       // Prepare close button
       var closeButton = listItem.GetChild(1).GetComponent<Button>();
-      closeButton.onClick.AddListener(() => QueryController.Instance.RemoveQuery(query));
+      closeButton.onClick.AddListener(() => QueryController.Instance.RemoveQuery(display));
       var closeRect = closeButton.GetComponent<RectTransform>();
 
       listItem.sizeDelta = new Vector2(textRect.sizeDelta.x + closeRect.sizeDelta.x, listItem.sizeDelta.y);

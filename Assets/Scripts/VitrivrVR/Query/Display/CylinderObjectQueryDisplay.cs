@@ -87,7 +87,7 @@ namespace VitrivrVR.Query.Display
       }
     }
 
-    public override void Initialize(QueryResponse queryData)
+    protected override void Initialize()
     {
       var fusionResults = queryData.GetMeanFusionResults();
       _results = fusionResults;
@@ -170,7 +170,7 @@ namespace VitrivrVR.Query.Display
       }
 
       var index = _objectMap[objectId];
-      var (position, rotation) = GetResultLocalPosRot(index, _mediaObjectSegmentDisplays[index].Count * padding);
+      var (position, rotation) = GetResultLocalPosRot(index, (_mediaObjectSegmentDisplays[index].Count - 1) * padding);
 
       var transform2 = itemDisplay.transform;
       transform2.localPosition = position;

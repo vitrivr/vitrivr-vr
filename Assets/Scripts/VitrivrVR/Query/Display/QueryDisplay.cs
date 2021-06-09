@@ -9,7 +9,17 @@ namespace VitrivrVR.Query.Display
   public abstract class QueryDisplay : MonoBehaviour
   {
     public virtual int NumberOfResults => -1;
+    public QueryResponse QueryData => queryData;
 
-    public abstract void Initialize(QueryResponse queryData);
+
+    protected QueryResponse queryData;
+
+    public void Initialize(QueryResponse queryResult)
+    {
+      queryData = queryResult;
+      Initialize();
+    }
+
+    protected abstract void Initialize();
   }
 }

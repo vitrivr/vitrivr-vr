@@ -30,14 +30,9 @@ namespace VitrivrVR.UI
       QueryController.Instance.queryDisplay = queryDisplayPrefabs[displayPrefabIndex];
     }
 
-    public void SetObjectQueryDisplayMode()
+    public void NewDisplayFromActive()
     {
-      // SetQueryDisplayMode(QueryDisplay.DisplayMode.MediaObjectDisplay);
-    }
-
-    public void SetSegmentQueryDisplayMode()
-    {
-      // SetQueryDisplayMode(QueryDisplay.DisplayMode.MediaSegmentDisplay);
+      QueryController.Instance.NewDisplayFromActive();
     }
 
     private void OnQueryFocus(int oldIndex, int newIndex)

@@ -74,7 +74,7 @@ namespace VitrivrVR.Query.Display
       }
     }
 
-    public override void Initialize(QueryResponse queryData)
+    protected override void Initialize()
     {
       var fusionResults = queryData.GetMeanFusionResults();
       _results = fusionResults;
