@@ -33,6 +33,8 @@ namespace VitrivrVR.UI
       _cellHeight = cellPrefab.GetComponent<RectTransform>().sizeDelta.y;
       _columns = new RectTransform[_nColumns];
       _cells = new GameObject[_nRows, _nColumns];
+      
+      var totalWidth = 0f;
 
       for (var i = 0; i < _nColumns; i++)
       {
@@ -48,9 +50,14 @@ namespace VitrivrVR.UI
         }
 
         var rectTransform = column.GetComponent<RectTransform>();
-        rectTransform.sizeDelta = new Vector2(columnWidth, table.GetLength(1) * _cellHeight);
+        rectTransform.sizeDelta = new Vector2(columnWidth, _nRows * _cellHeight);
         _columns[i] = rectTransform;
+
+        totalWidth += columnWidth;
       }
+
+      var t = GetComponent<RectTransform>();
+      t.sizeDelta = new Vector2(totalWidth, _nRows * _cellHeight);
     }
 
     public void SetCell(int row, int column, string text)
