@@ -27,6 +27,7 @@ namespace VitrivrVR.Query.Display
     public InputAction rotationAction;
 
     public int maxSegmentsPerObject = 3;
+    public float segmentDistance = 0.2f;
 
     public override int NumberOfResults => _nResults;
 
@@ -101,6 +102,7 @@ namespace VitrivrVR.Query.Display
       foreach (var segment in _results.Take(_maxColumns * 3 / 4 * rows))
       {
         _instantiationQueue.Enqueue(segment);
+        _enqueued++;
       }
     }
 
@@ -170,7 +172,7 @@ namespace VitrivrVR.Query.Display
       }
 
       var index = _objectMap[objectId];
-      var (position, rotation) = GetResultLocalPosRot(index, (_mediaObjectSegmentDisplays[index].Count - 1) * padding);
+      var (position, rotation) = GetResultLocalPosRot(index, (_mediaObjectSegmentDisplays[index].Count - 1) * segmentDistance);
 
       var transform2 = itemDisplay.transform;
       transform2.localPosition = position;
@@ -179,7 +181,7 @@ namespace VitrivrVR.Query.Display
       transform2.localScale *= resultSize;
 
       _mediaDisplays.Add(itemDisplay);
-      await itemDisplay.Initialize(result);
+      itemDisplay.Initialize(result);
 
       itemDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
     }

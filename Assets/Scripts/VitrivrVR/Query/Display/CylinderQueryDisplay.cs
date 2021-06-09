@@ -70,7 +70,7 @@ namespace VitrivrVR.Query.Display
 
       if (_instantiationQueue.Count > 0)
       {
-        await CreateResultObject(_instantiationQueue.Dequeue());
+        CreateResultObject(_instantiationQueue.Dequeue());
       }
     }
 
@@ -130,7 +130,7 @@ namespace VitrivrVR.Query.Display
       }
     }
 
-    private async Task CreateResultObject(ScoredSegment result)
+    private void CreateResultObject(ScoredSegment result)
     {
       // Determine position
       var index = _mediaDisplays.Count;
@@ -147,7 +147,7 @@ namespace VitrivrVR.Query.Display
       // Add to media displays list
       _mediaDisplays.Add(itemDisplay);
 
-      await itemDisplay.Initialize(result);
+      itemDisplay.Initialize(result);
 
       itemDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
     }

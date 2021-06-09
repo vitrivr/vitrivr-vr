@@ -33,13 +33,26 @@ namespace VitrivrVR.Media.Display
       clickHandler.onClick = OnClickImage;
     }
 
+    private async void Start()
+    {
+      try
+      {
+        var thumbnailUrl = await CineastWrapper.GetThumbnailUrlOfAsync(_segment);
+        StartCoroutine(DownloadHelper.DownloadTexture(thumbnailUrl, OnDownloadError, OnDownloadSuccess));
+      }
+      catch (Exception)
+      {
+        previewImage.texture = errorTexture;
+      }
+    }
+
     public override ScoredSegment ScoredSegment => _scoredSegment;
 
     /// <summary>
     /// Initializes this display with the given segment data.
     /// </summary>
     /// <param name="segment">Segment to display</param>
-    public override async Task Initialize(ScoredSegment segment)
+    public override void Initialize(ScoredSegment segment)
     {
       _scoredSegment = segment;
       _segment = segment.segment;
@@ -52,15 +65,6 @@ namespace VitrivrVR.Media.Display
       rectTransform.offsetMin = new Vector2(-scoreFrameSize, -scoreFrameSize);
       rectTransform.offsetMax = new Vector2(scoreFrameSize, scoreFrameSize);
       scoreFrame.gameObject.SetActive(true);
-      try
-      {
-        var thumbnailUrl = await CineastWrapper.GetThumbnailUrlOfAsync(_segment);
-        StartCoroutine(DownloadHelper.DownloadTexture(thumbnailUrl, OnDownloadError, OnDownloadSuccess));
-      }
-      catch (Exception)
-      {
-        previewImage.texture = errorTexture;
-      }
     }
 
     private async void OnClickImage(PointerEventData pointerEventData)

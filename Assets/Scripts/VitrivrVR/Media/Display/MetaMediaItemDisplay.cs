@@ -12,9 +12,9 @@ namespace VitrivrVR.Media.Display
 
     public override ScoredSegment ScoredSegment => mediaItemDisplay.ScoredSegment;
 
-    public override Task Initialize(ScoredSegment segment)
+    public override void Initialize(ScoredSegment segment)
     {
-      return mediaItemDisplay.Initialize(segment);
+      mediaItemDisplay.Initialize(segment);
     }
   }
 }

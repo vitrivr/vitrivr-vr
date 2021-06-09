@@ -59,7 +59,7 @@ namespace VitrivrVR.Query.Display
       
       if (_instantiationQueue.Count > 0)
       {
-        await CreateResultObject(_instantiationQueue.Dequeue());
+        CreateResultObject(_instantiationQueue.Dequeue());
       }
     }
 
@@ -80,7 +80,7 @@ namespace VitrivrVR.Query.Display
       }
     }
 
-    private async Task CreateResultObject(ScoredSegment result)
+    private void CreateResultObject(ScoredSegment result)
     {
       // Determine position
       var row = _mediaDisplays.Count % rows;
@@ -97,7 +97,7 @@ namespace VitrivrVR.Query.Display
 
       _mediaDisplays.Add((itemDisplay, (float) result.score));
 
-      await itemDisplay.Initialize(result);
+      itemDisplay.Initialize(result);
     }
   }
 }

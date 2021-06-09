@@ -35,11 +35,11 @@ namespace VitrivrVR.Query.Display
 
       if (_instantiationQueue.Count > 0)
       {
-        await CreateResultObject(_instantiationQueue.Dequeue());
+        CreateResultObject(_instantiationQueue.Dequeue());
       }
     }
 
-    private async Task CreateResultObject(ScoredSegment result)
+    private void CreateResultObject(ScoredSegment result)
     {
       // Determine position
       var position = new Vector3(0, 0, innerRadius + 1 - (float) result.score);
@@ -57,7 +57,7 @@ namespace VitrivrVR.Query.Display
       _mediaDisplays.Add((itemDisplay, (float) result.score));
 
       // Only begin initialization after determining position so that results can begin positioning
-      await itemDisplay.Initialize(result);
+      itemDisplay.Initialize(result);
     }
 
     public void ClearResults()
