@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,8 +13,9 @@ namespace VitrivrVR.Query.Display
 {
   /// <summary>
   /// Displays queries as if on the surface of a cylinder in a grid.
+  /// Object version
   /// </summary>
-  public class CylinderQueryDisplay : QueryDisplay
+  public class CylinderObjectQueryDisplay : QueryDisplay
   {
     public MediaItemDisplay mediaItemDisplay;
     public int rows = 4;
@@ -32,6 +33,14 @@ namespace VitrivrVR.Query.Display
     private readonly Queue<ScoredSegment> _instantiationQueue = new Queue<ScoredSegment>();
 
     private List<ScoredSegment> _results;
+
+    /// <summary>
+    /// Dictionary containing for each media object in the results the index of the list of corresponding media item
+    /// displays in _mediaObjectSegmentDisplays.
+    /// </summary>
+    private readonly Dictionary<string, int> _objectMap = new Dictionary<string, int>();
+
+    private readonly List<List<MediaItemDisplay>> _mediaObjectSegmentDisplays = new List<List<MediaItemDisplay>>();
 
     private int _nResults;
     private float _columnAngle;
@@ -104,12 +113,12 @@ namespace VitrivrVR.Query.Display
 
       // Check instantiations
       var enabledEnd = Mathf.Min((rawColumnIndex + _maxColumns) * rows, _nResults);
-      if (enabledEnd > _mediaDisplays.Count + _instantiationQueue.Count)
+      if (enabledEnd > _mediaObjectSegmentDisplays.Count && _instantiationQueue.Count == 0)
       {
-        var start = _mediaDisplays.Count + _instantiationQueue.Count;
-        foreach (var segment in _results.GetRange(start, enabledEnd - start))
+        var index = _mediaDisplays.Count;
+        if (index < _results.Count)
         {
-          _instantiationQueue.Enqueue(segment);
+          _instantiationQueue.Enqueue(_results[index]);
         }
       }
 
@@ -118,11 +127,11 @@ namespace VitrivrVR.Query.Display
       if (enabledStart != _currentStart || enabledEnd != _currentEnd)
       {
         var start = Mathf.Min(enabledStart, _currentStart);
-        var end = Mathf.Min(Mathf.Max(enabledEnd, _currentEnd), _mediaDisplays.Count);
+        var end = Mathf.Min(Mathf.Max(enabledEnd, _currentEnd), _mediaObjectSegmentDisplays.Count);
         for (var i = start; i < end; i++)
         {
           var active = enabledStart <= i && i < enabledEnd;
-          _mediaDisplays[i].gameObject.SetActive(active);
+          _mediaObjectSegmentDisplays[i].ForEach(display => display.gameObject.SetActive(active));
         }
 
         _currentStart = enabledStart;
@@ -132,11 +141,23 @@ namespace VitrivrVR.Query.Display
 
     private async Task CreateResultObject(ScoredSegment result)
     {
-      // Determine position
-      var index = _mediaDisplays.Count;
-      var (position, rotation) = GetResultLocalPosRot(index);
+      var objectId = await result.segment.GetObjectId();
 
       var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, Quaternion.identity, transform);
+
+      // Add to media object list
+      if (_objectMap.ContainsKey(objectId))
+      {
+        _mediaObjectSegmentDisplays[_objectMap[objectId]].Add(itemDisplay);
+      }
+      else
+      {
+        _objectMap[objectId] = _mediaObjectSegmentDisplays.Count;
+        _mediaObjectSegmentDisplays.Add(new List<MediaItemDisplay> {itemDisplay});
+      }
+
+      var index = _objectMap[objectId];
+      var (position, rotation) = GetResultLocalPosRot(index, _mediaObjectSegmentDisplays[index].Count * padding);
 
       var transform2 = itemDisplay.transform;
       transform2.localPosition = position;
@@ -144,9 +165,7 @@ namespace VitrivrVR.Query.Display
       // Adjust size
       transform2.localScale *= resultSize;
 
-      // Add to media displays list
       _mediaDisplays.Add(itemDisplay);
-
       await itemDisplay.Initialize(result);
 
       itemDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
