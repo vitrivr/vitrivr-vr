@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Query;
+using VitrivrVR.Query.Display;
 
 namespace VitrivrVR.UI
 {
@@ -29,7 +30,8 @@ namespace VitrivrVR.UI
 
     private void OnQueryAdded(int index)
     {
-      AddQuery(QueryController.Instance.queries[index].query);
+      var (query, display) = QueryController.Instance.queries[index];
+      AddQuery(query, display);
     }
 
     private void OnQueryRemoved(int index)
@@ -66,9 +68,9 @@ namespace VitrivrVR.UI
       }
       else
       {
-        foreach (var (query, _) in QueryController.Instance.queries)
+        foreach (var (query, display) in QueryController.Instance.queries)
         {
-          AddQuery(query);
+          AddQuery(query, display);
         }
 
         if (QueryController.Instance.CurrentQuery != -1)
@@ -89,7 +91,7 @@ namespace VitrivrVR.UI
       textRect.sizeDelta = new Vector2(tmp.GetPreferredValues().x, textRect.sizeDelta.y);
     }
 
-    private void AddQuery(SimilarityQuery query)
+    private void AddQuery(SimilarityQuery query, QueryDisplay display)
     {
       const int padding = 20;
       if (_queries.Count == 0 && list.childCount > 0)
@@ -108,7 +110,7 @@ namespace VitrivrVR.UI
       textButton.colors = colors;
 
       var tmp = textButton.GetComponentInChildren<TextMeshProUGUI>();
-      tmp.text = QueryToString(query);
+      tmp.text = $"[{display.GetType().Name}] {QueryToString(query)}";
       var textRect = textButton.GetComponent<RectTransform>();
       textRect.sizeDelta = new Vector2(tmp.GetPreferredValues().x + padding, textRect.sizeDelta.y);
       textButton.onClick.AddListener(() => QueryController.Instance.SelectQuery(query));
