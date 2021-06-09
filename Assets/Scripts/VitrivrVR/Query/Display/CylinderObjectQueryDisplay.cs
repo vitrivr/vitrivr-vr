@@ -26,6 +26,8 @@ namespace VitrivrVR.Query.Display
 
     public InputAction rotationAction;
 
+    public int maxSegmentsPerObject = 3;
+
     public override int NumberOfResults => _nResults;
 
     private readonly List<MediaItemDisplay> _mediaDisplays = new List<MediaItemDisplay>();
@@ -33,6 +35,8 @@ namespace VitrivrVR.Query.Display
     private readonly Queue<ScoredSegment> _instantiationQueue = new Queue<ScoredSegment>();
 
     private List<ScoredSegment> _results;
+
+    private int _enqueued;
 
     /// <summary>
     /// Dictionary containing for each media object in the results the index of the list of corresponding media item
@@ -113,12 +117,13 @@ namespace VitrivrVR.Query.Display
 
       // Check instantiations
       var enabledEnd = Mathf.Min((rawColumnIndex + _maxColumns) * rows, _nResults);
-      if (enabledEnd > _mediaObjectSegmentDisplays.Count && _instantiationQueue.Count == 0)
+      if (enabledEnd > _mediaObjectSegmentDisplays.Count && _enqueued == _mediaDisplays.Count)
       {
         var index = _mediaDisplays.Count;
         if (index < _results.Count)
         {
           _instantiationQueue.Enqueue(_results[index]);
+          _enqueued++;
         }
       }
 
@@ -142,6 +147,14 @@ namespace VitrivrVR.Query.Display
     private async Task CreateResultObject(ScoredSegment result)
     {
       var objectId = await result.segment.GetObjectId();
+
+      // Only instantiate if max segments for this object have not been reached already
+      if (_objectMap.ContainsKey(objectId) &&
+          _mediaObjectSegmentDisplays[_objectMap[objectId]].Count >= maxSegmentsPerObject)
+      {
+        _mediaDisplays.Add(null);
+        return;
+      }
 
       var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, Quaternion.identity, transform);
 

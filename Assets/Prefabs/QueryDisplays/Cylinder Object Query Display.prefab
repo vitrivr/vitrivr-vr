@@ -106,3 +106,4 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Rotation
       m_Flags: 8
+  maxSegmentsPerObject: 3
