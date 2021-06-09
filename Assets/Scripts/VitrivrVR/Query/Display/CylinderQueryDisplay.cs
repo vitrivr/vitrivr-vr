@@ -27,19 +27,21 @@ namespace VitrivrVR.Query.Display
 
     public override int NumberOfResults => _nResults;
 
-    private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays =
-      new List<(MediaItemDisplay, float)>();
+    private readonly List<MediaItemDisplay> _mediaDisplays = new List<MediaItemDisplay>();
 
     private readonly Queue<ScoredSegment> _instantiationQueue = new Queue<ScoredSegment>();
 
     private List<ScoredSegment> _results;
 
+    // MediaObjectDisplay mode variables
+
     /// <summary>
-    /// Dictionary containing for each media object in the results the index in the media object display mode and the
-    /// number of segments belonging to it found in the results so far.
+    /// Dictionary containing for each media object in the results the index of the list of corresponding media item
+    /// displays in _mediaObjectSegmentDisplays.
     /// </summary>
-    private Dictionary<string, (int firstIndex, int segments)> _mediaObjectIndexes =
-      new Dictionary<string, (int firstIndex, int segments)>();
+    private readonly Dictionary<string, int> _objectMap = new Dictionary<string, int>();
+
+    private readonly List<List<MediaItemDisplay>> _mediaObjectSegmentDisplays = new List<List<MediaItemDisplay>>();
 
     private int _nResults;
     private float _columnAngle;
@@ -101,7 +103,7 @@ namespace VitrivrVR.Query.Display
       }
     }
 
-    public override async void SwitchDisplayMode(DisplayMode mode)
+    public override void SwitchDisplayMode(DisplayMode mode)
     {
       if (mode == _currentDisplayMode)
       {
@@ -114,33 +116,23 @@ namespace VitrivrVR.Query.Display
           for (var i = 0; i < _mediaDisplays.Count; i++)
           {
             var (position, rotation) = GetResultLocalPosRot(i);
-            var displayTransform = _mediaDisplays[i].display.transform;
+            var displayTransform = _mediaDisplays[i].transform;
             displayTransform.localPosition = position;
             displayTransform.localRotation = rotation;
           }
 
           break;
         case DisplayMode.MediaObjectDisplay:
-          for (var i = 0; i < _mediaDisplays.Count; i++)
+          for (var objectIndex = 0; objectIndex < _mediaObjectSegmentDisplays.Count; objectIndex++)
           {
-            var objectId = await _results[i].segment.GetObjectId();
-            int index;
-            var count = 0;
-            if (_mediaObjectIndexes.ContainsKey(objectId))
+            var displays = _mediaObjectSegmentDisplays[objectIndex];
+            for (var order = 0; order < displays.Count; order++)
             {
-              (index, count) = _mediaObjectIndexes[objectId];
+              var (position, rotation) = GetResultLocalPosRot(objectIndex, order * padding);
+              var displayTransform = displays[order].transform;
+              displayTransform.localPosition = position;
+              displayTransform.localRotation = rotation;
             }
-            else
-            {
-              index = _mediaObjectIndexes.Count;
-            }
-
-            _mediaObjectIndexes[objectId] = (index, count + 1);
-
-            var (position, rotation) = GetResultLocalPosRot(index, count * padding);
-            var displayTransform = _mediaDisplays[i].display.transform;
-            displayTransform.localPosition = position;
-            displayTransform.localRotation = rotation;
           }
 
           break;
@@ -151,6 +143,10 @@ namespace VitrivrVR.Query.Display
       _currentDisplayMode = mode;
     }
 
+    /// <summary>
+    /// Rotates the display and ensures that only displays that are supposed to be within the viewing window are
+    /// visible. Adds uninitialized segments to the instantiation queue as needed.
+    /// </summary>
     private void Rotate(float degrees)
     {
       transform.Rotate(degrees * Vector3.up);
@@ -177,7 +173,7 @@ namespace VitrivrVR.Query.Display
         var end = Mathf.Min(Mathf.Max(enabledEnd, _currentEnd), _mediaDisplays.Count);
         for (var i = start; i < end; i++)
         {
-          _mediaDisplays[i].display.gameObject.SetActive(enabledStart <= i && i < enabledEnd);
+          _mediaDisplays[i].gameObject.SetActive(enabledStart <= i && i < enabledEnd);
         }
 
         _currentStart = enabledStart;
@@ -187,24 +183,62 @@ namespace VitrivrVR.Query.Display
 
     private async Task CreateResultObject(ScoredSegment result)
     {
-      // Determine position
-      var index = _mediaDisplays.Count;
-
-      var (position, rotation) = GetResultLocalPosRot(index);
-
       var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, Quaternion.identity, transform);
+
+      // Add to media displays list
+      var displayIndex = _mediaDisplays.Count;
+      _mediaDisplays.Add(itemDisplay);
+
+      // Add to media object list
+      var objectIndex = await AddToMediaObjectList(result.segment, itemDisplay);
+
+      var (position, rotation) = _currentDisplayMode switch
+      {
+        DisplayMode.MediaSegmentDisplay => GetResultLocalPosRot(displayIndex),
+        DisplayMode.MediaObjectDisplay => GetResultLocalPosRot(objectIndex,
+          _mediaObjectSegmentDisplays[objectIndex].Count * padding),
+        _ => (Vector3.zero, Quaternion.identity)
+      };
+
       var transform2 = itemDisplay.transform;
       transform2.localPosition = position;
       transform2.localRotation = rotation;
       // Adjust size
       transform2.localScale *= resultSize;
 
-
-      _mediaDisplays.Add((itemDisplay, (float) result.score));
-
       await itemDisplay.Initialize(result);
 
-      itemDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
+      var index = _currentDisplayMode switch
+      {
+        DisplayMode.MediaSegmentDisplay => displayIndex,
+        DisplayMode.MediaObjectDisplay => objectIndex,
+        _ => displayIndex
+      };
+      itemDisplay.gameObject.SetActive(CheckDisplayEnabled(index));
+    }
+
+    private async Task<int> AddToMediaObjectList(SegmentData segment, MediaItemDisplay itemDisplay)
+    {
+      var objectId = await segment.GetObjectId();
+      if (_objectMap.ContainsKey(objectId))
+      {
+        _mediaObjectSegmentDisplays[_objectMap[objectId]].Add(itemDisplay);
+      }
+      else
+      {
+        _objectMap[objectId] = _mediaObjectSegmentDisplays.Count;
+        _mediaObjectSegmentDisplays.Add(new List<MediaItemDisplay> {itemDisplay});
+      }
+
+      return _objectMap[objectId];
+    }
+
+    /// <summary>
+    /// Checks for a results index if an item placed at this position should be enabled or not.
+    /// </summary>
+    private bool CheckDisplayEnabled(int index)
+    {
+      return _currentStart <= index && index < _currentEnd;
     }
 
     /// <summary>
