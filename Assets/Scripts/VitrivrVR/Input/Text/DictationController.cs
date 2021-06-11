@@ -67,16 +67,29 @@ namespace VitrivrVR.Input.Text
     /// </summary>
     public DictationStateEvent onDictationStateChange;
 
+    public InputAction dictateAction;
+
     private DictationRecognizer _dictationRecognizer;
 
     private void Awake()
     {
       SetUpDictationRecognizer();
+      dictateAction.performed += SetDictation;
+      dictateAction.canceled += SetDictation;
+    }
+
+    private void OnEnable()
+    {
+      dictateAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+      dictateAction.Disable();
     }
 
     public void SetDictation(InputAction.CallbackContext context)
     {
-      Debug.Log("Test!");
       SetDictation(context.performed);
     }
 

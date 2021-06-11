@@ -58,3 +58,19 @@ MonoBehaviour:
   onDictationStateChange:
     m_PersistentCalls:
       m_Calls: []
+  dictateAction:
+    m_Name: Dictate
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: f8fac999-fe19-4fd0-ac03-18307e77f069
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: bf9dc97f-52fb-441c-b3eb-8dd3a52b7885
+      m_Path: <XRController>/primary
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Dictate
+      m_Flags: 0

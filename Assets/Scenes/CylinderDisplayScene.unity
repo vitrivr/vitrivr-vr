@@ -1003,17 +1003,22 @@ PrefabInstance:
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: primaryButtonEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandAxisEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandGripEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: secondaryButtonEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
@@ -1028,7 +1033,7 @@ PrefabInstance:
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
@@ -1069,7 +1074,7 @@ PrefabInstance:
         type: 3}
       propertyPath: rightHandGripEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1686424235}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandGripEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Target
@@ -1077,9 +1082,19 @@ PrefabInstance:
       objectReference: {fileID: 1686424235}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
+      propertyPath: secondaryButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
       propertyPath: leftHandGripEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: secondaryButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1898715786}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: leftHandGripEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -1118,7 +1133,7 @@ PrefabInstance:
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandGripEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnGripButton
+      value: Grab
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
@@ -1127,8 +1142,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
+      propertyPath: secondaryButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
       propertyPath: leftHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: secondaryButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetDictation
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
@@ -1149,7 +1174,7 @@ PrefabInstance:
         type: 3}
       propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1686424235}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Target
@@ -1178,12 +1203,17 @@ PrefabInstance:
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnTriggerButton
+      value: Interact
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandTriggerButtonEvent.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
       value: Interact
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: secondaryButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VitrivrVR.Input.Text.DictationController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
@@ -1208,6 +1238,11 @@ PrefabInstance:
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
         type: 3}
       propertyPath: rightHandGripEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
+        type: 3}
+      propertyPath: secondaryButtonEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 469832756570029566, guid: 21b21afd679d64060a1625eb72859aed,
@@ -3665,6 +3700,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
+      propertyPath: dictateAction.m_SingletonActionBindings.Array.data[1].m_Id
+      value: 420c1ffd-a252-4073-8014-79d749149c3a
+      objectReference: {fileID: 0}
+    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
+        type: 3}
       propertyPath: onDictationHypothesis.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -3672,6 +3712,16 @@ PrefabInstance:
         type: 3}
       propertyPath: onDictationStateChange.m_PersistentCalls.m_Calls.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
+        type: 3}
+      propertyPath: dictateAction.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <XRController>/menu
+      objectReference: {fileID: 0}
+    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
+        type: 3}
+      propertyPath: dictateAction.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Dictate
       objectReference: {fileID: 0}
     - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
