@@ -58,6 +58,7 @@ namespace VitrivrVR.Media.Display
     private GameObject _objectSegmentView;
     private bool _metadataShown;
     private GameObject _metadataTable;
+    private bool _tagListShown;
     private ScrollRect _tagList;
 
     private bool _hovered;
@@ -151,7 +152,6 @@ namespace VitrivrVR.Media.Display
       if (_metadataShown)
       {
         Destroy(_metadataTable);
-        Destroy(_tagList.gameObject);
         _metadataShown = false;
         return;
       }
@@ -188,8 +188,21 @@ namespace VitrivrVR.Media.Display
       uiTableController.table = table;
       var uiTableTransform = _metadataTable.GetComponent<RectTransform>();
       uiTableTransform.sizeDelta = new Vector2(100, 200); // x is completely irrelevant here, since width is auto
+    }
 
-      // Segment tags
+    public async void ToggleTagList()
+    {
+      if (_tagListShown)
+      {
+        Destroy(_tagList.gameObject);
+        _tagListShown = false;
+        return;
+      }
+
+      _tagListShown = true;
+      
+      var bottomStack = progressBar.parent;
+      
       _tagList = Instantiate(scrollableListPrefab, bottomStack);
       var listRect = _tagList.GetComponent<RectTransform>();
       listRect.anchorMin = new Vector2(0, .5f);
