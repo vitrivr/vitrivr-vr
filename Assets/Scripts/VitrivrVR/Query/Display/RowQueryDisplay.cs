@@ -38,7 +38,7 @@ namespace VitrivrVR.Query.Display
       _horizontalScroll = value.Get<Vector2>().x;
     }
 
-    private async void Update()
+    private void Update()
     {
       transform.Translate(Time.deltaTime * scrollSpeed * _horizontalScroll * Vector3.left);
       // Start includes items in the instantiation queue, since these will be instantiated shortly

@@ -26,7 +26,7 @@ namespace VitrivrVR.Query.Display
 
     private readonly Queue<ScoredSegment> _instantiationQueue = new Queue<ScoredSegment>();
 
-    private async void Update()
+    private void Update()
     {
       // Rotate carousel
       var scroll = UnityEngine.Input.GetAxisRaw(scrollAxis);

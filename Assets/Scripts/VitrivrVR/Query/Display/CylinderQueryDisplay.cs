@@ -64,7 +64,7 @@ namespace VitrivrVR.Query.Display
       rotationAction.Disable();
     }
 
-    private async void Update()
+    private void Update()
     {
       Rotate(Time.deltaTime * rotationSpeed * rotationAction.ReadValue<Vector2>().x);
 
