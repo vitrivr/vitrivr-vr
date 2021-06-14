@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VitrivrVR.Config;
 using VitrivrVR.Media.Display;
 using VitrivrVR.Notification;
+using VitrivrVR.Submission;
 
 namespace VitrivrVR.Query.Display
 {
@@ -88,6 +88,11 @@ namespace VitrivrVR.Query.Display
       foreach (var segment in _results.Take(_maxColumns * 3 / 4 * rows))
       {
         _instantiationQueue.Enqueue(segment);
+      }
+
+      if (ConfigManager.Config.dresEnabled)
+      {
+        DresClientManager.LogResults("segment", _results, queryData.query);
       }
     }
 

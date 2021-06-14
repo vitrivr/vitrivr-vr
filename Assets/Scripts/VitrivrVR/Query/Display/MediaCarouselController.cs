@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
 using VitrivrVR.Config;

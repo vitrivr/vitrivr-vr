@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using VitrivrVR.Config;
 using VitrivrVR.Media.Display;
 using VitrivrVR.Notification;
+using VitrivrVR.Submission;
 
 namespace VitrivrVR.Query.Display
 {
@@ -104,6 +105,11 @@ namespace VitrivrVR.Query.Display
         _instantiationQueue.Enqueue(segment);
         _enqueued++;
       }
+
+      if (ConfigManager.Config.dresEnabled)
+      {
+        DresClientManager.LogResults("object", _results, queryData.query);
+      }
     }
 
     /// <summary>
@@ -172,7 +178,8 @@ namespace VitrivrVR.Query.Display
       }
 
       var index = _objectMap[objectId];
-      var (position, rotation) = GetResultLocalPosRot(index, (_mediaObjectSegmentDisplays[index].Count - 1) * segmentDistance);
+      var (position, rotation) =
+        GetResultLocalPosRot(index, (_mediaObjectSegmentDisplays[index].Count - 1) * segmentDistance);
 
       var transform2 = itemDisplay.transform;
       transform2.localPosition = position;
