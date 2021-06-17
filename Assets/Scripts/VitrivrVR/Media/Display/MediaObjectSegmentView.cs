@@ -9,6 +9,7 @@ using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Interaction.System;
 using VitrivrVR.Interaction.System.Grab;
 using VitrivrVR.Media.Controller;
+using VitrivrVR.Submission;
 
 namespace VitrivrVR.Media.Display
 {
@@ -41,6 +42,7 @@ namespace VitrivrVR.Media.Display
       if (other.TryGetComponent<Interactor>(out var interactor))
       {
         _enteredInteractors.Add(interactor, -1);
+        DresClientManager.LogInteraction("videoSummary", $"browse started {_mediaObject.Id}");
       }
     }
 
@@ -55,6 +57,7 @@ namespace VitrivrVR.Media.Display
         }
 
         _enteredInteractors.Remove(interactor);
+        DresClientManager.LogInteraction("videoSummary", $"browse stopped {_mediaObject.Id}");
       }
     }
 
@@ -82,6 +85,11 @@ namespace VitrivrVR.Media.Display
       }
     }
 
+    private void OnDestroy()
+    {
+      DresClientManager.LogInteraction("videoSummary", $"closed {_mediaObject.Id}");
+    }
+
     public async void Initialize(ObjectData mediaObject, Action<int> onSegmentSelection, int min = 0, int max = -1)
     {
       _onSegmentSelection = onSegmentSelection;
@@ -105,6 +113,9 @@ namespace VitrivrVR.Media.Display
 
       _thumbnails = new ThumbnailController[segmentInfo.Length];
       StartCoroutine(InstantiateSegmentIndicators(segmentInfo, segmentInfo.Length));
+      
+      // TODO: Translate type in DresClientManager to support other media object types
+      DresClientManager.LogInteraction("videoSummary", $"initialized {_mediaObject.Id}");
     }
 
     public override void OnInteraction(Transform interactor, bool start)
@@ -112,6 +123,7 @@ namespace VitrivrVR.Media.Display
       if (!start) return;
       var segmentIndex = GetSegmentIndex(interactor) + _minIndex;
       _onSegmentSelection(segmentIndex);
+      DresClientManager.LogInteraction("videoSummary", $"selected {_mediaObject.Id} {segmentIndex}");
     }
 
     private IEnumerator InstantiateSegmentIndicators(IEnumerable<(SegmentData segment, int seqNum)> segmentInfo,

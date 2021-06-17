@@ -1,5 +1,8 @@
+using Org.Vitrivr.DresApi.Model;
 using UnityEngine;
 using UnityEngine.Windows.Speech;
+using VitrivrVR.Config;
+using VitrivrVR.Submission;
 
 namespace VitrivrVR.Input.Text
 {
@@ -11,11 +14,13 @@ namespace VitrivrVR.Input.Text
     public void InputText(string text)
     {
       TextInputManager.InputText(text);
+      DresClientManager.LogInteraction("keyboard", $"input {text}", QueryEvent.CategoryEnum.TEXT);
     }
 
     public void InputBackspace()
     {
       TextInputManager.InputBackspace();
+      DresClientManager.LogInteraction("keyboard", "backspace", QueryEvent.CategoryEnum.TEXT);
     }
 
     /// <summary>
@@ -27,6 +32,11 @@ namespace VitrivrVR.Input.Text
       if (confidence != ConfidenceLevel.High && confidence != ConfidenceLevel.Medium) return;
 
       InputText(text);
+      if (ConfigManager.Config.dresEnabled)
+      {
+        DresClientManager.LogInteraction("speechToText", $"input {text} {confidence.ToString()}",
+          QueryEvent.CategoryEnum.TEXT);
+      }
     }
   }
 }

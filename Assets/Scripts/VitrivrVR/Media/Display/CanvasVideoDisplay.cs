@@ -116,6 +116,7 @@ namespace VitrivrVR.Media.Display
       if (ConfigManager.Config.dresEnabled)
       {
         submitButton.SetActive(true);
+        DresClientManager.LogInteraction("videoPlayer", $"initialized {_mediaObject.Id} {_segment.Id}");
       }
     }
 
@@ -131,6 +132,7 @@ namespace VitrivrVR.Media.Display
       {
         Destroy(_objectSegmentView);
       }
+      DresClientManager.LogInteraction("videoPlayer", $"closed {_mediaObject.Id} {_segment.Id}");
     }
 
     public void ShowObjectSegmentView()
@@ -153,6 +155,7 @@ namespace VitrivrVR.Media.Display
       {
         Destroy(_metadataTable);
         _metadataShown = false;
+        DresClientManager.LogInteraction("mediaObjectMetadata", $"closed {_mediaObject.Id}");
         return;
       }
 
@@ -188,6 +191,8 @@ namespace VitrivrVR.Media.Display
       uiTableController.table = table;
       var uiTableTransform = _metadataTable.GetComponent<RectTransform>();
       uiTableTransform.sizeDelta = new Vector2(100, 200); // x is completely irrelevant here, since width is auto
+      
+      DresClientManager.LogInteraction("mediaObjectMetadata", $"opened {_mediaObject.Id}");
     }
 
     public async void ToggleTagList()
@@ -196,13 +201,14 @@ namespace VitrivrVR.Media.Display
       {
         Destroy(_tagList.gameObject);
         _tagListShown = false;
+        DresClientManager.LogInteraction("segmentTags", $"closed {_mediaObject.Id}");
         return;
       }
 
       _tagListShown = true;
-      
+
       var bottomStack = progressBar.parent;
-      
+
       _tagList = Instantiate(scrollableListPrefab, bottomStack);
       var listRect = _tagList.GetComponent<RectTransform>();
       listRect.anchorMin = new Vector2(0, .5f);
@@ -222,6 +228,8 @@ namespace VitrivrVR.Media.Display
         var tagItem = Instantiate(listItemPrefab, listContent);
         tagItem.GetComponentInChildren<TextMeshProUGUI>().text = tagData.Name;
       }
+
+      DresClientManager.LogInteraction("segmentTags", $"opened {_mediaObject.Id} {segment.Id}");
     }
 
     public async void SubmitCurrentFrame()
@@ -300,6 +308,8 @@ namespace VitrivrVR.Media.Display
         UpdateProgressIndicator(time);
         UpdateText(time);
       }
+      
+      DresClientManager.LogInteraction("videoPlayer", $"skipped {_mediaObject.Id} {time} {sign}");
     }
 
     private void Update()
@@ -317,10 +327,12 @@ namespace VitrivrVR.Media.Display
       if (_videoPlayerController.IsPlaying)
       {
         _videoPlayerController.Pause();
+        DresClientManager.LogInteraction("videoPlayer", $"pause {_mediaObject.Id} {_videoPlayerController.ClockTime}");
       }
       else
       {
         _videoPlayerController.Play();
+        DresClientManager.LogInteraction("videoPlayer", $"play {_mediaObject.Id} {_videoPlayerController.ClockTime}");
       }
     }
 
@@ -339,6 +351,7 @@ namespace VitrivrVR.Media.Display
 
       UpdateProgressIndicator(newTime);
       UpdateText(newTime);
+      DresClientManager.LogInteraction("videoPlayer", $"jump {_mediaObject.Id} {newTime}");
     }
 
     private void SetVideoTime(double time)

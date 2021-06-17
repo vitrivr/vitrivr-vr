@@ -132,6 +132,8 @@ namespace VitrivrVR.Query.Display
 
         _currentStart = enabledStart;
         _currentEnd = enabledEnd;
+
+        DresClientManager.LogInteraction("rankedList", $"browse {Mathf.Sign(degrees)}");
       }
     }
 

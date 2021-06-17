@@ -11,6 +11,7 @@ using VitrivrVR.Config;
 using VitrivrVR.Notification;
 using VitrivrVR.Query.Display;
 using VitrivrVR.Query.Term;
+using VitrivrVR.Submission;
 
 namespace VitrivrVR.Query
 {
@@ -145,6 +146,8 @@ namespace VitrivrVR.Query
       SetQueryActive(index, true);
       queryFocusEvent.Invoke(CurrentQuery, index);
       CurrentQuery = index;
+
+      DresClientManager.LogInteraction("queryManagement", $"select {index}");
     }
 
     /// <summary>
@@ -181,6 +184,7 @@ namespace VitrivrVR.Query
       queryRemovedEvent.Invoke(index);
       Destroy(queries[index].display.gameObject);
       queries.RemoveAt(index);
+      DresClientManager.LogInteraction("queryManagement", $"delete {index}");
     }
 
     public void ClearQuery()
@@ -189,6 +193,7 @@ namespace VitrivrVR.Query
       SetQueryActive(CurrentQuery, false);
       queryFocusEvent.Invoke(CurrentQuery, -1);
       CurrentQuery = -1;
+      DresClientManager.LogInteraction("queryManagement", "clear");
     }
 
     /// <summary>
@@ -201,6 +206,7 @@ namespace VitrivrVR.Query
         NotificationController.Notify("No query selected!");
         return;
       }
+
       var (query, display) = queries[CurrentQuery];
       if (display.GetType() == queryDisplay.GetType())
       {

@@ -81,6 +81,11 @@ namespace VitrivrVR.Config
     /// </summary>
     public int submissionIdPrefixLength;
 
+    /// <summary>
+    /// The time interval between sending interaction logs to DRES.
+    /// </summary>
+    public float interactionLogSubmissionInterval;
+
     private VitrivrVrConfig()
     {
       maxResults = 10000;
@@ -96,9 +101,10 @@ namespace VitrivrVR.Config
         mapping[CategoryMappings.EDGE_CATEGORY]
       };
       defaultMediaVolume = .5f;
-      skipLength = 5f;
+      skipLength = 2.5f;
       dresEnabled = false;
       submissionIdPrefixLength = 0;
+      interactionLogSubmissionInterval = 10f;
     }
 
     public static VitrivrVrConfig GetDefault()

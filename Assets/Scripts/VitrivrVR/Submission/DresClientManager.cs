@@ -18,6 +18,9 @@ namespace VitrivrVR.Submission
   {
     public static DresClient instance;
 
+    private static readonly List<QueryEvent> InteractionEvents = new List<QueryEvent>();
+    private static float _interactionEventTimer;
+
     private async void Start()
     {
       if (ConfigManager.Config.dresEnabled)
@@ -25,6 +28,35 @@ namespace VitrivrVR.Submission
         instance = new DresClient();
         await instance.Login();
         NotificationController.Notify($"Dres connected: {instance.UserDetails.Username}");
+      }
+    }
+
+    private async void Update()
+    {
+      if (!ConfigManager.Config.dresEnabled) return;
+
+      //Update timer
+      _interactionEventTimer += Time.deltaTime;
+      if (_interactionEventTimer > ConfigManager.Config.interactionLogSubmissionInterval)
+      {
+        // Reset timer
+        _interactionEventTimer %= ConfigManager.Config.interactionLogSubmissionInterval;
+
+        if (InteractionEvents.Count > 0)
+        {
+          var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+          var success = await instance.LogQueryEvents(timestamp, InteractionEvents);
+
+          if (!success.Status)
+          {
+            NotificationController.Notify($"Could not log interactions to Dres: {success.Description}");
+          }
+          else
+          {
+            InteractionEvents.Clear();
+          }
+        }
       }
     }
 
@@ -56,6 +88,7 @@ namespace VitrivrVR.Submission
 
       var queryEvents = query.Containers.First().Terms.Select(term =>
       {
+        // Convert term type to Dres category
         var category = term.Type switch
         {
           QueryTerm.TypeEnum.IMAGE => QueryEvent.CategoryEnum.IMAGE,
@@ -84,6 +117,16 @@ namespace VitrivrVR.Submission
       {
         NotificationController.Notify($"Could not log to Dres: {success.Description}");
       }
+    }
+
+    public static void LogInteraction(string type, string value,
+      QueryEvent.CategoryEnum category = QueryEvent.CategoryEnum.BROWSING)
+    {
+      if (!ConfigManager.Config.dresEnabled) return;
+
+      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+      var queryEvent = new QueryEvent(timestamp, category, type, value);
+      InteractionEvents.Add(queryEvent);
     }
 
     /// <summary>
