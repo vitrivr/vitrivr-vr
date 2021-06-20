@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Org.Vitrivr.CineastApi.Model;
@@ -21,17 +22,33 @@ namespace VitrivrVR.Submission
     private static readonly List<QueryEvent> InteractionEvents = new List<QueryEvent>();
     private static float _interactionEventTimer;
 
+    private static string _interactionLogPath;
+    private static string _resultsLogPath;
+    private static string _submissionLogPath;
+
     private async void Start()
     {
       if (ConfigManager.Config.dresEnabled)
       {
         instance = new DresClient();
         await instance.Login();
-        NotificationController.Notify($"Dres connected: {instance.UserDetails.Username}");
+        var logDir = ConfigManager.Config.logFileLocation;
+        var startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        var username = instance.UserDetails.Username;
+        var session = instance.UserDetails.SessionId;
+        _interactionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_interaction.txt");
+        _resultsLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_results.txt");
+        _submissionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_submission.txt");
+        NotificationController.Notify($"Dres connected: {username}");
+
+        if (ConfigManager.Config.writeLogsToFile)
+        {
+          Directory.CreateDirectory(ConfigManager.Config.logFileLocation);
+        }
       }
     }
 
-    private async void Update()
+    private void Update()
     {
       if (!ConfigManager.Config.dresEnabled) return;
 
@@ -41,22 +58,45 @@ namespace VitrivrVR.Submission
       {
         // Reset timer
         _interactionEventTimer %= ConfigManager.Config.interactionLogSubmissionInterval;
+        LogInteraction();
+      }
+    }
 
-        if (InteractionEvents.Count > 0)
-        {
-          var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+    private void OnDestroy()
+    {
+      if (!ConfigManager.Config.dresEnabled) return;
+      LogInteraction();
+    }
 
-          var success = await instance.LogQueryEvents(timestamp, InteractionEvents);
+    public static async void SubmitResult(string mediaObjectId, int frame)
+    {
+      try
+      {
+        var result = await instance.SubmitResult(mediaObjectId, frame);
+        NotificationController.Notify($"Submission: {result.Submission}");
+      }
+      catch (Exception e)
+      {
+        NotificationController.Notify(e.Message);
+      }
 
-          if (!success.Status)
-          {
-            NotificationController.Notify($"Could not log interactions to Dres: {success.Description}");
-          }
-          else
-          {
-            InteractionEvents.Clear();
-          }
-        }
+      if (ConfigManager.Config.writeLogsToFile)
+      {
+        LogSubmissionToFile(mediaObjectId, frame);
+      }
+    }
+
+    private static async void LogSubmissionToFile(string mediaObjectId, int frame)
+    {
+      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+      try
+      {
+        using var file = new StreamWriter(_submissionLogPath, true);
+        await file.WriteLineAsync($"{timestamp},{mediaObjectId},{frame}");
+      }
+      catch (Exception e)
+      {
+        NotificationController.Notify($"Error logging to file: {e.Message}");
       }
     }
 
@@ -111,12 +151,78 @@ namespace VitrivrVR.Submission
         return new QueryEvent(timestamp, category, type, value);
       });
 
-      var success = await instance.LogResults(timestamp, sortType, "top", queryResults.ToList(), queryEvents.ToList());
-
-      if (!success.Status)
+      var queryResultsList = queryResults.ToList();
+      var queryEventsList = queryEvents.ToList();
+      try
       {
-        NotificationController.Notify($"Could not log to Dres: {success.Description}");
+        var success = await instance.LogResults(timestamp, sortType, "top", queryResultsList, queryEventsList);
+
+        if (!success.Status)
+        {
+          NotificationController.Notify($"Could not log to Dres: {success.Description}");
+        }
       }
+      catch (Exception e)
+      {
+        NotificationController.Notify(e.Message);
+      }
+
+      if (ConfigManager.Config.writeLogsToFile)
+      {
+        try
+        {
+          using var file = new StreamWriter(_resultsLogPath, true);
+          var jsonResults = string.Join(",", queryResultsList.Select(q => q.ToJson().Replace("\n", "")));
+          var jsonEvents = string.Join(",", queryEventsList.Select(q => q.ToJson().Replace("\n", "")));
+          var resultLog = $"{timestamp},{sortType},top,[{jsonResults}],[{jsonEvents}]";
+          await file.WriteLineAsync(resultLog);
+        }
+        catch (Exception e)
+        {
+          NotificationController.Notify($"Error logging to file: {e.Message}");
+        }
+      }
+    }
+
+    private static async void LogInteraction()
+    {
+      if (InteractionEvents.Count <= 0) return;
+
+      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+      // Submit to DRES
+      try
+      {
+        var success = await instance.LogQueryEvents(timestamp, InteractionEvents);
+
+        if (!success.Status)
+        {
+          NotificationController.Notify($"Could not log interactions to Dres: {success.Description}");
+        }
+      }
+      catch (Exception e)
+      {
+        NotificationController.Notify(e.Message);
+      }
+
+      // Write to file
+      if (ConfigManager.Config.writeLogsToFile)
+      {
+        try
+        {
+          using var file = new StreamWriter(_interactionLogPath, true);
+          foreach (var interactionEvent in InteractionEvents)
+          {
+            await file.WriteLineAsync(interactionEvent.ToJson().Replace("\n", ""));
+          }
+        }
+        catch (Exception e)
+        {
+          NotificationController.Notify($"Error logging to file: {e.Message}");
+        }
+      }
+
+      InteractionEvents.Clear();
     }
 
     public static void LogInteraction(string type, string value,

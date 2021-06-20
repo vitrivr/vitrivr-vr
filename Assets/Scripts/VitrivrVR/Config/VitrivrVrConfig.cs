@@ -86,6 +86,16 @@ namespace VitrivrVR.Config
     /// </summary>
     public float interactionLogSubmissionInterval;
 
+    /// <summary>
+    /// Enables writing results and interaction logs to file.
+    /// </summary>
+    public bool writeLogsToFile;
+
+    /// <summary>
+    /// Path to location where log files are to be written.
+    /// </summary>
+    public string logFileLocation;
+
     private VitrivrVrConfig()
     {
       maxResults = 10000;
@@ -105,6 +115,8 @@ namespace VitrivrVR.Config
       dresEnabled = false;
       submissionIdPrefixLength = 0;
       interactionLogSubmissionInterval = 10f;
+      writeLogsToFile = false;
+      logFileLocation = "session_logs/";
     }
 
     public static VitrivrVrConfig GetDefault()

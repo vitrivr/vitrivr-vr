@@ -132,6 +132,7 @@ namespace VitrivrVR.Media.Display
       {
         Destroy(_objectSegmentView);
       }
+
       DresClientManager.LogInteraction("videoPlayer", $"closed {_mediaObject.Id} {_segment.Id}");
     }
 
@@ -191,7 +192,7 @@ namespace VitrivrVR.Media.Display
       uiTableController.table = table;
       var uiTableTransform = _metadataTable.GetComponent<RectTransform>();
       uiTableTransform.sizeDelta = new Vector2(100, 200); // x is completely irrelevant here, since width is auto
-      
+
       DresClientManager.LogInteraction("mediaObjectMetadata", $"opened {_mediaObject.Id}");
     }
 
@@ -246,8 +247,7 @@ namespace VitrivrVR.Media.Display
       var prefixLength = ConfigManager.Config.submissionIdPrefixLength;
       var mediaObjectId = prefixLength > 0 ? _mediaObject.Id.Substring(prefixLength) : _mediaObject.Id;
 
-      var result = await DresClientManager.instance.SubmitResult(mediaObjectId, (int) frame);
-      NotificationController.Notify($"Submission: {result.Submission}");
+      DresClientManager.SubmitResult(mediaObjectId, (int) frame);
     }
 
     public void SetVolume(float volume)
@@ -308,7 +308,7 @@ namespace VitrivrVR.Media.Display
         UpdateProgressIndicator(time);
         UpdateText(time);
       }
-      
+
       DresClientManager.LogInteraction("videoPlayer", $"skipped {_mediaObject.Id} {time} {sign}");
     }
 
