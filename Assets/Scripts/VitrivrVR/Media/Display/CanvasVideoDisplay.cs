@@ -233,7 +233,7 @@ namespace VitrivrVR.Media.Display
       DresClientManager.LogInteraction("segmentTags", $"opened {_mediaObject.Id} {segment.Id}");
     }
 
-    public async void SubmitCurrentFrame()
+    public void SubmitCurrentFrame()
     {
       if (!ConfigManager.Config.dresEnabled)
       {
