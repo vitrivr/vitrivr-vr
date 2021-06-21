@@ -204,6 +204,9 @@ namespace VitrivrVR.Submission
       {
         NotificationController.Notify(e.Message);
       }
+      
+      var events = InteractionEvents.ToArray();
+      InteractionEvents.Clear();
 
       // Write to file
       if (ConfigManager.Config.writeLogsToFile)
@@ -211,7 +214,7 @@ namespace VitrivrVR.Submission
         try
         {
           using var file = new StreamWriter(_interactionLogPath, true);
-          foreach (var interactionEvent in InteractionEvents)
+          foreach (var interactionEvent in events)
           {
             await file.WriteLineAsync(interactionEvent.ToJson().Replace("\n", ""));
           }
@@ -221,8 +224,6 @@ namespace VitrivrVR.Submission
           NotificationController.Notify($"Error logging to file: {e.Message}");
         }
       }
-
-      InteractionEvents.Clear();
     }
 
     public static void LogInteraction(string type, string value,
