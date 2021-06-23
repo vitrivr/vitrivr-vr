@@ -1,10 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Config;
+using VitrivrVR.Submission;
 using VitrivrVR.Util;
 
 namespace VitrivrVR.Media.Display
@@ -21,15 +23,25 @@ namespace VitrivrVR.Media.Display
     public RectTransform imageFrame;
     public int scoreFrameSize = 25;
 
+    public InputAction submitAction;
+
     private ScoredSegment _scoredSegment;
     private SegmentData _segment;
     private MediaDisplay _mediaDisplay;
+
+    private HoverHandler _hoverHandler;
+    private bool _hovered;
 
     private void Awake()
     {
       GetComponent<Canvas>().worldCamera = Camera.main;
       var clickHandler = previewImage.gameObject.AddComponent<ClickHandler>();
       clickHandler.onClick = OnClickImage;
+
+      _hoverHandler = GetComponent<HoverHandler>();
+      _hoverHandler.onEnter += OnHoverEnter;
+      _hoverHandler.onExit += OnHoverExit;
+      submitAction.performed += Submit;
     }
 
     private async void Start()
@@ -43,6 +55,17 @@ namespace VitrivrVR.Media.Display
       {
         previewImage.texture = errorTexture;
       }
+    }
+
+    private void OnEnable()
+    {
+      submitAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+      submitAction.Disable();
+      _hovered = false;
     }
 
     public override ScoredSegment ScoredSegment => _scoredSegment;
@@ -100,6 +123,32 @@ namespace VitrivrVR.Media.Display
       float factor = Mathf.Max(loadedTexture.width, loadedTexture.height);
       imageFrame.sizeDelta =
         new Vector2(1000 * loadedTexture.width / factor, 1000 * loadedTexture.height / factor);
+    }
+
+    private void OnHoverEnter(PointerEventData pointerEventData)
+    {
+      _hovered = true;
+    }
+
+    private void OnHoverExit(PointerEventData pointerEventData)
+    {
+      _hovered = false;
+    }
+
+    private async void Submit(InputAction.CallbackContext context)
+    {
+      if (!_hovered) return;
+      if (!ConfigManager.Config.dresEnabled) return;
+
+      var mediaObjectId = await _segment.GetObjectId();
+      // Remove media object ID prefix if configured
+      // TODO: Move into DRES client
+      var prefixLength = ConfigManager.Config.submissionIdPrefixLength;
+      mediaObjectId = prefixLength > 0 ? mediaObjectId.Substring(prefixLength) : mediaObjectId;
+      var startFrame = await _segment.GetStart();
+      var endFrame = await _segment.GetEnd();
+      var frame = (startFrame + endFrame) / 2;
+      DresClientManager.SubmitResult(mediaObjectId, frame);
     }
   }
 }

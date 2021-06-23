@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 1611233960861917339}
   - component: {fileID: 6484090007945539455}
   - component: {fileID: 8930343491133665097}
+  - component: {fileID: 6327175653774180933}
   m_Layer: 0
   m_Name: CanvasMediaItem
   m_TagString: Untagged
@@ -193,7 +194,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &1611233960861917339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,6 +249,34 @@ MonoBehaviour:
   scoreFrame: {fileID: 4797499402522525822}
   imageFrame: {fileID: 7994159168318806018}
   scoreFrameSize: 25
+  submitAction:
+    m_Name: Submit
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 993c62b6-b10b-460b-a9f5-77d702580a46
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: d2ff95e8-9203-4786-90c7-505ebb093848
+      m_Path: <XRController>/trackpadClicked
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Submit
+      m_Flags: 0
+--- !u!114 &6327175653774180933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6942319118100717745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d8e7798683c94d2a9feb7ba6332f047, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8715993880187611840
 GameObject:
   m_ObjectHideFlags: 0
