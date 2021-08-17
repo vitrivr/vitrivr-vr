@@ -141,10 +141,7 @@ namespace VitrivrVR.Media.Display
       if (!ConfigManager.Config.dresEnabled) return;
 
       var mediaObjectId = await _segment.GetObjectId();
-      // Remove media object ID prefix if configured
-      // TODO: Move into DRES client
-      var prefixLength = ConfigManager.Config.submissionIdPrefixLength;
-      mediaObjectId = prefixLength > 0 ? mediaObjectId.Substring(prefixLength) : mediaObjectId;
+      // TODO: Adjust to work on media types other than video and move to DresClientManager
       var startFrame = await _segment.GetStart();
       var endFrame = await _segment.GetEnd();
       var frame = (startFrame + endFrame) / 2;

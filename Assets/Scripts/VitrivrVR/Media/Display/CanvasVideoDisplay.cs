@@ -243,11 +243,7 @@ namespace VitrivrVR.Media.Display
 
       var frame = _videoPlayerController.Frame;
 
-      // Remove media object ID prefix if configured
-      var prefixLength = ConfigManager.Config.submissionIdPrefixLength;
-      var mediaObjectId = prefixLength > 0 ? _mediaObject.Id.Substring(prefixLength) : _mediaObject.Id;
-
-      DresClientManager.SubmitResult(mediaObjectId, (int) frame);
+      DresClientManager.SubmitResult(_mediaObject.Id, (int) frame);
     }
 
     public void SetVolume(float volume)

@@ -70,6 +70,13 @@ namespace VitrivrVR.Submission
 
     public static async void SubmitResult(string mediaObjectId, int frame)
     {
+      // Remove media object ID prefix if configured
+      var prefixLength = ConfigManager.Config.submissionIdPrefixLength;
+      if (prefixLength > 0)
+      {
+        mediaObjectId = mediaObjectId.Substring(prefixLength);
+      }
+
       try
       {
         var result = await instance.SubmitResult(mediaObjectId, frame);
@@ -204,7 +211,7 @@ namespace VitrivrVR.Submission
       {
         NotificationController.Notify(e.Message);
       }
-      
+
       var events = InteractionEvents.ToArray();
       InteractionEvents.Clear();
 
