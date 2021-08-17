@@ -70,12 +70,7 @@ namespace VitrivrVR.Submission
 
     public static async void SubmitResult(string mediaObjectId, int frame)
     {
-      // Remove media object ID prefix if configured
-      var prefixLength = ConfigManager.Config.submissionIdPrefixLength;
-      if (prefixLength > 0)
-      {
-        mediaObjectId = mediaObjectId.Substring(prefixLength);
-      }
+      mediaObjectId = RemovePrefix(mediaObjectId);
 
       try
       {
@@ -127,6 +122,7 @@ namespace VitrivrVR.Submission
       {
         var segment = result.segment;
         var objectId = await segment.GetObjectId();
+        objectId = RemovePrefix(objectId);
         var sequenceNumber = await segment.GetSequenceNumber();
         var frame = await segment.GetStart();
 
@@ -262,6 +258,15 @@ namespace VitrivrVR.Submission
         CategoryMappings.EDGE_CATEGORY => "localFeatures",
         _ => category
       };
+    }
+
+    /// <summary>
+    /// Removes the configured prefix length from the given segment or object ID.
+    /// </summary>
+    private static string RemovePrefix(string id)
+    {
+      var prefixLength = ConfigManager.Config.submissionIdPrefixLength;
+      return prefixLength > 0 ? id.Substring(prefixLength) : id;
     }
   }
 }
