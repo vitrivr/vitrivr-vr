@@ -24,6 +24,18 @@ namespace VitrivrVR.Config
       public Color ToColor() => new Color(r, g, b);
     }
 
+    [Serializable]
+    public class TextCategory
+    {
+      public string name, id;
+
+      public TextCategory(string name, string id)
+      {
+        this.name = name;
+        this.id = id;
+      }
+  }
+
     /// <summary>
     /// The maximum number of results to accept from a single query.
     /// </summary>
@@ -58,6 +70,11 @@ namespace VitrivrVR.Config
     /// The default categories for image query-by-example.
     /// </summary>
     public List<string> defaultImageCategories;
+
+    /// <summary>
+    /// The text categories to provide for text query terms.
+    /// </summary>
+    public List<TextCategory> textCategories;
 
     /// <summary>
     /// The default volume [0, 1] to use for audio and video.
@@ -109,6 +126,13 @@ namespace VitrivrVR.Config
       {
         mapping[CategoryMappings.GLOBAL_COLOR_CATEGORY],
         mapping[CategoryMappings.EDGE_CATEGORY]
+      };
+      textCategories = new List<TextCategory>
+      {
+        new TextCategory("OCR", "ocr"),
+        new TextCategory("ASR", "asr"),
+        new TextCategory("Caption", "scenecaption"),
+        new TextCategory("Co-Embed", "visualtextcoembedding")
       };
       defaultMediaVolume = .5f;
       skipLength = 2.5f;

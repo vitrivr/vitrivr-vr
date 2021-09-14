@@ -800,7 +800,7 @@ GameObject:
   - component: {fileID: 4396087477468707235}
   - component: {fileID: 2598968511619484028}
   m_Layer: 8
-  m_Name: CanvasQueryTermProvider
+  m_Name: Canvas Query Term Provider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

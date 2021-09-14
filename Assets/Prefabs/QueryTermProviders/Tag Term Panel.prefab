@@ -457,7 +457,7 @@ GameObject:
   - component: {fileID: 1504956553915585632}
   - component: {fileID: 1646674508545723665}
   m_Layer: 0
-  m_Name: Tag Input Panel
+  m_Name: Tag Term Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
