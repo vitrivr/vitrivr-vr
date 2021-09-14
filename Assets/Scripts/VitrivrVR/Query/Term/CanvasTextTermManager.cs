@@ -10,7 +10,7 @@ namespace VitrivrVR.Query.Term
   /// <summary>
   /// Class to create and manage multiple text term providers.
   /// </summary>
-  public class CanvasTextTermManager : MonoBehaviour
+  public class CanvasTextTermManager : QueryTermProvider
   {
     [Tooltip("The prefab from which to create text term providers.")]
     public CanvasTextTermProvider textTermProviderPrefab;
@@ -23,7 +23,7 @@ namespace VitrivrVR.Query.Term
       _textTermProvider = GetComponentInChildren<CanvasTextTermProvider>();
     }
 
-    public IEnumerable<QueryTerm> GetTerms()
+    public override List<QueryTerm> GetTerms()
     {
       var terms = _providers.SelectMany(provider => provider.GetTerms()).ToList();
       terms.AddRange(_textTermProvider.GetTerms());

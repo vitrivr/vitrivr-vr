@@ -1,28 +1,24 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
-using Vitrivr.UnityInterface.CineastApi;
-using Vitrivr.UnityInterface.CineastApi.Utils;
 using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using Vitrivr.UnityInterface.CineastApi;
+using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Util;
-using Button = UnityEngine.UI.Button;
 
 namespace VitrivrVR.Query.Term
 {
-  /// <summary>
-  /// Canvas based <see cref="QueryTermProvider"/>.
-  /// </summary>
-  public class CanvasQueryTermProvider : QueryTermProvider
+  public class CanvasTagTermProvider : QueryTermProvider
   {
     public GameObject tagButtonPrefab;
     public GameObject tagItemPrefab;
     public RectTransform searchScrollViewContent;
     public RectTransform tagScrollViewContent;
     public RectTransform toolTipPanel;
+    public TextMeshProUGUI toolTipText;
     public int maxResults = 100;
-
-    public CanvasTextTermManager textTermProvider;
 
     private readonly List<TagData> _tagItems = new List<TagData>();
     private readonly HashSet<string> _tagIds = new HashSet<string>();
@@ -31,14 +27,7 @@ namespace VitrivrVR.Query.Term
     /// Stores the latest tag search input to determine if search results are still relevant.
     /// </summary>
     private string _latestInput;
-
-    private TextMeshProUGUI _tooltipText;
-
-    private void Awake()
-    {
-      _tooltipText = toolTipPanel.GetComponentInChildren<TextMeshProUGUI>();
-    }
-
+    
     /// <summary>
     /// Retrieves tags similar to the text input and adds corresponding buttons to the search scroll view.
     /// </summary>
@@ -125,7 +114,7 @@ namespace VitrivrVR.Query.Term
 
     private void SetTooltip(string tooltip)
     {
-      _tooltipText.text = tooltip;
+      toolTipText.text = tooltip;
       toolTipPanel.gameObject.SetActive(true);
     }
 
@@ -142,8 +131,6 @@ namespace VitrivrVR.Query.Term
       {
         terms.Add(QueryTermBuilder.BuildTagTerm(tags));
       }
-
-      terms.AddRange(textTermProvider.GetTerms());
 
       return terms;
     }
