@@ -1,80 +1,55 @@
 using System.Collections.Generic;
+using System.Linq;
 using Org.Vitrivr.CineastApi.Model;
+using TMPro;
+using UnityEngine.UI;
+using VitrivrVR.Config;
 
 namespace VitrivrVR.Query.Term
 {
   public class CanvasTextTermProvider : QueryTermProvider
   {
+    public Toggle textTogglePrefab;
+
     // Text input data
-    // TODO: Restructure to be modular and configurable
-    private bool _ocr;
-    private bool _asr;
-    private bool _sceneCaption;
-    private bool _visualTextCoEmbedding;
     private string _textSearchText;
+    private List<(string id, Toggle toggle)> _categories;
+
+    private void Start()
+    {
+      var categories = ConfigManager.Config.textCategories;
+      _categories = categories.Select((category, index) =>
+      {
+        var toggle = Instantiate(textTogglePrefab, transform);
+        toggle.transform.SetSiblingIndex(index);
+        var text = toggle.GetComponentInChildren<TextMeshProUGUI>();
+        text.text = category.name;
+        return (category.id, toggle);
+      }).ToList();
+    }
 
     public void SetTextSearchText(string text)
     {
       _textSearchText = text;
     }
 
-    public void SetOcrSearch(bool ocr)
-    {
-      _ocr = ocr;
-    }
-
-    public void SetAsrSearch(bool asr)
-    {
-      _asr = asr;
-    }
-
-    public void SetSceneCaptionSearch(bool sceneCaption)
-    {
-      _sceneCaption = sceneCaption;
-    }
-
-    public void SetVisualTextCoEmbeddingSearch(bool visualTextCoEmbedding)
-    {
-      _visualTextCoEmbedding = visualTextCoEmbedding;
-    }
-
     public override List<QueryTerm> GetTerms()
     {
       var terms = new List<QueryTerm>();
-      if ((_ocr || _asr || _sceneCaption || _visualTextCoEmbedding) && !string.IsNullOrEmpty(_textSearchText))
-      {
-        terms.Add(BuildTextTerm());
-      }
+
+      if (string.IsNullOrEmpty(_textSearchText))
+        return terms;
+
+      var categories = _categories
+        .Where(category => category.toggle.isOn)
+        .Select(category => category.id).ToList();
+
+      if (categories.Count == 0)
+        return terms;
+
+      terms.Add(new QueryTerm(QueryTerm.TypeEnum.TEXT, _textSearchText, categories));
 
       return terms;
-    }
-
-    private QueryTerm BuildTextTerm()
-    {
-      // TODO: Move to Cineast Unity Interface in a more modular way
-      var categories = new List<string>();
-
-      if (_ocr)
-      {
-        categories.Add("ocr");
-      }
-
-      if (_asr)
-      {
-        categories.Add("asr");
-      }
-
-      if (_sceneCaption)
-      {
-        categories.Add("scenecaption");
-      }
-
-      if (_visualTextCoEmbedding)
-      {
-        categories.Add("visualtextcoembedding");
-      }
-
-      return new QueryTerm(QueryTerm.TypeEnum.TEXT, _textSearchText, categories);
     }
   }
 }
