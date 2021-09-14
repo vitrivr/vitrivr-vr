@@ -14,7 +14,7 @@ namespace VitrivrVR.Util
 
       if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
       {
-        Debug.LogError(www.error);
+        Debug.LogError($"URL: {url}\nError: {www.error}");
         onError();
       }
       else
