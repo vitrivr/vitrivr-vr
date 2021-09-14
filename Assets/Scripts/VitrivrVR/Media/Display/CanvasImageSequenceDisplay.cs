@@ -52,6 +52,7 @@ namespace VitrivrVR.Media.Display
 
     public void Close()
     {
+      Destroy(gameObject);
       _onClose();
     }
 
