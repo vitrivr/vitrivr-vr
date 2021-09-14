@@ -1,14 +1,5 @@
 {
   "dependencies": {
-    "com.unity.collab-proxy": {
-      "version": "1.7.1",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "2.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.ext.nunit": {
       "version": "1.0.6",
       "depth": 1,
@@ -41,13 +32,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.nuget.newtonsoft-json": {
-      "version": "2.0.0",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
     "com.unity.subsystemregistration": {
       "version": "1.0.6",
       "depth": 1,
@@ -56,7 +40,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
-      "version": "1.1.27",
+      "version": "1.1.29",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -76,7 +60,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.5.6",
+      "version": "1.6.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -148,7 +132,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "a9acafb48a19212a2e41cc36939e4d1a56d7471a"
+      "hash": "8f6ebcf34e1c77153b45e1c0341312b1dae5f0ed"
     },
     "org.vitrivr.unityinterface.dresapi": {
       "version": "https://github.com/vitrivr/DresUnityInterface.git#rename-dll",
