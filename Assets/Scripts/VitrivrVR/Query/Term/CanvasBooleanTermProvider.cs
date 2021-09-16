@@ -30,7 +30,16 @@ namespace VitrivrVR.Query.Term
 
     private async void Start()
     {
-      foreach (var category in ConfigManager.Config.booleanCategories)
+      var categories = ConfigManager.Config.booleanCategories;
+
+      if (categories.Count == 0)
+      {
+        Debug.LogError("Boolean term enabled with no Boolean categories specified!");
+        Destroy(transform.root.gameObject);
+        return;
+      }
+      
+      foreach (var category in categories)
       {
         if (Enum.TryParse<BooleanTermTypes>(category.selectionType, out var termType))
         {
