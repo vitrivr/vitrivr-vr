@@ -60,7 +60,7 @@ namespace VitrivrVR.Query.Term
 
     private void CreateIntegerRange(VitrivrVrConfig.BooleanCategory category)
     {
-      var entity = $"{category.table}.{category.attribute}";
+      var entity = $"{category.table}.{category.column}";
       var ops = new List<RelationalOperator> { RelationalOperator.Eq };
       var start = int.Parse(category.options[0]);
       var end = int.Parse(category.options[1]);
@@ -72,7 +72,7 @@ namespace VitrivrVR.Query.Term
 
     private void CreateOptions(VitrivrVrConfig.BooleanCategory category)
     {
-      var entity = $"{category.table}.{category.attribute}";
+      var entity = $"{category.table}.{category.column}";
       var ops = new List<RelationalOperator> { RelationalOperator.Eq };
       _categories.Add((entity, ops, category.options.ToList()));
 
@@ -81,9 +81,9 @@ namespace VitrivrVR.Query.Term
 
     private async Task CreateDynamicOptions(VitrivrVrConfig.BooleanCategory category)
     {
-      var entity = $"{category.table}.{category.attribute}";
+      var entity = $"{category.table}.{category.column}";
       var ops = new List<RelationalOperator> { RelationalOperator.Eq };
-      var options = await CineastWrapper.GetDistinctTableValues(category.table, category.attribute);
+      var options = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
       _categories.Add((entity, ops, options));
 
       categoryDropdown.AddOptions(new List<TMP_Dropdown.OptionData> { new TMP_Dropdown.OptionData(category.name) });

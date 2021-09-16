@@ -40,7 +40,7 @@ namespace VitrivrVR.Config
     [Serializable]
     public class BooleanCategory
     {
-      public string name, table, selectionType, attribute;
+      public string name, selectionType, table, column;
       public string[] options;
     }
 
