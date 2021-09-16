@@ -8,6 +8,13 @@ using UnityEngine;
 namespace VitrivrVR.Config
 {
   [Serializable]
+  public class BooleanCategory
+  {
+    public string name, selectionType, table, column;
+    public string[] options;
+  }
+
+  [Serializable]
   public class VitrivrVrConfig
   {
     [Serializable]
@@ -35,13 +42,6 @@ namespace VitrivrVR.Config
         this.name = name;
         this.id = id;
       }
-    }
-
-    [Serializable]
-    public class BooleanCategory
-    {
-      public string name, selectionType, table, column;
-      public string[] options;
     }
 
     /// <summary>

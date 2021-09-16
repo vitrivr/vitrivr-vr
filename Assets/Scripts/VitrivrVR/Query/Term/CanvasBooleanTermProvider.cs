@@ -38,7 +38,7 @@ namespace VitrivrVR.Query.Term
         Destroy(transform.root.gameObject);
         return;
       }
-      
+
       foreach (var category in categories)
       {
         if (Enum.TryParse<BooleanTermTypes>(category.selectionType, out var termType))
@@ -63,11 +63,11 @@ namespace VitrivrVR.Query.Term
           Debug.LogError($"Unknown Boolean term type: {category.selectionType}");
         }
       }
-      
+
       SelectCategory(0);
     }
 
-    private void CreateIntegerRange(VitrivrVrConfig.BooleanCategory category)
+    private void CreateIntegerRange(BooleanCategory category)
     {
       var entity = $"{category.table}.{category.column}";
       var ops = new List<RelationalOperator> { RelationalOperator.Eq };
@@ -79,19 +79,19 @@ namespace VitrivrVR.Query.Term
       categoryDropdown.AddOptions(new List<TMP_Dropdown.OptionData> { new TMP_Dropdown.OptionData(category.name) });
     }
 
-    private void CreateOptions(VitrivrVrConfig.BooleanCategory category)
+    private void CreateOptions(BooleanCategory category)
     {
       var entity = $"{category.table}.{category.column}";
-      var ops = new List<RelationalOperator> { RelationalOperator.Eq };
+      var ops = new List<RelationalOperator> { RelationalOperator.Eq, RelationalOperator.NEq };
       _categories.Add((entity, ops, category.options.ToList()));
 
       categoryDropdown.AddOptions(new List<TMP_Dropdown.OptionData> { new TMP_Dropdown.OptionData(category.name) });
     }
 
-    private async Task CreateDynamicOptions(VitrivrVrConfig.BooleanCategory category)
+    private async Task CreateDynamicOptions(BooleanCategory category)
     {
       var entity = $"{category.table}.{category.column}";
-      var ops = new List<RelationalOperator> { RelationalOperator.Eq };
+      var ops = new List<RelationalOperator> { RelationalOperator.Eq, RelationalOperator.NEq };
       var options = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
       _categories.Add((entity, ops, options));
 
@@ -102,7 +102,7 @@ namespace VitrivrVR.Query.Term
     {
       operatorDropdown.ClearOptions();
       operatorDropdown.AddOptions(_categories[index].ops.Select(op => op.ToString()).ToList());
-      
+
       valueDropdown.ClearOptions();
       valueDropdown.AddOptions(_categories[index].values);
     }
