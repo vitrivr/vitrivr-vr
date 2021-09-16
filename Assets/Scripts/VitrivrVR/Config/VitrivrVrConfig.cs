@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Vitrivr.UnityInterface.CineastApi.Model.Config;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
@@ -34,7 +35,14 @@ namespace VitrivrVR.Config
         this.name = name;
         this.id = id;
       }
-  }
+    }
+
+    [Serializable]
+    public class BooleanCategory
+    {
+      public string name, table, selectionType, attribute;
+      public string[] options;
+    }
 
     /// <summary>
     /// The maximum number of results to accept from a single query.
@@ -75,6 +83,8 @@ namespace VitrivrVR.Config
     /// The text categories to provide for text query terms.
     /// </summary>
     public List<TextCategory> textCategories;
+
+    public List<BooleanCategory> booleanCategories;
 
     /// <summary>
     /// The default volume [0, 1] to use for audio and video.
@@ -134,6 +144,7 @@ namespace VitrivrVR.Config
         new TextCategory("Caption", "scenecaption"),
         new TextCategory("Co-Embed", "visualtextcoembedding")
       };
+      booleanCategories = new List<BooleanCategory>();
       defaultMediaVolume = .5f;
       skipLength = 2.5f;
       dresEnabled = false;
