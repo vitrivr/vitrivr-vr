@@ -1,32 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Org.Vitrivr.CineastApi.Model;
-using TMPro;
 using UnityEngine;
 using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Query;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Config;
+using VitrivrVR.Query.Term.Boolean;
 
 namespace VitrivrVR.Query.Term
 {
   public class CanvasBooleanTermProvider : QueryTermProvider
   {
-    public TMP_Dropdown categoryDropdown;
-    public TMP_Dropdown operatorDropdown;
-    public TMP_Dropdown valueDropdown;
+    public CanvasWeekdaySelection weekdaySelection;
+    public CanvasOptionSelection optionSelection;
 
     private enum BooleanTermTypes
     {
       IntegerRange,
-      Options,
+      WeekdayOptions,
       DynamicOptions
     }
 
-    private List<(string entity, List<RelationalOperator> ops, List<string> values)> _categories =
-      new List<(string entity, List<RelationalOperator> ops, List<string> values)>();
+    private List<CanvasBooleanTerm> _termProviders = new List<CanvasBooleanTerm>();
 
     private async void Start()
     {
@@ -46,13 +43,22 @@ namespace VitrivrVR.Query.Term
           switch (termType)
           {
             case BooleanTermTypes.IntegerRange:
-              CreateIntegerRange(category);
               break;
-            case BooleanTermTypes.Options:
-              CreateOptions(category);
+            case BooleanTermTypes.WeekdayOptions:
+              var weekdayOptions = Instantiate(weekdaySelection, transform);
+              weekdayOptions.Initialize($"{category.table}.{category.column}", category.options);
+              _termProviders.Add(weekdayOptions);
               break;
             case BooleanTermTypes.DynamicOptions:
-              await CreateDynamicOptions(category);
+              var dynamicOptions = Instantiate(optionSelection, transform);
+              var dynOpt = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
+              dynamicOptions.Initialize(category.name, $"{category.table}.{category.column}",
+                new List<RelationalOperator>
+                {
+                  RelationalOperator.Eq,
+                  RelationalOperator.NEq
+                }, dynOpt);
+              _termProviders.Add(dynamicOptions);
               break;
             default:
               throw new ArgumentOutOfRangeException();
@@ -63,60 +69,21 @@ namespace VitrivrVR.Query.Term
           Debug.LogError($"Unknown Boolean term type: {category.selectionType}");
         }
       }
-
-      SelectCategory(0);
-    }
-
-    private void CreateIntegerRange(BooleanCategory category)
-    {
-      var entity = $"{category.table}.{category.column}";
-      var ops = new List<RelationalOperator> { RelationalOperator.Eq };
-      var start = int.Parse(category.options[0]);
-      var end = int.Parse(category.options[1]);
-      var values = Enumerable.Range(start, end - start).Select(i => i.ToString()).ToList();
-      _categories.Add((entity, ops, values));
-
-      categoryDropdown.AddOptions(new List<TMP_Dropdown.OptionData> { new TMP_Dropdown.OptionData(category.name) });
-    }
-
-    private void CreateOptions(BooleanCategory category)
-    {
-      var entity = $"{category.table}.{category.column}";
-      var ops = new List<RelationalOperator> { RelationalOperator.Eq, RelationalOperator.NEq };
-      _categories.Add((entity, ops, category.options.ToList()));
-
-      categoryDropdown.AddOptions(new List<TMP_Dropdown.OptionData> { new TMP_Dropdown.OptionData(category.name) });
-    }
-
-    private async Task CreateDynamicOptions(BooleanCategory category)
-    {
-      var entity = $"{category.table}.{category.column}";
-      var ops = new List<RelationalOperator> { RelationalOperator.Eq, RelationalOperator.NEq };
-      var options = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
-      _categories.Add((entity, ops, options));
-
-      categoryDropdown.AddOptions(new List<TMP_Dropdown.OptionData> { new TMP_Dropdown.OptionData(category.name) });
-    }
-
-    public void SelectCategory(int index)
-    {
-      operatorDropdown.ClearOptions();
-      operatorDropdown.AddOptions(_categories[index].ops.Select(op => op.ToString()).ToList());
-
-      valueDropdown.ClearOptions();
-      valueDropdown.AddOptions(_categories[index].values);
     }
 
     public override List<QueryTerm> GetTerms()
     {
-      var (entity, ops, values) = _categories[categoryDropdown.value];
-      var op = ops[operatorDropdown.value];
-      var value = values[valueDropdown.value];
+      var termParts = _termProviders
+        .Select(provider => provider.GetTerm())
+        .Where(t => t.attribute != null)
+        .ToArray();
 
-      return new List<QueryTerm>
-      {
-        QueryTermBuilder.BuildBooleanTerm(entity, op, value)
-      };
+      return termParts.Length == 0
+        ? new List<QueryTerm>()
+        : new List<QueryTerm>
+        {
+          QueryTermBuilder.BuildBooleanTerm(termParts)
+        };
     }
   }
 }
