@@ -40,19 +40,20 @@ namespace VitrivrVR.Query.Term
       {
         if (Enum.TryParse<BooleanTermTypes>(category.selectionType, out var termType))
         {
+          var entity = $"{category.table}.{category.column}";
           switch (termType)
           {
             case BooleanTermTypes.IntegerRange:
               break;
             case BooleanTermTypes.WeekdayOptions:
               var weekdayOptions = Instantiate(weekdaySelection, transform);
-              weekdayOptions.Initialize($"{category.table}.{category.column}", category.options);
+              weekdayOptions.Initialize(category.name, entity, category.options);
               _termProviders.Add(weekdayOptions);
               break;
             case BooleanTermTypes.DynamicOptions:
               var dynamicOptions = Instantiate(optionSelection, transform);
               var dynOpt = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
-              dynamicOptions.Initialize(category.name, $"{category.table}.{category.column}",
+              dynamicOptions.Initialize(category.name, entity,
                 new List<RelationalOperator>
                 {
                   RelationalOperator.Eq,
@@ -74,8 +75,8 @@ namespace VitrivrVR.Query.Term
     public override List<QueryTerm> GetTerms()
     {
       var termParts = _termProviders
+        .Where(t => t.IsEnabled())
         .Select(provider => provider.GetTerm())
-        .Where(t => t.attribute != null)
         .ToArray();
 
       return termParts.Length == 0

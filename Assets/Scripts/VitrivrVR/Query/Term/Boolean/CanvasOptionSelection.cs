@@ -28,8 +28,13 @@ namespace VitrivrVR.Query.Term.Boolean
 
     public override (string attribute, RelationalOperator op, string[] values) GetTerm()
     {
-      // TODO: Default empty option to be ignored
       return (_entity, _operators[operatorDropdown.value], new[] { _options[valueDropdown.value] });
+    }
+
+    public override bool IsEnabled()
+    {
+      // TODO: Implement enabling and disabling term
+      return true;
     }
   }
 }
