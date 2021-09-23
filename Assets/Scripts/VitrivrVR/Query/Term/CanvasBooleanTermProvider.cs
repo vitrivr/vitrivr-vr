@@ -23,6 +23,12 @@ namespace VitrivrVR.Query.Term
       DynamicOptions
     }
 
+    private enum SortOrder
+    {
+      Alphabetic,
+      Numeric
+    }
+
     private List<CanvasBooleanTerm> _termProviders = new List<CanvasBooleanTerm>();
 
     private async void Start()
@@ -53,6 +59,22 @@ namespace VitrivrVR.Query.Term
             case BooleanTermTypes.DynamicOptions:
               var dynamicOptions = Instantiate(optionSelection, transform);
               var dynOpt = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
+              if (category.options != null && Enum.TryParse<SortOrder>(category.options.First(), out var order))
+              {
+                switch (order)
+                {
+                  case SortOrder.Alphabetic:
+                    dynOpt.Sort();
+                    break;
+                  case SortOrder.Numeric:
+                    var numericSorted = dynOpt.Select(int.Parse).ToList();
+                    numericSorted.Sort();
+                    dynOpt = numericSorted.Select(n => n.ToString()).ToList();
+                    break;
+                  default:
+                    throw new ArgumentOutOfRangeException();
+                }
+              }
               dynamicOptions.Initialize(category.name, entity,
                 new List<RelationalOperator>
                 {
