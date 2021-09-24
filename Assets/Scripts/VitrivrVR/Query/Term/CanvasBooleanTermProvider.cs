@@ -15,6 +15,7 @@ namespace VitrivrVR.Query.Term
   {
     public CanvasWeekdaySelection weekdaySelection;
     public CanvasOptionSelection optionSelection;
+    public CanvasIntegerRange integerRange;
 
     private enum BooleanTermTypes
     {
@@ -50,6 +51,10 @@ namespace VitrivrVR.Query.Term
           switch (termType)
           {
             case BooleanTermTypes.IntegerRange:
+              var intRange = Instantiate(integerRange, transform);
+              intRange.Initialize(category.name, entity, int.Parse(category.options[0]),
+                int.Parse(category.options[1]));
+              _termProviders.Add(intRange);
               break;
             case BooleanTermTypes.WeekdayOptions:
               var weekdayOptions = Instantiate(weekdaySelection, transform);
@@ -64,6 +69,7 @@ namespace VitrivrVR.Query.Term
                 // TODO: Handle empty options array
                 dynOpt = SortOptions(dynOpt, category.options.First());
               }
+
               dynamicOptions.Initialize(category.name, entity,
                 new List<RelationalOperator>
                 {
