@@ -59,21 +59,10 @@ namespace VitrivrVR.Query.Term
             case BooleanTermTypes.DynamicOptions:
               var dynamicOptions = Instantiate(optionSelection, transform);
               var dynOpt = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
-              if (category.options != null && Enum.TryParse<SortOrder>(category.options.First(), out var order))
+              if (category.options != null)
               {
-                switch (order)
-                {
-                  case SortOrder.Alphabetic:
-                    dynOpt.Sort();
-                    break;
-                  case SortOrder.Numeric:
-                    var numericSorted = dynOpt.Select(int.Parse).ToList();
-                    numericSorted.Sort();
-                    dynOpt = numericSorted.Select(n => n.ToString()).ToList();
-                    break;
-                  default:
-                    throw new ArgumentOutOfRangeException();
-                }
+                // TODO: Handle empty options array
+                dynOpt = SortOptions(dynOpt, category.options.First());
               }
               dynamicOptions.Initialize(category.name, entity,
                 new List<RelationalOperator>
@@ -107,6 +96,28 @@ namespace VitrivrVR.Query.Term
         {
           QueryTermBuilder.BuildBooleanTerm(termParts)
         };
+    }
+
+    private static List<string> SortOptions(List<string> options, string sortOrder)
+    {
+      if (Enum.TryParse<SortOrder>(sortOrder, out var order))
+      {
+        switch (order)
+        {
+          case SortOrder.Alphabetic:
+            options.Sort();
+            return options;
+          case SortOrder.Numeric:
+            var numericSorted = options.Select(int.Parse).ToList();
+            numericSorted.Sort();
+            return numericSorted.Select(n => n.ToString()).ToList();
+          default:
+            throw new ArgumentOutOfRangeException();
+        }
+      }
+
+      Debug.LogError($"Unknown sort order {sortOrder} specified!");
+      return options;
     }
   }
 }
