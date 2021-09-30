@@ -88,6 +88,27 @@ namespace VitrivrVR.Submission
       }
     }
 
+    public static async void SubmitResult(string mediaSegmentId)
+    {
+      mediaSegmentId = RemovePrefix(mediaSegmentId);
+
+      try
+      {
+        // TODO: Update with newer DresClient method without frame parameter
+        var result = await instance.SubmitResult(mediaSegmentId, 0);
+        NotificationController.Notify($"Submission: {result.Submission}");
+      }
+      catch (Exception e)
+      {
+        NotificationController.Notify(e.Message);
+      }
+
+      if (ConfigManager.Config.writeLogsToFile)
+      {
+        LogSubmissionToFile(mediaSegmentId);
+      }
+    }
+
     private static async void LogSubmissionToFile(string mediaObjectId, int frame)
     {
       var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -95,6 +116,20 @@ namespace VitrivrVR.Submission
       {
         using var file = new StreamWriter(_submissionLogPath, true);
         await file.WriteLineAsync($"{timestamp},{mediaObjectId},{frame}");
+      }
+      catch (Exception e)
+      {
+        NotificationController.Notify($"Error logging to file: {e.Message}");
+      }
+    }
+
+    private static async void LogSubmissionToFile(string mediaSegmentId)
+    {
+      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+      try
+      {
+        using var file = new StreamWriter(_submissionLogPath, true);
+        await file.WriteLineAsync($"{timestamp},{mediaSegmentId}");
       }
       catch (Exception e)
       {
@@ -182,7 +217,7 @@ namespace VitrivrVR.Submission
         }
         catch (Exception e)
         {
-          NotificationController.Notify($"Error logging to file: {e.Message}");
+          NotificationController.NotifyError($"Error logging to file: {e.Message}", e);
         }
       }
     }
@@ -200,12 +235,12 @@ namespace VitrivrVR.Submission
 
         if (!success.Status)
         {
-          NotificationController.Notify($"Could not log interactions to Dres: {success.Description}");
+          NotificationController.NotifyError($"Could not log interactions to Dres: {success.Description}");
         }
       }
       catch (Exception e)
       {
-        NotificationController.Notify(e.Message);
+        NotificationController.NotifyError($"Error logging interaction: {e.Message}", e);
       }
 
       var events = InteractionEvents.ToArray();
@@ -224,7 +259,7 @@ namespace VitrivrVR.Submission
         }
         catch (Exception e)
         {
-          NotificationController.Notify($"Error logging to file: {e.Message}");
+          NotificationController.NotifyError($"Error logging to file: {e.Message}", e);
         }
       }
     }

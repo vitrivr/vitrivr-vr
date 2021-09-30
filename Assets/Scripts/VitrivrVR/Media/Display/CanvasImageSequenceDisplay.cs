@@ -6,6 +6,9 @@ using UnityEngine.UI;
 using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using Vitrivr.UnityInterface.CineastApi.Model.Registries;
+using VitrivrVR.Config;
+using VitrivrVR.Notification;
+using VitrivrVR.Submission;
 using VitrivrVR.Util;
 
 namespace VitrivrVR.Media.Display
@@ -16,6 +19,7 @@ namespace VitrivrVR.Media.Display
     public RawImage previewImage;
     public GameObject metadataButton;
     public Transform bottomStack;
+    public GameObject submitButton;
 
     public GameObject scrollableUITablePrefab;
     public ScrollRect scrollableListPrefab;
@@ -56,6 +60,13 @@ namespace VitrivrVR.Media.Display
           imageTransform.sizeDelta = new Vector2(1000f * width / factor, 1000f * height / factor);
         }
       ));
+      
+      // Enable DRES submission button
+      if (ConfigManager.Config.dresEnabled)
+      {
+        submitButton.SetActive(true);
+        DresClientManager.LogInteraction("imageSequenceDisplay", $"initialized {_mediaObject.Id} {Segment.Id}");
+      }
     }
 
     public void Close()
@@ -110,6 +121,17 @@ namespace VitrivrVR.Media.Display
         _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.2f * t.forward, t.rotation, t);
         _objectSegmentView.GetComponentInChildren<MediaObjectSegmentView>().Initialize(_mediaObject, i => { }, min, max);
       }
+    }
+    
+    public void Submit()
+    {
+      if (!ConfigManager.Config.dresEnabled)
+      {
+        NotificationController.Notify("Dres is disabled!");
+        return;
+      }
+
+      DresClientManager.SubmitResult(Segment.Id);
     }
   }
 }

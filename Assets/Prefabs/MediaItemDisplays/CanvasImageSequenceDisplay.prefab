@@ -925,6 +925,7 @@ MonoBehaviour:
   previewImage: {fileID: 3777549360673753629}
   metadataButton: {fileID: 2103391515301786338}
   bottomStack: {fileID: 2348964729075364556}
+  submitButton: {fileID: 6959233241561244974}
   scrollableUITablePrefab: {fileID: 8791042073019561513, guid: ec7b8d050e5be4866828273d41564928,
     type: 3}
   scrollableListPrefab: {fileID: 5664318009189944088, guid: c0f12a2207ad34e92baaa6ebc6f5b80f,
@@ -945,6 +946,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onInteractionEvent:
+    m_PersistentCalls:
+      m_Calls: []
   grabTransform: {fileID: 0}
   onHoverChange:
     m_PersistentCalls:

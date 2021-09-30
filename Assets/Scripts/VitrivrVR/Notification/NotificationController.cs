@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -38,6 +39,21 @@ namespace VitrivrVR.Notification
       {
         Debug.Log(notification);
       }
+    }
+
+    public static void NotifyError(string error, [CanBeNull] Exception exception = null)
+    {
+      if (_instance)
+      {
+        _instance.notificationEvent.Invoke(error);
+      }
+      else
+      {
+        Debug.LogError(error);
+      }
+
+      if (exception == null) return;
+      Debug.LogError(exception.StackTrace);
     }
   }
 }
