@@ -46,7 +46,15 @@ namespace VitrivrVR.Media.Display
 
       StartCoroutine(DownloadHelper.DownloadTexture(mediaUrl,
         () => { previewImage.texture = errorTexture; },
-        texture => { previewImage.texture = texture; }
+        texture =>
+        {
+          previewImage.texture = texture;
+          var width = texture.width;
+          var height = texture.height;
+          var factor = Mathf.Max(width, height);
+          var imageTransform = previewImage.GetComponent<RectTransform>();
+          imageTransform.sizeDelta = new Vector2(1000f * width / factor, 1000f * height / factor);
+        }
       ));
     }
 
