@@ -13,7 +13,7 @@ namespace VitrivrVR.Config
     {
       return File.Exists(GetConfigFilePath())
         ? ReadAndMerge()
-        : VitrivrVrConfig.GetDefault();
+        : GetDefault();
     }
 
     private static string GetConfigFilePath()
@@ -35,6 +35,12 @@ namespace VitrivrVR.Config
       var config = VitrivrVrConfig.GetDefault();
       JsonUtility.FromJsonOverwrite(json, config);
       return config;
+    }
+
+    private static VitrivrVrConfig GetDefault()
+    {
+      Debug.Log($"No config file found at {GetConfigFilePath()}, using defaults.");
+      return VitrivrVrConfig.GetDefault();
     }
   }
 }
