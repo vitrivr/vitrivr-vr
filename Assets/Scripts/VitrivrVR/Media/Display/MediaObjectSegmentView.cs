@@ -93,7 +93,6 @@ namespace VitrivrVR.Media.Display
     public async void Initialize(ObjectData mediaObject, Action<int> onSegmentSelection, int min = 0, int max = -1)
     {
       _onSegmentSelection = onSegmentSelection;
-      _minIndex = min;
       _mediaObject = mediaObject;
 
       var segments = await mediaObject.GetSegments();
@@ -110,6 +109,7 @@ namespace VitrivrVR.Media.Display
 
       // Make sure segments are unique (this may be removed if it can be guaranteed on server side)
       segmentInfo = segmentInfo.Distinct().ToArray();
+      _minIndex = segmentInfo.Select(item => item.index).Min();
 
       _thumbnails = new ThumbnailController[segmentInfo.Length];
       StartCoroutine(InstantiateSegmentIndicators(segmentInfo, segmentInfo.Length));
