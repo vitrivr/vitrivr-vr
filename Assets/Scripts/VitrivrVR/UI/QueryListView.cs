@@ -162,9 +162,12 @@ namespace VitrivrVR.UI
       {
         case QueryTerm.TypeEnum.IMAGE:
           return baseString;
+        case QueryTerm.TypeEnum.BOOLEAN:
         case QueryTerm.TypeEnum.TAG:
+        {
           var data = Base64Converter.StringFromBase64(term.Data.Substring(Base64Converter.JsonPrefix.Length));
           return $"{baseString}: {data}";
+        }
         default:
           return $"{baseString}: {term.Data}";
       }
