@@ -46,7 +46,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.4, y: 0.3, z: 0.01}
+  m_Size: {x: 0.4, y: 0.5, z: 0.01}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &7970916485576120093
 Rigidbody:
@@ -133,7 +133,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 300}
+  m_SizeDelta: {x: 400, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &467071047409634821
 Canvas:
@@ -747,7 +747,7 @@ PrefabInstance:
     - target: {fileID: 8172403779926075741, guid: 6273aab0a11161b4982ccb9213f6c561,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8172403779926075741, guid: 6273aab0a11161b4982ccb9213f6c561,
         type: 3}

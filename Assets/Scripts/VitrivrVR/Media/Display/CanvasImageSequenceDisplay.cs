@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
@@ -64,7 +65,7 @@ namespace VitrivrVR.Media.Display
           imageTransform.sizeDelta = new Vector2(1000f * width / factor, 1000f * height / factor);
         }
       ));
-      
+
       // Enable DRES submission button
       if (ConfigManager.Config.dresEnabled)
       {
@@ -108,7 +109,7 @@ namespace VitrivrVR.Media.Display
         var tagItem = Instantiate(listItemPrefab, listContent);
         tagItem.GetComponentInChildren<TextMeshProUGUI>().text = tagData.Name;
       }
-      
+
       DresClientManager.LogInteraction("segmentTags", $"opened {_mediaObject.Id} {Segment.Id}");
     }
 
@@ -125,10 +126,11 @@ namespace VitrivrVR.Media.Display
         var max = index + MAXNeighbors;
         var t = transform;
         _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.2f * t.forward, t.rotation, t);
-        _objectSegmentView.GetComponentInChildren<MediaObjectSegmentView>().Initialize(_mediaObject, i => { }, min, max);
+        _objectSegmentView.GetComponentInChildren<MediaObjectSegmentView>()
+          .Initialize(_mediaObject, OpenSegment, min, max);
       }
     }
-    
+
     public void Submit()
     {
       if (!ConfigManager.Config.dresEnabled)
@@ -138,6 +140,24 @@ namespace VitrivrVR.Media.Display
       }
 
       DresClientManager.SubmitResult(Segment.Id);
+    }
+
+    private async void OpenSegment(int segmentIndex)
+    {
+      // TODO: Refactor to avoid having to fetch and initialize all segments of given object
+      var segments = await SegmentRegistry.GetSegmentsOf(_mediaObject.Id);
+      await SegmentRegistry.BatchFetchSegmentData(segments);
+      segments = segments.Where(segment => segment.GetSequenceNumber().Result == segmentIndex).ToList();
+
+      if (segments.Count != 1)
+      {
+        Debug.LogError($"Unexpected number of segments found with sequence number {segmentIndex}: {segments.Count}");
+      }
+
+      var segment = segments.First();
+      var scoredSegment = new ScoredSegment(segment, 0);
+      var t = _objectSegmentView != null ? _objectSegmentView.transform : transform;
+      await MediaDisplayFactory.CreateDisplay(scoredSegment, () => { }, t.position + 0.2f * t.up, t.rotation);
     }
   }
 }
