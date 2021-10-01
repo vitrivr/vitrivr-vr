@@ -80,6 +80,16 @@ namespace VitrivrVR.Media.Display
       _onClose();
     }
 
+    private void OnDestroy()
+    {
+      if (_objectSegmentView)
+      {
+        Destroy(_objectSegmentView);
+      }
+
+      DresClientManager.LogInteraction("imageSequenceDisplay", $"closed {_mediaObject.Id} {Segment.Id}");
+    }
+
     public async void ShowMetadata()
     {
       if (_metadataShown)
