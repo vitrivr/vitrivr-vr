@@ -125,7 +125,7 @@ namespace VitrivrVR.Media.Display
         var min = index - MAXNeighbors;
         var max = index + MAXNeighbors;
         var t = transform;
-        _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.2f * t.forward, t.rotation, t);
+        _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.2f * t.forward, t.rotation);
         _objectSegmentView.GetComponentInChildren<MediaObjectSegmentView>()
           .Initialize(_mediaObject, OpenSegment, min, max);
       }
