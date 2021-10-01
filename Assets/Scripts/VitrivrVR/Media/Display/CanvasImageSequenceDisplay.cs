@@ -18,8 +18,9 @@ namespace VitrivrVR.Media.Display
     public Texture2D errorTexture;
     public RawImage previewImage;
     public GameObject metadataButton;
-    public Transform bottomStack;
     public GameObject submitButton;
+    public Transform bottomStack;
+    public TextMeshProUGUI segmentDataText;
 
     public GameObject scrollableUITablePrefab;
     public ScrollRect scrollableListPrefab;
@@ -44,6 +45,9 @@ namespace VitrivrVR.Media.Display
       _scoredSegment = scoredSegment;
       _onClose = onClose;
       _mediaObject = ObjectRegistry.GetObject(await Segment.GetObjectId());
+
+      var sn = await Segment.GetSequenceNumber();
+      segmentDataText.text = $"{Segment.Id}:\nNumber: {sn}\nScore: {_scoredSegment.score:F}";
 
       // Resolve media URL
       var mediaUrl = await CineastWrapper.GetMediaUrlOfAsync(_mediaObject, Segment.Id);
@@ -90,7 +94,7 @@ namespace VitrivrVR.Media.Display
       var listRect = tagList.GetComponent<RectTransform>();
       listRect.anchorMin = new Vector2(0, .5f);
       listRect.anchorMax = new Vector2(0, .5f);
-      listRect.sizeDelta = new Vector2(100, 200);
+      listRect.sizeDelta = new Vector2(100, 600);
 
       var listContent = tagList.content;
 
@@ -104,6 +108,8 @@ namespace VitrivrVR.Media.Display
         var tagItem = Instantiate(listItemPrefab, listContent);
         tagItem.GetComponentInChildren<TextMeshProUGUI>().text = tagData.Name;
       }
+      
+      DresClientManager.LogInteraction("segmentTags", $"opened {_mediaObject.Id} {Segment.Id}");
     }
 
     public async void ShowObjectSegmentView()
