@@ -140,12 +140,7 @@ namespace VitrivrVR.Media.Display
       if (!_hovered) return;
       if (!ConfigManager.Config.dresEnabled) return;
 
-      var mediaObjectId = await _segment.GetObjectId();
-      // TODO: Adjust to work on media types other than video and move to DresClientManager
-      var startFrame = await _segment.GetStart();
-      var endFrame = await _segment.GetEnd();
-      var frame = (startFrame + endFrame) / 2;
-      DresClientManager.SubmitResult(mediaObjectId, frame);
+      DresClientManager.QuickSubmitSegment(_segment);
     }
   }
 }

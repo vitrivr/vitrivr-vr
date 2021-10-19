@@ -88,6 +88,33 @@ namespace VitrivrVR.Submission
       }
     }
 
+    /// <summary>
+    /// Submit segment without further submission specification.
+    /// </summary>
+    /// <param name="segment">Segment to be submitted.</param>
+    public static async void QuickSubmitSegment(SegmentData segment)
+    {
+      var mediaObjectId = await segment.GetObjectId();
+      var mediaObject = ObjectRegistry.GetObject(mediaObjectId);
+      var mediaType = await mediaObject.GetMediaType();
+
+      switch (mediaType)
+      {
+        case MediaObjectDescriptor.MediatypeEnum.VIDEO:
+          var startFrame = await segment.GetStart();
+          var endFrame = await segment.GetEnd();
+          var frame = (startFrame + endFrame) / 2;
+          SubmitResult(mediaObjectId, frame);
+          break;
+        case MediaObjectDescriptor.MediatypeEnum.IMAGESEQUENCE:
+          SubmitResult(segment.Id);
+          break;
+        default:
+          SubmitResult(mediaObjectId);
+          break;
+      }
+    }
+
     private static async void LogSubmissionToFile(string mediaObjectId, int? frame)
     {
       var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
