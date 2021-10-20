@@ -146,7 +146,8 @@ namespace VitrivrVR.Media.Display
       {
         var t = transform;
         _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.2f * t.forward, t.rotation);
-        _objectSegmentView.GetComponentInChildren<MediaObjectSegmentView>().Initialize(_mediaObject, SkipToSegment);
+        _objectSegmentView.GetComponentInChildren<MediaObjectSegmentView>()
+          .Initialize(_mediaObject, (i, _) => SkipToSegment(i));
       }
     }
 

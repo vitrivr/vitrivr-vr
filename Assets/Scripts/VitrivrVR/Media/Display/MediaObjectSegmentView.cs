@@ -20,7 +20,7 @@ namespace VitrivrVR.Media.Display
     public Transform grabHandle;
 
     private ThumbnailController[] _thumbnails;
-    private Action<int> _onSegmentSelection;
+    private Action<int, Vector3> _onSegmentSelection;
     private ObjectData _mediaObject;
 
     private int _minIndex;
@@ -90,7 +90,7 @@ namespace VitrivrVR.Media.Display
       DresClientManager.LogInteraction("videoSummary", $"closed {_mediaObject.Id}");
     }
 
-    public async void Initialize(ObjectData mediaObject, Action<int> onSegmentSelection, int min = 0, int max = -1)
+    public async void Initialize(ObjectData mediaObject, Action<int, Vector3> onSegmentSelection, int min = 0, int max = -1)
     {
       _onSegmentSelection = onSegmentSelection;
       _mediaObject = mediaObject;
@@ -122,7 +122,7 @@ namespace VitrivrVR.Media.Display
     {
       if (start) return;
       var segmentIndex = GetSegmentIndex(interactor) + _minIndex;
-      _onSegmentSelection(segmentIndex);
+      _onSegmentSelection(segmentIndex, interactor.position);
       DresClientManager.LogInteraction("videoSummary", $"selected {_mediaObject.Id} {segmentIndex}");
     }
 

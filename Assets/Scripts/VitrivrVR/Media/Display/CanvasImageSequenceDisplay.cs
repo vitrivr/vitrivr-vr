@@ -152,7 +152,7 @@ namespace VitrivrVR.Media.Display
       DresClientManager.SubmitResult(Segment.Id);
     }
 
-    private async void OpenSegment(int segmentIndex)
+    private async void OpenSegment(int segmentIndex, Vector3 position)
     {
       // TODO: Refactor to avoid having to fetch and initialize all segments of given object
       var segments = await SegmentRegistry.GetSegmentsOf(_mediaObject.Id);
@@ -167,7 +167,7 @@ namespace VitrivrVR.Media.Display
       var segment = segments.First();
       var scoredSegment = new ScoredSegment(segment, 0);
       var t = _objectSegmentView != null ? _objectSegmentView.transform : transform;
-      await MediaDisplayFactory.CreateDisplay(scoredSegment, () => { }, t.position + 0.2f * t.up, t.rotation);
+      await MediaDisplayFactory.CreateDisplay(scoredSegment, () => { }, position + 0.2f * t.up, t.rotation);
     }
   }
 }
