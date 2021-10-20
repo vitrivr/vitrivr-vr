@@ -135,7 +135,7 @@ namespace VitrivrVR.Media.Display
       _hovered = false;
     }
 
-    private async void Submit(InputAction.CallbackContext context)
+    private void Submit(InputAction.CallbackContext context)
     {
       if (!_hovered) return;
       if (!ConfigManager.Config.dresEnabled) return;
