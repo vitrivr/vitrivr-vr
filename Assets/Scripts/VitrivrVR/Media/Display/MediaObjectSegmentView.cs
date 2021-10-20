@@ -99,7 +99,7 @@ namespace VitrivrVR.Media.Display
 
       var segmentInfo =
         await Task.WhenAll(segments.Select(async segment =>
-          (segment, index: await segment.GetSequenceNumber() - 1)));
+          (segment, index: await segment.GetSequenceNumber())));
 
       // Filter to specified segment range
       if (max > min)
@@ -120,7 +120,7 @@ namespace VitrivrVR.Media.Display
 
     public override void OnInteraction(Transform interactor, bool start)
     {
-      if (!start) return;
+      if (start) return;
       var segmentIndex = GetSegmentIndex(interactor) + _minIndex;
       _onSegmentSelection(segmentIndex);
       DresClientManager.LogInteraction("videoSummary", $"selected {_mediaObject.Id} {segmentIndex}");
