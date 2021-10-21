@@ -137,11 +137,11 @@
       "hash": "8f6ebcf34e1c77153b45e1c0341312b1dae5f0ed"
     },
     "org.vitrivr.unityinterface.dresapi": {
-      "version": "https://github.com/vitrivr/DresUnityInterface.git#rename-dll",
+      "version": "https://github.com/vitrivr/DresUnityInterface.git#v1.0.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "5b0e1d2a3450dce70e20c08bf08decfc67d54fe7"
+      "hash": "d9cfc9e7502b95572ea1a0a3c3285fc1d45c5091"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
