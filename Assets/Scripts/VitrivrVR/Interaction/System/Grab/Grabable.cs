@@ -53,7 +53,6 @@ namespace VitrivrVR.Interaction.System.Grab
       _grabber = start ? interactor : null;
       if (start)
       {
-        // grabAnchor = grabTransform.localPosition - grabTransform.InverseTransformPoint(interactor.position);
         _grabAnchor = grabTransform.position - interactor.position;
         _inverseGrabberRotation = Quaternion.Inverse(interactor.rotation);
         _rotationAnchor = _inverseGrabberRotation * grabTransform.rotation;
