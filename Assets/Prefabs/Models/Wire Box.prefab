@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7522296592306451478}
   - component: {fileID: 3228590803646611160}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Wire Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3831985920990628002}
   - component: {fileID: 4071958404678402638}
   - component: {fileID: 4542815942561149804}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: KeyboardKeyPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 7074046086698995567}
   - component: {fileID: 5578311406143223224}
   - component: {fileID: 5321529643281490802}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

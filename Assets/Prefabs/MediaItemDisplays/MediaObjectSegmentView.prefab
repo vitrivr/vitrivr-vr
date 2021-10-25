@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2556684498974878230}
   - component: {fileID: 4170892856184767079}
   - component: {fileID: 3153232660883206802}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1064222993669077097}
   - component: {fileID: 2735348621216750488}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: MediaObjectSegmentView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5770168903340626282}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Scale
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 6563266443013789699}
   - component: {fileID: 8684338128240511769}
   - component: {fileID: 4168317332248490644}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: GrabHandle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -231,7 +231,7 @@ GameObject:
   - component: {fileID: 4533467575946256674}
   - component: {fileID: 5124401864430817430}
   - component: {fileID: 1333676805464828812}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,7 +264,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2770999f7546746cfb9ee13a26154382, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onInteractionEvent:
+    m_PersistentCalls:
+      m_Calls: []
   grabTransform: {fileID: 0}
+  onHoverChange:
+    m_PersistentCalls:
+      m_Calls: []
   thumbnailPrefab: {fileID: 2550728198607861108, guid: df9e32658f9354bfb88abf111839f9cd,
     type: 3}
   root: {fileID: 1064222993669077097}

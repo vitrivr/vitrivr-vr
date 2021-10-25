@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4860110570767679251}
   - component: {fileID: 7970916485576120093}
   - component: {fileID: 8614554977911711682}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Boolean Term Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

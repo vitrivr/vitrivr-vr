@@ -1194,7 +1194,7 @@ GameObject:
   - component: {fileID: 837733352}
   - component: {fileID: 837733351}
   - component: {fileID: 837733350}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Settings View Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2038,7 +2038,7 @@ GameObject:
   - component: {fileID: 1241178933}
   - component: {fileID: 1241178932}
   - component: {fileID: 1241178931}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Query View Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3466,7 +3466,7 @@ GameObject:
   - component: {fileID: 1684389145}
   - component: {fileID: 1684389146}
   - component: {fileID: 1684389147}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Direct Interactor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3523,7 +3523,7 @@ GameObject:
   - component: {fileID: 1686424233}
   - component: {fileID: 1686424234}
   - component: {fileID: 1686424235}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Direct Interactor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3685,7 +3685,7 @@ GameObject:
   - component: {fileID: 1869219390}
   - component: {fileID: 1869219389}
   - component: {fileID: 1869219388}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Query List Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4001,7 +4001,7 @@ GameObject:
   - component: {fileID: 1915357481}
   - component: {fileID: 1915357480}
   - component: {fileID: 1915357479}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Config Info Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4578,6 +4578,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6370198948358844713, guid: e3fa50f12bdc33147a210244db865073,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6370198948358844717, guid: e3fa50f12bdc33147a210244db865073,
         type: 3}

@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 9122845553279482989}
   - component: {fileID: 6014044026604491875}
   - component: {fileID: 5360765140851745980}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Tag Term Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
