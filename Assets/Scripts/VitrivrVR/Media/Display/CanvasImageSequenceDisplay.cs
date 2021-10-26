@@ -10,6 +10,7 @@ using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using VitrivrVR.Config;
 using VitrivrVR.Notification;
 using VitrivrVR.Submission;
+using VitrivrVR.UI;
 using VitrivrVR.Util;
 
 namespace VitrivrVR.Media.Display
@@ -18,7 +19,6 @@ namespace VitrivrVR.Media.Display
   {
     public Texture2D errorTexture;
     public RawImage previewImage;
-    public GameObject metadataButton;
     public GameObject submitButton;
     public Transform bottomStack;
     public TextMeshProUGUI segmentDataText;
@@ -38,8 +38,12 @@ namespace VitrivrVR.Media.Display
     private ObjectData _mediaObject;
     private Action _onClose;
 
-    private bool _metadataShown;
     private GameObject _objectSegmentView;
+
+    private bool _metadataShown;
+    private GameObject _metadataTable;
+    private bool _tagListShown;
+    private ScrollRect _tagList;
 
     public override async void Initialize(ScoredSegment scoredSegment, Action onClose)
     {
@@ -90,24 +94,69 @@ namespace VitrivrVR.Media.Display
       DresClientManager.LogInteraction("imageSequenceDisplay", $"closed {_mediaObject.Id} {Segment.Id}");
     }
 
-    public async void ShowMetadata()
+    public async void ToggleMetadata()
     {
       if (_metadataShown)
       {
+        Destroy(_metadataTable);
+        _metadataShown = false;
+        DresClientManager.LogInteraction("mediaSegmentMetadata", $"closed {_mediaObject.Id}");
         return;
       }
 
       _metadataShown = true;
-      Destroy(metadataButton);
 
-      // Segment tags
-      var tagList = Instantiate(scrollableListPrefab, bottomStack);
-      var listRect = tagList.GetComponent<RectTransform>();
+      var metadata = await Segment.Metadata.GetAll();
+      var rows = metadata.Values.Select(domain => domain.Count).Aggregate(0, (x, y) => x + y);
+      var table = new string[rows, 3];
+      var i = 0;
+      foreach (var domain in metadata.Where(domain => domain.Value.Count != 0))
+      {
+        // Fill first column
+        table[i, 0] = domain.Key;
+        for (var j = 1; j < domain.Value.Count; j++)
+        {
+          table[i + j, 0] = "";
+        }
+
+        // Fill key-value pairs
+        foreach (var (pair, index) in domain.Value.Select((pair, index) => (pair, index)))
+        {
+          table[i + index, 1] = pair.Key;
+          table[i + index, 2] = pair.Value;
+        }
+
+        i += domain.Value.Count;
+      }
+
+      _metadataTable = Instantiate(scrollableUITablePrefab, bottomStack);
+      var uiTableController = _metadataTable.GetComponentInChildren<UITableController>();
+      uiTableController.table = table;
+      var uiTableTransform = _metadataTable.GetComponent<RectTransform>();
+      uiTableTransform.sizeDelta = new Vector2(100, 600); // x is completely irrelevant here, since width is auto
+
+      DresClientManager.LogInteraction("mediaObjectMetadata", $"opened {_mediaObject.Id}");
+    }
+
+    public async void ToggleTagList()
+    {
+      if (_tagListShown)
+      {
+        Destroy(_tagList.gameObject);
+        _tagListShown = false;
+        DresClientManager.LogInteraction("segmentTags", $"closed {_mediaObject.Id}");
+        return;
+      }
+
+      _tagListShown = true;
+
+      _tagList = Instantiate(scrollableListPrefab, bottomStack);
+      var listRect = _tagList.GetComponent<RectTransform>();
       listRect.anchorMin = new Vector2(0, .5f);
       listRect.anchorMax = new Vector2(0, .5f);
       listRect.sizeDelta = new Vector2(100, 600);
 
-      var listContent = tagList.content;
+      var listContent = _tagList.content;
 
       // TODO: Preload or cache for all results
       var tagIds = await CineastWrapper.MetadataApi.FindTagsByIdAsync(Segment.Id);
