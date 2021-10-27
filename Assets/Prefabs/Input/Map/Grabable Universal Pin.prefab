@@ -12,9 +12,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onInteractionEvent:
+  onInteraction:
     m_PersistentCalls:
       m_Calls: []
+  onGrab:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1129541822114460642}
+        m_TargetAssemblyTypeName: Map.UniversalPin, unibas.vr-multimedia-interfaces.Runtime
+        m_MethodName: OnGrab
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onDrop:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1129541822114460642}
+        m_TargetAssemblyTypeName: Map.UniversalPin, unibas.vr-multimedia-interfaces.Runtime
+        m_MethodName: OnDrop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   grabTransform: {fileID: 0}
   onHoverChange:
     m_PersistentCalls:
@@ -84,7 +114,7 @@ PrefabInstance:
     - target: {fileID: 7022304576964692116, guid: 5a4f5dcb258c30440b2e275ee0936a5a,
         type: 3}
       propertyPath: m_Name
-      value: Universal Pin Variant
+      value: Grabable Universal Pin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a4f5dcb258c30440b2e275ee0936a5a, type: 3}
@@ -94,3 +124,15 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7987358806122232695}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1129541822114460642 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7022304576964692117, guid: 5a4f5dcb258c30440b2e275ee0936a5a,
+    type: 3}
+  m_PrefabInstance: {fileID: 7987358806122232695}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129541822114460643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 220bded746f2c8e489b1bf32e977001e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
