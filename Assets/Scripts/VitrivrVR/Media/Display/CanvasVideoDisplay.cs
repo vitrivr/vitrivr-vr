@@ -192,7 +192,7 @@ namespace VitrivrVR.Media.Display
       var uiTableController = _metadataTable.GetComponentInChildren<UITableController>();
       uiTableController.table = table;
       var uiTableTransform = _metadataTable.GetComponent<RectTransform>();
-      uiTableTransform.sizeDelta = new Vector2(100, 200); // x is completely irrelevant here, since width is auto
+      uiTableTransform.sizeDelta = new Vector2(100, 600); // x is completely irrelevant here, since width is auto
 
       DresClientManager.LogInteraction("mediaObjectMetadata", $"opened {_mediaObject.Id}");
     }
