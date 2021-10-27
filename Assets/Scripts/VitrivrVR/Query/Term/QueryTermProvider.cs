@@ -9,6 +9,13 @@ namespace VitrivrVR.Query.Term
   /// </summary>
   public abstract class QueryTermProvider : MonoBehaviour
   {
+    /// <summary>
+    /// Returns a list of the <see cref="QueryTerm"/>s specified through this query term provider.
+    ///
+    /// In case this query term provider is disabled or currently does not specify any terms, expected behavior is to
+    /// return an empty list.
+    /// </summary>
+    /// <returns>A list of <see cref="QueryTerm"/>s specified through this query term provider (may be empty).</returns>
     public abstract List<QueryTerm> GetTerms();
   }
 }
