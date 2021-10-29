@@ -7,7 +7,7 @@
       "dependencies": {
         "com.mapbox.mapbox-sdk": "2.1.1"
       },
-      "hash": "94fea43057105e297831c2e0e4fb64815f318d53"
+      "hash": "5e9a406d9f91151a2432f5c3e880c1d96a0f1cfb"
     },
     "com.mapbox.mapbox-sdk": {
       "version": "https://github.com/Spiess/mapbox-upm-sdk.git",
