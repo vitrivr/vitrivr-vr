@@ -13,6 +13,7 @@ namespace VitrivrVR.Input.Controller
   /// Object for the management of XR controller button events.
   /// <para>Place in a scene and connect actions to the respective button events.</para>
   /// </summary>
+  [Obsolete("Transition to new input system")]
   public class XRButtonObserver : MonoBehaviour
   {
     [Serializable]
