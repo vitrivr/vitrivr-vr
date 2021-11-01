@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 763974230}
   - component: {fileID: 763974231}
   - component: {fileID: 763974229}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: PhysicalKeyboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1567,7 +1567,7 @@ GameObject:
   - component: {fileID: 1890894282304273587}
   - component: {fileID: 2954403938280973320}
   - component: {fileID: 4488891672446029487}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: CanvasVideo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1704,6 +1704,7 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Skip
       m_Flags: 8
+    m_Flags: 0
   videoHoverHandler: {fileID: 7569357379765769196}
 --- !u!114 &4488891672446029487
 MonoBehaviour:

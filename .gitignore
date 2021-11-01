@@ -87,6 +87,10 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
+# Mapbox
+Assets/Resources/
+Assets/Resources.meta
+
 # Custom
 #------------------------
 Assets/cineastapi.json

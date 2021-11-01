@@ -992,7 +992,7 @@ GameObject:
   - component: {fileID: 1890894282304273587}
   - component: {fileID: 4952956502963791116}
   - component: {fileID: 817953361563286965}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: CanvasImageSequenceDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}

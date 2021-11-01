@@ -11,7 +11,7 @@ namespace VitrivrVR.Interaction.System.Grab
     public class HoverEvent : UnityEvent<bool>
     {
     }
-    
+
     /// <summary>
     /// Allows setting the grab target to other transforms e.g. parent (defaults to this transform).
     /// </summary>
@@ -50,10 +50,10 @@ namespace VitrivrVR.Interaction.System.Grab
 
     public override void OnGrab(Transform interactor, bool start)
     {
+      base.OnGrab(interactor, start);
       _grabber = start ? interactor : null;
       if (start)
       {
-        // grabAnchor = grabTransform.localPosition - grabTransform.InverseTransformPoint(interactor.position);
         _grabAnchor = grabTransform.position - interactor.position;
         _inverseGrabberRotation = Quaternion.Inverse(interactor.rotation);
         _rotationAnchor = _inverseGrabberRotation * grabTransform.rotation;
@@ -68,7 +68,7 @@ namespace VitrivrVR.Interaction.System.Grab
         onHoverChange.Invoke(true);
       }
     }
-    
+
     public override void OnHoverExit(Transform interactor)
     {
       _hovering.Remove(interactor);

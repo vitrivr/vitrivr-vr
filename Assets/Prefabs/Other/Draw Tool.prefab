@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6708968734323057813}
   - component: {fileID: 6001526161889136103}
   - component: {fileID: 1036123275}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Draw Tool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,6 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5da46388ea15e7541befe5f650cb0f47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onInteractionEvent:
+    m_PersistentCalls:
+      m_Calls: []
   grabTransform: {fileID: 0}
   onHoverChange:
     m_PersistentCalls:
