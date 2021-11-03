@@ -3412,6 +3412,14 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Toggle
       m_Flags: 0
+    - m_Name: 
+      m_Id: c354e5d0-6345-4c40-be8c-2d85373ec157
+      m_Path: <XRController>{LeftHand}/primaryButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Toggle
+      m_Flags: 0
     m_Flags: 0
   menuItems:
   - {fileID: 1915357482}
@@ -3641,6 +3649,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
+      propertyPath: dictateAction.m_SingletonActionBindings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
+        type: 3}
       propertyPath: onDictationResult.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -3652,7 +3665,12 @@ PrefabInstance:
     - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
       propertyPath: dictateAction.m_SingletonActionBindings.Array.data[1].m_Id
-      value: 420c1ffd-a252-4073-8014-79d749149c3a
+      value: 1ef2d25c-63c4-4784-aa9d-863e56b0453f
+      objectReference: {fileID: 0}
+    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
+        type: 3}
+      propertyPath: dictateAction.m_SingletonActionBindings.Array.data[2].m_Id
+      value: f3c49d40-e693-404a-95d2-fd854f089dae
       objectReference: {fileID: 0}
     - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
@@ -3667,11 +3685,16 @@ PrefabInstance:
     - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
       propertyPath: dictateAction.m_SingletonActionBindings.Array.data[1].m_Path
-      value: <XRController>/menu
+      value: <XRController>{RightHand}/primaryButton
       objectReference: {fileID: 0}
     - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
       propertyPath: dictateAction.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Dictate
+      objectReference: {fileID: 0}
+    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
+        type: 3}
+      propertyPath: dictateAction.m_SingletonActionBindings.Array.data[2].m_Action
       value: Dictate
       objectReference: {fileID: 0}
     - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
