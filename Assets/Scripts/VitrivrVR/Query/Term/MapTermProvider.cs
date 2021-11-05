@@ -14,7 +14,7 @@ namespace VitrivrVR.Query.Term
 
     public override List<QueryTerm> GetTerms()
     {
-      return map.enabled
+      return map.gameObject.activeInHierarchy
         ? map.GetPinCoordinates()
           .Select(coordinates => QueryTermBuilder.BuildLocationTerm(coordinates.x, coordinates.y))
           .ToList()
