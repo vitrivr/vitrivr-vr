@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using Vitrivr.UnityInterface.CineastApi.Model.Config;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
@@ -102,6 +101,12 @@ namespace VitrivrVR.Config
     public bool dresEnabled;
 
     /// <summary>
+    /// Enables connecting to a DRES instance with an invalid SSL certificate.
+    /// WARNING: This bypasses certificate validation, use at your own risk!
+    /// </summary>
+    public bool allowInvalidCertificate;
+
+    /// <summary>
     /// The length of the media object ID prefix to be removed before submission.
     /// If e.g. internal IDs start with "v_" while competition IDs do not, this parameter may be set to 2 to remove this
     /// for submission to the competition system only.
@@ -148,6 +153,7 @@ namespace VitrivrVR.Config
       defaultMediaVolume = .5f;
       skipLength = 2.5f;
       dresEnabled = false;
+      allowInvalidCertificate = false;
       submissionIdPrefixLength = 0;
       interactionLogSubmissionInterval = 10f;
       writeLogsToFile = false;

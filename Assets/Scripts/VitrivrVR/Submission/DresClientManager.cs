@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Org.Vitrivr.CineastApi.Model;
 using Org.Vitrivr.DresApi.Model;
@@ -28,23 +29,28 @@ namespace VitrivrVR.Submission
 
     private async void Start()
     {
-      if (ConfigManager.Config.dresEnabled)
-      {
-        instance = new DresClient();
-        await instance.Login();
-        var logDir = ConfigManager.Config.logFileLocation;
-        var startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        var username = instance.UserDetails.Username;
-        var session = instance.UserDetails.SessionId;
-        _interactionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_interaction.txt");
-        _resultsLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_results.txt");
-        _submissionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_submission.txt");
-        NotificationController.Notify($"Dres connected: {username}");
+      if (!ConfigManager.Config.dresEnabled) return;
 
-        if (ConfigManager.Config.writeLogsToFile)
-        {
-          Directory.CreateDirectory(ConfigManager.Config.logFileLocation);
-        }
+      if (ConfigManager.Config.allowInvalidCertificate)
+      {
+        ServicePointManager.ServerCertificateValidationCallback +=
+          (sender, certificate, chain, sslPolicyErrors) => true;
+      }
+
+      instance = new DresClient();
+      await instance.Login();
+      var logDir = ConfigManager.Config.logFileLocation;
+      var startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+      var username = instance.UserDetails.Username;
+      var session = instance.UserDetails.SessionId;
+      _interactionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_interaction.txt");
+      _resultsLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_results.txt");
+      _submissionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_submission.txt");
+      NotificationController.Notify($"Dres connected: {username}");
+
+      if (ConfigManager.Config.writeLogsToFile)
+      {
+        Directory.CreateDirectory(ConfigManager.Config.logFileLocation);
       }
     }
 
