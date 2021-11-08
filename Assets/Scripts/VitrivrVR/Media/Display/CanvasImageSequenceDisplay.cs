@@ -53,6 +53,8 @@ namespace VitrivrVR.Media.Display
 
       var sn = await Segment.GetSequenceNumber();
       segmentDataText.text = $"{Segment.Id}:\nNumber: {sn}\nScore: {_scoredSegment.score:F}";
+      LayoutRebuilder.ForceRebuildLayoutImmediate(segmentDataText.rectTransform.parent as RectTransform);
+      segmentDataText.rectTransform.sizeDelta = segmentDataText.GetPreferredValues();
 
       // Resolve media URL
       var mediaUrl = await CineastWrapper.GetMediaUrlOfAsync(_mediaObject, Segment.Id);
