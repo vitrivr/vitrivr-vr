@@ -28,6 +28,14 @@ namespace VitrivrVR.UI
       Initialize();
     }
 
+    /// <summary>
+    /// Removes all queries form the query controller.
+    /// </summary>
+    public void ClearAll()
+    {
+      QueryController.Instance.RemoveAllQueries();
+    }
+
     private void OnQueryAdded(int index)
     {
       var (query, display) = QueryController.Instance.queries[index];

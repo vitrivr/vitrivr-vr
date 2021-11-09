@@ -187,6 +187,14 @@ namespace VitrivrVR.Query
       DresClientManager.LogInteraction("queryManagement", $"delete {index}");
     }
 
+    public void RemoveAllQueries()
+    {
+      for (var queryIndex = queries.Count - 1; queryIndex >= 0; queryIndex--)
+      {
+        RemoveQuery(queryIndex);
+      }
+    }
+
     public void ClearQuery()
     {
       if (CurrentQuery == -1) return;
