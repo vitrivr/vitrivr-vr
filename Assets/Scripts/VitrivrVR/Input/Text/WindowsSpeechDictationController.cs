@@ -12,7 +12,7 @@ namespace VitrivrVR.Input.Text
   /// <para>Place in a scene, connect actions to the respective dictation events and use public methods to start or stop
   /// dictation.</para>
   /// </summary>
-  public class DictationController : MonoBehaviour
+  public class WindowsSpeechDictationController : MonoBehaviour
   {
     [Serializable]
     public class DictationResultEvent : UnityEvent<string, ConfidenceLevel>

@@ -145,6 +145,13 @@
       },
       "url": "https://packages.unity.com"
     },
+    "deepspeech": {
+      "version": "https://github.com/Spiess/deep-speech-upm.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "0b42bba6768deed00e8b0b14c1b5dc9ca33b0bec"
+    },
     "org.vitrivr.unityinterface.cineastapi": {
       "version": "https://github.com/vitrivr/CineastUnityInterface.git#v0.0.1",
       "depth": 0,

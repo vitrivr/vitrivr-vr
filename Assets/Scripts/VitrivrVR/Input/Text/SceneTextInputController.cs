@@ -27,7 +27,7 @@ namespace VitrivrVR.Input.Text
     /// Adds the dictation result to the currently selected text field. Will only process dictation results with High or
     /// Medium <see cref="ConfidenceLevel"/>.
     /// </summary>
-    public void ReceiveDictationResult(string text, ConfidenceLevel confidence)
+    public void ReceiveWindowsSpeechDictationResult(string text, ConfidenceLevel confidence)
     {
       if (confidence != ConfidenceLevel.High && confidence != ConfidenceLevel.Medium) return;
 
@@ -36,6 +36,15 @@ namespace VitrivrVR.Input.Text
       {
         DresClientManager.LogInteraction("speechToText", $"input {text} {confidence.ToString()}",
           QueryEvent.CategoryEnum.TEXT);
+      }
+    }
+
+    public void ReceiveDictationResult(string text)
+    {
+      InputText(text);
+      if (ConfigManager.Config.dresEnabled)
+      {
+        DresClientManager.LogInteraction("speechToText", $"input {text} DeepSpeech", QueryEvent.CategoryEnum.TEXT);
       }
     }
   }

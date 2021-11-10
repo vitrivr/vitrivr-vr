@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6138346692447936478}
   - component: {fileID: 6138346692447936479}
+  - component: {fileID: 3410162950854232091}
+  - component: {fileID: 4433309193479553597}
   m_Layer: 0
   m_Name: DictationController
   m_TagString: Untagged
@@ -38,7 +40,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6138346692447936476}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 130d71f4ad21fbe45a3cefdecd9d2eee, type: 3}
   m_Name: 
@@ -74,3 +76,67 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Dictate
       m_Flags: 0
+    - m_Name: 
+      m_Id: 1ef2d25c-63c4-4784-aa9d-863e56b0453f
+      m_Path: <XRController>{RightHand}/primaryButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Dictate
+      m_Flags: 0
+    m_Flags: 0
+--- !u!114 &3410162950854232091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6138346692447936476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b0267dc6107aac43a3e562cfe3590b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dictateAction:
+    m_Name: Dictate
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: c1d6c29d-3c81-4d0b-85e9-45d4c4b7c022
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 3d9cce71-5313-449a-9e55-97ff996027d3
+      m_Path: <XRController>{RightHand}/primary
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Dictate
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 606c07e2-0337-409a-b12b-d62fc6fa21c0
+      m_Path: <XRController>{RightHand}/primaryButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Dictate
+      m_Flags: 0
+    m_Flags: 0
+--- !u!114 &4433309193479553597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6138346692447936476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eccc0e08ae964554d880b2d041316894, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onResult:
+    m_PersistentCalls:
+      m_Calls: []
+  onPrediction:
+    m_PersistentCalls:
+      m_Calls: []
