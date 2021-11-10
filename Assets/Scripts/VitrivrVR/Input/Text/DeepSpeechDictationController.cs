@@ -1,12 +1,11 @@
 using System;
 using DeepSpeech;
-using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 namespace VitrivrVR.Input.Text
 {
-  public class DeepSpeechDictationController : MonoBehaviour
+  public class DeepSpeechDictationController : DeepSpeechStreamController
   {
     [Serializable]
     public class DictationStateEvent : UnityEvent<bool>
@@ -16,11 +15,9 @@ namespace VitrivrVR.Input.Text
     public DictationStateEvent onDictationStateChange;
     public InputAction dictateAction;
 
-    private DeepSpeechStreamController _deepSpeech;
-
-    private void Start()
+    private new void Start()
     {
-      _deepSpeech = GetComponent<DeepSpeechStreamController>();
+      base.Start();
 
       dictateAction.performed += SetDictation;
       dictateAction.canceled += SetDictation;
@@ -39,15 +36,15 @@ namespace VitrivrVR.Input.Text
     public void SetDictation(InputAction.CallbackContext context)
     {
       var startDictation = context.performed;
-      
+
       onDictationStateChange.Invoke(startDictation);
       if (startDictation)
       {
-        _deepSpeech.StartDictation();
+        StartDictation();
       }
       else
       {
-        _deepSpeech.StopDictation();
+        StopDictation();
       }
     }
   }

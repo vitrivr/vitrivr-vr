@@ -3590,7 +3590,7 @@ PrefabInstance:
     - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
       propertyPath: onResult.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
@@ -3604,9 +3604,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
+      propertyPath: onResult.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
+        type: 3}
       propertyPath: onResult.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 704178031}
+    - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
+        type: 3}
+      propertyPath: onResult.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1549049000}
     - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
       propertyPath: onDictationStateChange.m_PersistentCalls.m_Calls.Array.size
@@ -3624,6 +3634,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
+      propertyPath: onResult.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
+        type: 3}
       propertyPath: onPrediction.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 704178031}
@@ -3631,6 +3646,11 @@ PrefabInstance:
         type: 3}
       propertyPath: onResult.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: set_text
+      objectReference: {fileID: 0}
+    - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
+        type: 3}
+      propertyPath: onResult.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ReceiveDictationResult
       objectReference: {fileID: 0}
     - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
@@ -3659,6 +3679,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
+      propertyPath: onResult.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: VitrivrVR.Input.Text.SceneTextInputController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
+        type: 3}
       propertyPath: onDictationStateChange.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
@@ -3680,6 +3705,11 @@ PrefabInstance:
     - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
       propertyPath: onResult.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
+        type: 3}
+      propertyPath: onResult.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
@@ -3987,7 +4017,8 @@ PrefabInstance:
       propertyPath: onDictationStateChange.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4433309193479553597, guid: c1659463ec29a4b46b3f3a25e5f1bdda, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c1659463ec29a4b46b3f3a25e5f1bdda, type: 3}
 --- !u!114 &1898715786 stripped
 MonoBehaviour:

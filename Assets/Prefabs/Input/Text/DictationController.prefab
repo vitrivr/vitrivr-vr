@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6138346692447936478}
   - component: {fileID: 6138346692447936479}
   - component: {fileID: 3410162950854232091}
-  - component: {fileID: 4433309193479553597}
   m_Layer: 0
   m_Name: DictationController
   m_TagString: Untagged
@@ -97,6 +96,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b0267dc6107aac43a3e562cfe3590b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onResult:
+    m_PersistentCalls:
+      m_Calls: []
+  onPrediction:
+    m_PersistentCalls:
+      m_Calls: []
+  onDictationStateChange:
+    m_PersistentCalls:
+      m_Calls: []
   dictateAction:
     m_Name: Dictate
     m_Type: 0
@@ -122,21 +130,3 @@ MonoBehaviour:
       m_Action: Dictate
       m_Flags: 0
     m_Flags: 0
---- !u!114 &4433309193479553597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6138346692447936476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eccc0e08ae964554d880b2d041316894, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onResult:
-    m_PersistentCalls:
-      m_Calls: []
-  onPrediction:
-    m_PersistentCalls:
-      m_Calls: []
