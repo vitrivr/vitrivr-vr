@@ -91,6 +91,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weekdaySelection: {fileID: 9187971182253083715, guid: 890bd40c30e9f41dbaeaa1b192db7c00,
     type: 3}
+  monthSelection: {fileID: 7114719018915921729, guid: 9261525a80c4c404aa1171c72f7dad33,
+    type: 3}
   optionSelection: {fileID: 1131156460057547074, guid: a821ed34b320845b9b69938400dd2175,
     type: 3}
   integerRange: {fileID: 2845567907889249240, guid: 98ca52dc0ff42451599497a8ebd175f6,

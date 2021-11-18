@@ -14,6 +14,7 @@ namespace VitrivrVR.Query.Term
   public class CanvasBooleanTermProvider : QueryTermProvider
   {
     public CanvasWeekdaySelection weekdaySelection;
+    public CanvasMonthSelection monthSelection;
     public CanvasOptionSelection optionSelection;
     public CanvasIntegerRange integerRange;
 
@@ -21,6 +22,7 @@ namespace VitrivrVR.Query.Term
     {
       IntegerRange,
       WeekdayOptions,
+      MonthOptions,
       DynamicOptions
     }
 
@@ -60,6 +62,12 @@ namespace VitrivrVR.Query.Term
               var weekdayOptions = Instantiate(weekdaySelection, transform);
               weekdayOptions.Initialize(category.name, entity, category.options);
               _termProviders.Add(weekdayOptions);
+              break;
+            case BooleanTermTypes.MonthOptions:
+              var monthOptions = Instantiate(monthSelection, transform);
+              var availableMonths = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
+              monthOptions.Initialize(category.name, entity, category.options, availableMonths);
+              _termProviders.Add(monthOptions);
               break;
             case BooleanTermTypes.DynamicOptions:
               var dynamicOptions = Instantiate(optionSelection, transform);
