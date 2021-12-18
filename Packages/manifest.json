@@ -14,7 +14,7 @@
     "com.unity.xr.openxr": "1.2.8",
     "deepspeech": "https://github.com/Spiess/deep-speech-upm.git",
     "org.vitrivr.unityinterface.cineastapi": "https://github.com/vitrivr/CineastUnityInterface.git#v0.0.1",
-    "org.vitrivr.unityinterface.dresapi": "https://github.com/vitrivr/DresUnityInterface.git#v1.0.0",
+    "org.vitrivr.unityinterface.dresapi": "https://github.com/dres-dev/UnityClient.git#v1.0.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",

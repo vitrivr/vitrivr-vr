@@ -160,7 +160,7 @@
       "hash": "a9ad36fa3c828830a1fe7e4c7afa0fb0757e0e54"
     },
     "org.vitrivr.unityinterface.dresapi": {
-      "version": "https://github.com/vitrivr/DresUnityInterface.git#v1.0.0",
+      "version": "https://github.com/dres-dev/UnityClient.git#v1.0.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
