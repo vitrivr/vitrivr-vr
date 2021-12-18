@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.009389741, g: 0.010874605, b: 0.014736945, a: 1}
+  m_IndirectSpecularColor: {r: 0.009389731, g: 0.010874586, b: 0.014736901, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3882,156 +3882,116 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationResult.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationComplete.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: dictateAction.m_SingletonActionBindings.Array.data[2].m_Id
       value: f3c49d40-e693-404a-95d2-fd854f089dae
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationHypothesis.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationStateChange.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: dictateAction.m_SingletonActionBindings.Array.data[2].m_Action
       value: Dictate
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationResult.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationComplete.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationResult.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1549049000}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationComplete.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 704178031}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationHypothesis.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationResult.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationStateChange.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationHypothesis.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 704178031}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationResult.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ReceiveWindowsSpeechDictationResult
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationComplete.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationStateChange.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1781603499}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationComplete.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: set_text
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationHypothesis.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationHypothesis.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: set_text
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationStateChange.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationStateChange.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SetActive
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationResult.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: VitrivrVR.Input.Text.SceneTextInputController, Assembly-CSharp
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationResult.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationComplete.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationHypothesis.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    - target: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: onDictationStateChange.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4433309193479553597, guid: c1659463ec29a4b46b3f3a25e5f1bdda, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1659463ec29a4b46b3f3a25e5f1bdda, type: 3}
---- !u!114 &1898715786 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6138346692447936479, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
-    type: 3}
-  m_PrefabInstance: {fileID: 1898715785}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 130d71f4ad21fbe45a3cefdecd9d2eee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1915357478
 GameObject:
   m_ObjectHideFlags: 0
@@ -5814,7 +5774,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1898715786}
+      objectReference: {fileID: 0}
     - target: {fileID: 2597370313422124306, guid: 3af4ab6016465a749a4a4b362e999f5c,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
