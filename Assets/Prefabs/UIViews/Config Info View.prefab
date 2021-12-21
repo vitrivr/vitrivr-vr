@@ -146,8 +146,8 @@ GameObject:
   - component: {fileID: 6370198948358844712}
   - component: {fileID: 6370198948358844713}
   - component: {fileID: 6370198948358844714}
-  - component: {fileID: 6370198948358844715}
   - component: {fileID: 6370198948358844716}
+  - component: {fileID: 4808675662379728824}
   m_Layer: 0
   m_Name: Config Info View
   m_TagString: Untagged
@@ -218,7 +218,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &6370198948358844714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,25 +236,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6370198948358844715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6370198948358844718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 0
-  m_CheckFor2DOcclusion: 0
-  m_CheckFor3DOcclusion: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 2147483647
-  m_RaycastTriggerInteraction: 1
 --- !u!114 &6370198948358844716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,3 +250,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollableUITable: {fileID: 8791042073019561513, guid: ec7b8d050e5be4866828273d41564928,
     type: 3}
+--- !u!114 &4808675662379728824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6370198948358844718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afe3cda3e244f60419474164d6ba3b0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_MaxDistance: 1000
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 0
