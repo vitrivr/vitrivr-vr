@@ -8,14 +8,11 @@ There are two things to be aware of:
 - **MapBox:** To use the map query formulation method using MapBox, follow the MapBox popup instructions to acquire an API-key. If you do not intend to use the map this step is not required.
 
 ## VR Input
-Due to the currently rapidly changing landscape VR/XR input libraries and interfaces this project uses a combination of custom, stable and preview packages and plugins to facilitate VR input and interaction.
-To enable a smooth transition to a stable solution, an attempt is made to separate input logic from interaction logic wherever possible.
+Due to the still rapidly evolving landscape of OpenXR plugins, libraries and backends, this project attempts to separate input logic from interaction logic wherever possible.
 
-Currently, the following library/plugin setup is used:
+Currently, the following input and interaction setup is used:
 
 - **Unity OpenXR Plugin** for VR input from any OpenXR compliant backend
-- [**Unity XR Input**](https://docs.unity3d.com/Manual/xr_input.html) for device-based input through the vitrivr-VR [XRButtonObserver](Assets/Scripts/VitrivrVR/Input/Controller/XRButtonObserver.cs) (transition to new input system bindings through OpenXR)
-- **Unity XR Interaction Toolkit Pre-release** for UI canvas interaction (transition to simple custom interactions with UI canvas)
 - **Custom Interaction System** for direct interaction consisting of [Interactors](Assets/Scripts/VitrivrVR/Interaction/System/Interactor.cs) and [Interactables](Assets/Scripts/VitrivrVR/Interaction/System/Interactable.cs)
 
 ### Contributing

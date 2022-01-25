@@ -2,6 +2,11 @@ using UnityEngine;
 
 namespace VitrivrVR.Input.Controller
 {
+  /// <summary>
+  /// Very simple pointer style UI line.
+  ///
+  /// Only works on canvases that can be hit via raycast (are attached to an object with a collider).
+  /// </summary>
   public class UILineController : MonoBehaviour
   {
     private LineRenderer _line;
