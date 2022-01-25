@@ -1,5 +1,5 @@
 {
-    "name": "UserInputActions",
+    "name": "User Input Actions",
     "maps": [
         {
             "name": "Player",
@@ -11,7 +11,8 @@
                     "id": "8be00c62-b592-4277-897b-4598945d1604",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Look",
@@ -19,7 +20,8 @@
                     "id": "f0af138f-917a-4bcf-83a4-b1230ae8fea9",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Fire",
@@ -27,7 +29,8 @@
                     "id": "dca70cfc-c2fb-4792-abb9-6790c924fff0",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Dictation",
@@ -35,7 +38,8 @@
                     "id": "5ae245a3-1a89-47f2-8dd8-72add8307431",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -282,7 +286,8 @@
                     "id": "ad646317-10a4-4dce-94fa-a03cb86e7305",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Submit",
@@ -290,7 +295,8 @@
                     "id": "6b45fc4b-5d5b-40a9-a53e-6b219da07143",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Cancel",
@@ -298,7 +304,8 @@
                     "id": "8f29819b-3a0b-40e5-b649-d19f9802d4b7",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Point",
@@ -306,7 +313,8 @@
                     "id": "dbad77b3-b187-49f9-9470-a2d07a6ad690",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Click",
@@ -314,7 +322,8 @@
                     "id": "e2046853-e1b6-4268-ba68-695c7f682cbe",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "ScrollWheel",
@@ -322,7 +331,8 @@
                     "id": "cd255efd-2480-49e3-8798-9c0c8b1372b3",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "MiddleClick",
@@ -330,7 +340,8 @@
                     "id": "c8fdd69d-c4e7-4471-a882-65d5c16bbe69",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "RightClick",
@@ -338,7 +349,8 @@
                     "id": "ef568ae4-675e-4d3d-9bcd-f8946099032a",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "TrackedDevicePosition",
@@ -346,7 +358,8 @@
                     "id": "5f7f9b5a-e2bf-4fcd-8e55-23ad67e28ac1",
                     "expectedControlType": "Vector3",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "TrackedDeviceOrientation",
@@ -354,7 +367,8 @@
                     "id": "15617147-4588-408a-a41f-d7c3e446500a",
                     "expectedControlType": "Quaternion",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -713,7 +727,7 @@
                 {
                     "name": "",
                     "id": "bb9e6b34-44bf-4381-ac63-5aa15d19f677",
-                    "path": "<XRController>/trigger",
+                    "path": "<XRController>/triggerPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
@@ -788,7 +802,8 @@
                     "id": "2bd90ba3-1366-4d01-8de1-c89365d88d98",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "RightHandAxis",
@@ -796,7 +811,26 @@
                     "id": "d3a9af7f-4bf0-4535-bd71-153d678de08a",
                     "expectedControlType": "Vector2",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PointerPosition",
+                    "type": "PassThrough",
+                    "id": "6a7c4623-cda1-410d-8b19-1eafe8ef6ff7",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PointerRotation",
+                    "type": "PassThrough",
+                    "id": "d070952e-16b0-4b2f-a18a-a6158ffc949d",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -942,6 +976,28 @@
                     "action": "LeftHandAxis",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "7416de9a-a309-482c-83a6-0ad1839c3924",
+                    "path": "<XRController>/pointerPosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6b5457c4-025a-49a8-98c7-dc17e5bdd97c",
+                    "path": "<XRController>/pointerRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

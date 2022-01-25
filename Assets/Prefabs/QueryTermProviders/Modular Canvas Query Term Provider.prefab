@@ -478,7 +478,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onInteractionEvent:
+  onInteraction:
+    m_PersistentCalls:
+      m_Calls: []
+  onGrab:
+    m_PersistentCalls:
+      m_Calls: []
+  onDrop:
     m_PersistentCalls:
       m_Calls: []
   grabTransform: {fileID: 0}
@@ -655,7 +661,7 @@ GameObject:
   - component: {fileID: 6365715307425837589}
   - component: {fileID: 7182125706740967699}
   - component: {fileID: 9101404675360806930}
-  - component: {fileID: 3751526640287779258}
+  - component: {fileID: 5424140824983831883}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -744,7 +750,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &3751526640287779258
+--- !u!114 &5424140824983831883
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -753,16 +759,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6629327919981479131}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Script: {fileID: 11500000, guid: afe3cda3e244f60419474164d6ba3b0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 0
   m_CheckFor2DOcclusion: 0
   m_CheckFor3DOcclusion: 0
+  m_MaxDistance: 1000
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 2147483647
-  m_RaycastTriggerInteraction: 1
+    m_Bits: 0
 --- !u!1 &6664122494449344204
 GameObject:
   m_ObjectHideFlags: 0

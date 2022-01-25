@@ -1380,31 +1380,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &195768224182005756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4500793346680963095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInteraction:
-    m_PersistentCalls:
-      m_Calls: []
-  onGrab:
-    m_PersistentCalls:
-      m_Calls: []
-  onDrop:
-    m_PersistentCalls:
-      m_Calls: []
-  grabTransform: {fileID: 0}
-  onHoverChange:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &4628496102931008594
 GameObject:
   m_ObjectHideFlags: 0
@@ -1532,7 +1507,7 @@ GameObject:
   - component: {fileID: 4628496103118665442}
   - component: {fileID: 4628496103118665443}
   - component: {fileID: 4628496103118665440}
-  - component: {fileID: 4628496103118665441}
+  - component: {fileID: 126779777824605974}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -1622,7 +1597,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &4628496103118665441
+--- !u!114 &126779777824605974
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1631,57 +1606,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 4628496103118665446}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Script: {fileID: 11500000, guid: afe3cda3e244f60419474164d6ba3b0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 0
   m_CheckFor2DOcclusion: 0
   m_CheckFor3DOcclusion: 0
+  m_MaxDistance: 1000
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 2147483647
-  m_RaycastTriggerInteraction: 1
---- !u!54 &195768223859809406
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5427794919942560248}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 126
-  m_CollisionDetection: 0
---- !u!114 &195768223859809395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5427794919942560248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInteraction:
-    m_PersistentCalls:
-      m_Calls: []
-  onGrab:
-    m_PersistentCalls:
-      m_Calls: []
-  onDrop:
-    m_PersistentCalls:
-      m_Calls: []
-  grabTransform: {fileID: 0}
-  onHoverChange:
-    m_PersistentCalls:
-      m_Calls: []
+    m_Bits: 0
 --- !u!1 &7513731306961856894
 GameObject:
   m_ObjectHideFlags: 0
@@ -1919,43 +1853,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &195768224908268602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9143556012033577989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onInteraction:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 9143556012033577987}
-        m_TargetAssemblyTypeName: Map.Map, unibas.vr-multimedia-interfaces.Runtime
-        m_MethodName: InteractionChange
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onGrab:
-    m_PersistentCalls:
-      m_Calls: []
-  onDrop:
-    m_PersistentCalls:
-      m_Calls: []
-  grabTransform: {fileID: 0}
-  onHoverChange:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1001 &195768224447904776
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2031,18 +1928,59 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c1852876ed6291b4cb396b94e6a8f9b9, type: 3}
---- !u!1 &5427794919942560248 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5324631972496942576, guid: c1852876ed6291b4cb396b94e6a8f9b9,
-    type: 3}
-  m_PrefabInstance: {fileID: 195768224447904776}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8741116835169746080 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8933221205955838120, guid: c1852876ed6291b4cb396b94e6a8f9b9,
     type: 3}
   m_PrefabInstance: {fileID: 195768224447904776}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5427794919942560248 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5324631972496942576, guid: c1852876ed6291b4cb396b94e6a8f9b9,
+    type: 3}
+  m_PrefabInstance: {fileID: 195768224447904776}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &195768223859809406
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5427794919942560248}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
+--- !u!114 &195768223859809395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5427794919942560248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onInteraction:
+    m_PersistentCalls:
+      m_Calls: []
+  onGrab:
+    m_PersistentCalls:
+      m_Calls: []
+  onDrop:
+    m_PersistentCalls:
+      m_Calls: []
+  grabTransform: {fileID: 0}
+  onHoverChange:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &195768225393370854
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2156,6 +2094,43 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 195768225393370854}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &195768224908268602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9143556012033577989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onInteraction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9143556012033577987}
+        m_TargetAssemblyTypeName: Map.Map, unibas.vr-multimedia-interfaces.Runtime
+        m_MethodName: InteractionChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onGrab:
+    m_PersistentCalls:
+      m_Calls: []
+  onDrop:
+    m_PersistentCalls:
+      m_Calls: []
+  grabTransform: {fileID: 0}
+  onHoverChange:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &195768225507824106
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2262,3 +2237,28 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 195768225507824106}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &195768224182005756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4500793346680963095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onInteraction:
+    m_PersistentCalls:
+      m_Calls: []
+  onGrab:
+    m_PersistentCalls:
+      m_Calls: []
+  onDrop:
+    m_PersistentCalls:
+      m_Calls: []
+  grabTransform: {fileID: 0}
+  onHoverChange:
+    m_PersistentCalls:
+      m_Calls: []
