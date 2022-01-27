@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +13,7 @@ namespace VitrivrVR.Interaction.System
     private readonly List<Interactable> _interactables = new List<Interactable>();
 
     private List<Interactable> _grabbed;
+    private List<Interactable> _interacting;
 
     private void Awake()
     {
@@ -37,9 +39,23 @@ namespace VitrivrVR.Interaction.System
     public void Interact(bool start)
     {
       RemoveDestroyed();
-      foreach (var interactable in _interactables)
+      if (start)
       {
-        interactable.OnInteraction(transform, start);
+        _interacting = new List<Interactable>(_interactables);
+        foreach (var interactable in _interactables)
+        {
+          interactable.OnInteraction(transform, true);
+        }
+      }
+      else
+      {
+        // TODO: Investigate if Where is still required after removing destroyed interactables from list
+        foreach (var interactable in _interacting.Where(interactable => interactable))
+        {
+          interactable.OnInteraction(transform, false);
+
+          _interacting = null;
+        }
       }
     }
 
@@ -56,12 +72,9 @@ namespace VitrivrVR.Interaction.System
       }
       else
       {
-        foreach (var interactable in _grabbed)
+        foreach (var interactable in _grabbed.Where(interactable => interactable))
         {
-          if (interactable)
-          {
-            interactable.OnGrab(transform, false);
-          }
+          interactable.OnGrab(transform, false);
         }
 
         _grabbed = null;
@@ -70,26 +83,25 @@ namespace VitrivrVR.Interaction.System
 
     private void OnTriggerEnter(Collider other)
     {
-      if (other.TryGetComponent<Interactable>(out var interactable))
-      {
-        _interactables.Add(interactable);
-        interactable.OnHoverEnter(transform);
-      }
+      if (!other.TryGetComponent<Interactable>(out var interactable)) return;
+
+      _interactables.Add(interactable);
+      interactable.OnHoverEnter(transform);
     }
 
     private void OnTriggerExit(Collider other)
     {
-      if (other.TryGetComponent<Interactable>(out var interactable))
-      {
-        _interactables.Remove(interactable);
-        interactable.OnHoverExit(transform);
-      }
+      if (!other.TryGetComponent<Interactable>(out var interactable)) return;
+
+      _interactables.Remove(interactable);
+      interactable.OnHoverExit(transform);
     }
 
     private void RemoveDestroyed()
     {
       _interactables.RemoveAll(interactable => interactable == null);
       _grabbed?.RemoveAll(interactable => interactable == null);
+      _interacting?.RemoveAll(interactable => interactable == null);
     }
   }
 }
