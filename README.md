@@ -16,8 +16,7 @@ Currently, the following input and interaction setup is used:
 - **Custom Interaction System** for direct interaction consisting of [Interactors](Assets/Scripts/VitrivrVR/Interaction/System/Interactor.cs) and [Interactables](Assets/Scripts/VitrivrVR/Interaction/System/Interactable.cs)
 
 ### Contributing
-Basic interactions should be implemented with the custom interaction system.
-UI interactions still occur through the XR interaction toolkit, but should be implemented on UI level to allow easy transition away.
+Basic interactions should be implemented with the custom interaction system, conventional 2D UI interactions through the Unity UI.
 
 Raw device input should be implemented using input actions from the new input system.
 
