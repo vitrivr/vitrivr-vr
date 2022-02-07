@@ -1585,6 +1585,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1042436027}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1083301797 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3603498185390360075, guid: f2f36bb0a1c3743b996ebbfb2f795c26,
+    type: 3}
+  m_PrefabInstance: {fileID: 1042436027}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1228133843
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2136,6 +2142,12 @@ PrefabInstance:
       objectReference: {fileID: 1606703275}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78fa5592dc168b74893e0289df1e5e39, type: 3}
+--- !u!1 &1393637347 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6706810709574562639, guid: d556376dea4e640f8add8eb4327c671e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8190677893039989711}
+  m_PrefabAsset: {fileID: 0}
 --- !u!28 &1447848311
 Texture2D:
   m_ObjectHideFlags: 0
@@ -2498,7 +2510,7 @@ PrefabInstance:
         type: 3}
       propertyPath: timer
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1083301797}
     - target: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
         type: 3}
       propertyPath: queryDisplay
@@ -2858,6 +2870,18 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1670780548 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8190677893466277024, guid: d556376dea4e640f8add8eb4327c671e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8190677893039989711}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1684389144
 GameObject:
   m_ObjectHideFlags: 0
@@ -3320,7 +3344,7 @@ PrefabInstance:
         type: 3}
       propertyPath: onResult.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1670780548}
     - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
       propertyPath: onResult.m_PersistentCalls.m_Calls.Array.data[1].m_Target
@@ -3350,7 +3374,7 @@ PrefabInstance:
         type: 3}
       propertyPath: onPrediction.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1670780548}
     - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
       propertyPath: onResult.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -3380,7 +3404,7 @@ PrefabInstance:
         type: 3}
       propertyPath: onDictationStateChange.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1393637347}
     - target: {fileID: 3410162950854232091, guid: c1659463ec29a4b46b3f3a25e5f1bdda,
         type: 3}
       propertyPath: onResult.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -4223,6 +4247,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Boolean Term Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 467071047052162229, guid: fc51cee4b22de4e6d98975af75dd8e61,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 467071047052162235, guid: fc51cee4b22de4e6d98975af75dd8e61,
         type: 3}

@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 4703087450076088303}
   - component: {fileID: 7918289345481841617}
   - component: {fileID: 1611233960861917339}
-  - component: {fileID: 6484090007945539455}
+  - component: {fileID: 2283709913420089007}
   - component: {fileID: 8930343491133665097}
   - component: {fileID: 6327175653774180933}
   m_Layer: 0
@@ -194,7 +194,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &1611233960861917339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,7 +212,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6484090007945539455
+--- !u!114 &2283709913420089007
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -221,16 +221,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6942319118100717745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Script: {fileID: 11500000, guid: afe3cda3e244f60419474164d6ba3b0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 0
   m_CheckFor2DOcclusion: 0
   m_CheckFor3DOcclusion: 0
+  m_MaxDistance: 1000
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 2147483647
-  m_RaycastTriggerInteraction: 1
+    m_Bits: 0
 --- !u!114 &8930343491133665097
 MonoBehaviour:
   m_ObjectHideFlags: 0
