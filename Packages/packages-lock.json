@@ -137,7 +137,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "5a82a4dc44753299561c59ac890c33ed04413e40"
+      "hash": "b5c2335720146358ae35a3ca25807140da33713d"
     },
     "org.vitrivr.unityinterface.cineastapi": {
       "version": "https://github.com/vitrivr/CineastUnityInterface.git#v0.0.1",
