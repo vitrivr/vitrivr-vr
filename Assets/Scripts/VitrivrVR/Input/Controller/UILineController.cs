@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.InputSystem.UI;
+using VitrivrVR.Util;
 
 namespace VitrivrVR.Input.Controller
 {
@@ -9,18 +11,37 @@ namespace VitrivrVR.Input.Controller
   /// </summary>
   public class UILineController : MonoBehaviour
   {
+    private int _pointerId = -1;
+
     private LineRenderer _line;
-    
+    private InputSystemUIInputModule _uiInputModule;
+
     private void Start()
     {
+      _uiInputModule = FindObjectOfType<InputSystemUIInputModule>();
       _line = GetComponent<LineRenderer>();
+      var canvasObject = transform.GetChild(0).gameObject;
+      canvasObject.GetComponent<Canvas>().worldCamera = Camera.main;
+      var hoverHandler = canvasObject.AddComponent<HoverHandler>();
+      hoverHandler.onEnter = data =>
+      {
+        _pointerId = data.pointerId;
+        Destroy(canvasObject);
+      };
     }
 
     private void FixedUpdate()
     {
-      if (Physics.Raycast(transform.position, transform.forward, out var hit, 3) && hit.transform.GetComponentInChildren<Canvas>() != null)
+      if (_pointerId == -1)
       {
-        _line.SetPosition(1, hit.distance * Vector3.forward);
+        return;
+      }
+      
+      var result = _uiInputModule.GetLastRaycastResult(_pointerId);
+
+      if (result.isValid)
+      {
+        _line.SetPosition(1, result.distance * Vector3.forward);
         _line.enabled = true;
       }
       else
