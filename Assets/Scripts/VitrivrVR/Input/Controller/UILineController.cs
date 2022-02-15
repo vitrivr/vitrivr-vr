@@ -1,16 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem.UI;
-using VitrivrVR.Util;
+using UnityEngine.InputSystem.XR;
 
 namespace VitrivrVR.Input.Controller
 {
   /// <summary>
   /// Very simple pointer style UI line.
-  ///
-  /// Only works on canvases that can be hit via raycast (are attached to an object with a collider).
   /// </summary>
   public class UILineController : MonoBehaviour
   {
+    public bool rightHand;
+
     private int _pointerId = -1;
 
     private LineRenderer _line;
@@ -20,23 +20,31 @@ namespace VitrivrVR.Input.Controller
     {
       _uiInputModule = FindObjectOfType<InputSystemUIInputModule>();
       _line = GetComponent<LineRenderer>();
-      var canvasObject = transform.GetChild(0).gameObject;
-      canvasObject.GetComponent<Canvas>().worldCamera = Camera.main;
-      var hoverHandler = canvasObject.AddComponent<HoverHandler>();
-      hoverHandler.onEnter = data =>
-      {
-        _pointerId = data.pointerId;
-        Destroy(canvasObject);
-      };
     }
 
     private void FixedUpdate()
     {
+      // Poll for connected XR controllers
       if (_pointerId == -1)
       {
+        if (rightHand)
+        {
+          if (XRController.rightHand != null)
+          {
+            _pointerId = XRController.rightHand.deviceId;
+          }
+        }
+        else
+        {
+          if (XRController.leftHand != null)
+          {
+            _pointerId = XRController.leftHand.deviceId;
+          }
+        }
+
         return;
       }
-      
+
       var result = _uiInputModule.GetLastRaycastResult(_pointerId);
 
       if (result.isValid)
