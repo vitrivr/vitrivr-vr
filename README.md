@@ -12,6 +12,21 @@ There are two things to be aware of:
 - **MapBox:** To use the map query formulation method using MapBox, follow the MapBox popup instructions to acquire an API-key. If you do not intend to use the map this step is not required.
 - **DeepSpeech:** To use the DeepSpeech speech-to-text functionality, follow the instructions on the [DeepSpeech UPM](https://github.com/Spiess/deep-speech-upm) repository to download and correctly place the required model file.
 
+## Usage
+
+### Configuration
+vitrivr-VR relies on an instance of [Cineast](https://github.com/vitrivr/cineast) for feature transformation and retrieval.
+To configure this connection, create a JSON configuration file at `Assets/cineastapi.json`.
+A documentation of the parameters is available in the [Cineast Unity Interface package](https://github.com/vitrivr/CineastUnityInterface/blob/master/Runtime/Vitrivr/UnityInterface/CineastApi/Model/Config/CineastConfig.cs).
+
+Configuration of vitrivr-VR itself is done through `Assets/vitrivr-vr.json`, which is documented in the [respective class](Assets/Scripts/VitrivrVR/Config/VitrivrVrConfig.cs).
+
+### Interaction
+All UI objects (other than the cylindrical results displays) can be grabbed and moved using the grip button on a standard XR controller.
+Other interactions typically use the trigger on a standard XR controller.
+To open the settings menu within vitrivr-VR use the menu button (small button above trackpad on VIVE wands) on the left-hand XR controller.
+To use speech-to-text, have a text-field selected and press and hold the menu button on the right-hand XR controller.
+
 ## VR Input
 Due to the still rapidly evolving landscape of OpenXR plugins, libraries and backends, this project attempts to separate input logic from interaction logic wherever possible.
 
