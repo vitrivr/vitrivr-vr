@@ -14,6 +14,8 @@ namespace VitrivrVR.UI
       GetComponent<Canvas>().worldCamera = Camera.main;
       var uiTable = Instantiate(scrollableUITable, transform);
       var uiTableController = uiTable.GetComponentInChildren<UITableController>();
+      var dresEnabled = ConfigManager.Config.dresEnabled;
+      const string disabledMessage = "Disabled";
       uiTableController.table = new[,]
       {
         {"Cineast", "Host", CineastConfigManager.Instance.Config.cineastHost},
@@ -23,10 +25,10 @@ namespace VitrivrVR.UI
         {"", "Media Path", CineastConfigManager.Instance.Config.mediaPath},
         {"", "", ""},
         
-        {"Dres", "Host", DresConfigManager.Instance.Config.host},
-        {"", "Port", DresConfigManager.Instance.Config.port.ToString()},
-        {"", "tls", DresConfigManager.Instance.Config.tls.ToString()},
-        {"", "User", DresConfigManager.Instance.Config.user},
+        {"Dres", "Host", dresEnabled ? DresConfigManager.Instance.Config.host : disabledMessage},
+        {"", "Port", dresEnabled ? DresConfigManager.Instance.Config.port.ToString() : disabledMessage},
+        {"", "tls", dresEnabled ? DresConfigManager.Instance.Config.tls.ToString() : disabledMessage},
+        {"", "User", dresEnabled ? DresConfigManager.Instance.Config.user : disabledMessage},
         {"", "", ""},
         
         {"vitrivr-VR", "Max Results", ConfigManager.Config.maxResults.ToString()},
