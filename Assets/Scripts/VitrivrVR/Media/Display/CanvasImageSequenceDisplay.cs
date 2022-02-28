@@ -112,23 +112,23 @@ namespace VitrivrVR.Media.Display
       var rows = metadata.Values.Select(domain => domain.Count).Aggregate(0, (x, y) => x + y);
       var table = new string[rows, 3];
       var i = 0;
-      foreach (var domain in metadata.Where(domain => domain.Value.Count != 0))
+      foreach (var (domain, pairs) in metadata.Where(domain => domain.Value.Count != 0))
       {
         // Fill first column
-        table[i, 0] = domain.Key;
-        for (var j = 1; j < domain.Value.Count; j++)
+        table[i, 0] = domain;
+        for (var j = 1; j < pairs.Count; j++)
         {
           table[i + j, 0] = "";
         }
 
         // Fill key-value pairs
-        foreach (var (pair, index) in domain.Value.Select((pair, index) => (pair, index)))
+        foreach (var ((key, value), index) in pairs.Select((pair, index) => (pair, index)))
         {
-          table[i + index, 1] = pair.Key;
-          table[i + index, 2] = pair.Value;
+          table[i + index, 1] = key;
+          table[i + index, 2] = value;
         }
 
-        i += domain.Value.Count;
+        i += pairs.Count;
       }
 
       _metadataTable = Instantiate(scrollableUITablePrefab, bottomStack);
@@ -201,6 +201,11 @@ namespace VitrivrVR.Media.Display
       }
 
       DresClientManager.SubmitResult(Segment.Id);
+    }
+
+    private void Awake()
+    {
+      GetComponentInChildren<Canvas>().worldCamera = Camera.main;
     }
 
     private async void OpenSegment(int segmentIndex, Vector3 position)
