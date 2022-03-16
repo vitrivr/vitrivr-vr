@@ -42,5 +42,29 @@ namespace VitrivrVR.Input.Text
       _inputField.ProcessEvent(Event.KeyboardEvent("backspace"));
       _inputField.ForceLabelUpdate();
     }
+    
+    public void InputLeftArrow()
+    {
+      _inputField.ProcessEvent(Event.KeyboardEvent("LeftArrow"));
+      _inputField.ForceLabelUpdate();
+    }
+    
+    public void InputRightArrow()
+    {
+      _inputField.ProcessEvent(Event.KeyboardEvent("RightArrow"));
+      _inputField.ForceLabelUpdate();
+    }
+    
+    public void InputReturn()
+    {
+      _inputField.ProcessEvent(Event.KeyboardEvent('\n'.ToString()));
+      _inputField.ForceLabelUpdate();
+    }
+    
+    public void InputTabulator()
+    {
+      _inputField.ProcessEvent(Event.KeyboardEvent('\t'.ToString()));
+      _inputField.ForceLabelUpdate();
+    }
   }
 }

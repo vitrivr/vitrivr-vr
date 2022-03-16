@@ -21,6 +21,29 @@ namespace VitrivrVR.Input.Text
       TextInputManager.InputBackspace();
       DresClientManager.LogInteraction("keyboard", "backspace", QueryEvent.CategoryEnum.TEXT);
     }
+    
+    public void InputReturn()
+    {
+      TextInputManager.InputReturn();
+      DresClientManager.LogInteraction("keyboard", "return", QueryEvent.CategoryEnum.TEXT);
+    }
+    
+    public void InputLeftArrow()
+    {
+      TextInputManager.InputLeftArrow();
+      DresClientManager.LogInteraction("keyboard", "ArrowLeft", QueryEvent.CategoryEnum.TEXT);
+    }
+    
+    public void InputRightArrow()
+    {
+      TextInputManager.InputRightArrow();
+      DresClientManager.LogInteraction("keyboard", "ArrowRight", QueryEvent.CategoryEnum.TEXT);
+    }
+    public void InputTabulator()
+    {
+      TextInputManager.InputTabulator();
+      DresClientManager.LogInteraction("keyboard", "Tabulator", QueryEvent.CategoryEnum.TEXT);
+    }
 
     public void ReceiveDictationResult(string text)
     {
