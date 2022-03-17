@@ -9,12 +9,6 @@
       },
       "hash": "ec0eb5cae8287651e07c32a3309d0668d53271ab"
     },
-    "ch.unibas.vr-open-text-input": {
-      "version": "file:C:/Users/nakar/vr-open-text-input",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
     "com.mapbox.mapbox-sdk": {
       "version": "https://github.com/Spiess/mapbox-upm-sdk.git",
       "depth": 0,
