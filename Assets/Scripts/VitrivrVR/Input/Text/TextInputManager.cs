@@ -50,6 +50,54 @@ namespace VitrivrVR.Input.Text
 
       inputField.InputBackspace();
     }
+    
+    public static void InputReturn()
+    {
+      var inputField = GETSelectedInputField();
+      
+      if (inputField == null)
+      {
+        return; // No text field selected, nothing to do
+      }
+
+      inputField.InputReturn();
+    }
+    
+    public static void InputLeftArrow()
+    {
+      var inputField = GETSelectedInputField();
+      
+      if (inputField == null)
+      {
+        return; // No text field selected, nothing to do
+      }
+
+      inputField.InputLeftArrow();
+    }
+    
+    public static void InputRightArrow()
+    {
+      var inputField = GETSelectedInputField();
+      
+      if (inputField == null)
+      {
+        return; // No text field selected, nothing to do
+      }
+
+      inputField.InputRightArrow();
+    }
+    
+    public static void InputTabulator()
+    {
+      var inputField = GETSelectedInputField();
+      
+      if (inputField == null)
+      {
+        return; // No text field selected, nothing to do
+      }
+
+      inputField.InputTabulator();
+    }
 
     private static InputFieldController GETSelectedInputField()
     {
