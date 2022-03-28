@@ -28,7 +28,7 @@ namespace VitrivrVR.Config
         this.b = b;
       }
 
-      public Color ToColor() => new Color(r, g, b);
+      public Color ToColor() => new(r, g, b);
     }
 
     [Serializable]
@@ -67,11 +67,6 @@ namespace VitrivrVR.Config
     /// The color to indicate the maximum score for returned results.
     /// </summary>
     public ConfigColor similarityColor;
-
-    /// <summary>
-    /// Sets the debug output for dictation and speech-to-text.
-    /// </summary>
-    public bool dictationDebugOutput;
 
     /// <summary>
     /// The default categories for image query-by-example.
@@ -135,7 +130,6 @@ namespace VitrivrVR.Config
       maxDisplay = 100;
       dissimilarityColor = new ConfigColor(1, 0, 0);
       similarityColor = new ConfigColor(0, 1, 0);
-      dictationDebugOutput = false;
       var mapping = CineastConfigManager.Instance.Config.categoryMappings.mapping;
       defaultImageCategories = new List<string>
       {
@@ -144,10 +138,10 @@ namespace VitrivrVR.Config
       };
       textCategories = new List<TextCategory>
       {
-        new TextCategory("OCR", "ocr"),
-        new TextCategory("ASR", "asr"),
-        new TextCategory("Caption", "scenecaption"),
-        new TextCategory("Co-Embed", "visualtextcoembedding")
+        new("OCR", "ocr"),
+        new("ASR", "asr"),
+        new("Caption", "scenecaption"),
+        new("Co-Embed", "visualtextcoembedding")
       };
       booleanCategories = new List<BooleanCategory>();
       defaultMediaVolume = .5f;
