@@ -1,16 +1,9 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 
 namespace VitrivrVR.Interaction.System.Grab
 {
   public class Grabable : EventInteractable
   {
-    [Serializable]
-    public class HoverEvent : UnityEvent<bool>
-    {
-    }
-
     /// <summary>
     /// Allows setting the grab target to other transforms e.g. parent (defaults to this transform).
     /// </summary>
