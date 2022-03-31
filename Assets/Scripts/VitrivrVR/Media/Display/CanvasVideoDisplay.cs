@@ -221,7 +221,7 @@ namespace VitrivrVR.Media.Display
 
       // TODO: Preload or cache for all results
       var segment = await GetCurrentSegment(_videoPlayerController.ClockTime);
-      var tagIds = await CineastWrapper.MetadataApi.FindTagsByIdAsync(segment.Id);
+      var tagIds = await CineastWrapper.MetadataApi.FindTagInformationByIdAsync(segment.Id);
 
       var tags = await CineastWrapper.TagApi.FindTagsByIdAsync(new IdList(tagIds.TagIDs));
 
