@@ -72,10 +72,13 @@ namespace VitrivrVR.Query.Term
             case BooleanTermTypes.DynamicOptions:
               var dynamicOptions = Instantiate(optionSelection, transform);
               var dynOpt = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
+              var numeric = false;
               if (category.options != null)
               {
                 // TODO: Handle empty options array
-                dynOpt = SortOptions(dynOpt, category.options.First());
+                var sortOrder = category.options.First();
+                dynOpt = SortOptions(dynOpt, sortOrder);
+                numeric = Enum.TryParse<SortOrder>(sortOrder, out var order) && order == SortOrder.Numeric;
               }
 
               dynamicOptions.Initialize(category.name, entity,
@@ -83,7 +86,7 @@ namespace VitrivrVR.Query.Term
                 {
                   RelationalOperator.Eq,
                   RelationalOperator.NEq
-                }, dynOpt);
+                }, dynOpt, numeric);
               _termProviders.Add(dynamicOptions);
               break;
             default:

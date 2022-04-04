@@ -18,7 +18,7 @@ namespace VitrivrVR.Submission
 {
   public class DresClientManager : MonoBehaviour
   {
-    public static DresClient instance;
+    public static DresClient Instance;
 
     private static readonly List<QueryEvent> InteractionEvents = new List<QueryEvent>();
     private static float _interactionEventTimer;
@@ -37,12 +37,12 @@ namespace VitrivrVR.Submission
           (sender, certificate, chain, sslPolicyErrors) => true;
       }
 
-      instance = new DresClient();
-      await instance.Login();
+      Instance = new DresClient();
+      await Instance.Login();
       var logDir = ConfigManager.Config.logFileLocation;
       var startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-      var username = instance.UserDetails.Username;
-      var session = instance.UserDetails.SessionId;
+      var username = Instance.UserDetails.Username;
+      var session = Instance.UserDetails.SessionId;
       _interactionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_interaction.txt");
       _resultsLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_results.txt");
       _submissionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_submission.txt");
@@ -80,7 +80,7 @@ namespace VitrivrVR.Submission
 
       try
       {
-        var result = await instance.SubmitResult(mediaObjectId, frame);
+        var result = await Instance.SubmitResult(mediaObjectId, frame);
         NotificationController.Notify($"Submission: {result.Submission}");
       }
       catch (Exception e)
@@ -165,7 +165,7 @@ namespace VitrivrVR.Submission
         return new QueryResult(objectId, sequenceNumber, frame, result.score, i);
       }));
 
-      var queryEvents = query.Containers.First().Terms.Select(term =>
+      var queryEvents = query.Terms.Select(term =>
       {
         // Convert term type to Dres category
         var category = term.Type switch
@@ -194,7 +194,7 @@ namespace VitrivrVR.Submission
       var queryEventsList = queryEvents.ToList();
       try
       {
-        var success = await instance.LogResults(timestamp, sortType, "top", queryResultsList, queryEventsList);
+        var success = await Instance.LogResults(timestamp, sortType, "top", queryResultsList, queryEventsList);
 
         if (!success.Status)
         {
@@ -232,7 +232,7 @@ namespace VitrivrVR.Submission
       // Submit to DRES
       try
       {
-        var success = await instance.LogQueryEvents(timestamp, InteractionEvents);
+        var success = await Instance.LogQueryEvents(timestamp, InteractionEvents);
 
         if (!success.Status)
         {

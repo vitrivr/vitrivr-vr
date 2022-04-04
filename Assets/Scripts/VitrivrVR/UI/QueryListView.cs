@@ -152,12 +152,9 @@ namespace VitrivrVR.UI
     private static string QueryToString(SimilarityQuery query)
     {
       var stringBuilder = new StringBuilder();
-      foreach (var component in query.Containers)
-      {
-        stringBuilder.Append("{");
-        stringBuilder.Append(string.Join(", ", component.Terms.Select(TermToString)));
-        stringBuilder.Append("}");
-      }
+      stringBuilder.Append("{");
+      stringBuilder.Append(string.Join(", ", query.Terms.Select(TermToString)));
+      stringBuilder.Append("}");
 
       return stringBuilder.ToString();
     }

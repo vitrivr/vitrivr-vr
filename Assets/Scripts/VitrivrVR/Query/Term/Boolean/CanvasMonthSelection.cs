@@ -50,7 +50,7 @@ namespace VitrivrVR.Query.Term.Boolean
       var options = selection
         .Zip(_options, (use, option) => (use, option))
         .Where(value => value.use)
-        .Select(value => value.option)
+        .Select(value => "\"" + value.option + "\"")
         .ToArray();
 
       return options.Length == 1

@@ -161,7 +161,7 @@ namespace VitrivrVR.Media.Display
       var listContent = _tagList.content;
 
       // TODO: Preload or cache for all results
-      var tagIds = await CineastWrapper.MetadataApi.FindTagsByIdAsync(Segment.Id);
+      var tagIds = await CineastWrapper.MetadataApi.FindTagInformationByIdAsync(Segment.Id);
 
       var tags = await CineastWrapper.TagApi.FindTagsByIdAsync(new IdList(tagIds.TagIDs));
 
