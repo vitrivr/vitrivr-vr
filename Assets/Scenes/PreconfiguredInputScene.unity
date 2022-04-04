@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.009389741, g: 0.010874605, b: 0.014736945, a: 1}
+  m_IndirectSpecularColor: {r: 0.009389731, g: 0.010874586, b: 0.014736901, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -824,6 +824,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1686422168030219644, guid: 601058e9a58ed44328f58d27d3ce77a4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4134188125030209472, guid: 601058e9a58ed44328f58d27d3ce77a4,
         type: 3}
       propertyPath: m_Camera
@@ -1431,7 +1436,6 @@ MonoBehaviour:
   onDrop:
     m_PersistentCalls:
       m_Calls: []
-  grabTransform: {fileID: 0}
   onHoverChange:
     m_PersistentCalls:
       m_Calls:
@@ -1447,6 +1451,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  grabTransform: {fileID: 0}
 --- !u!1 &881647751
 GameObject:
   m_ObjectHideFlags: 0
@@ -1611,6 +1616,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1085628313357563494, guid: a9392593edf5b46759c4127cdaaef06b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4292794415908081019, guid: a9392593edf5b46759c4127cdaaef06b,
         type: 3}
       propertyPath: m_Camera
@@ -1934,7 +1944,6 @@ MonoBehaviour:
   onDrop:
     m_PersistentCalls:
       m_Calls: []
-  grabTransform: {fileID: 0}
   onHoverChange:
     m_PersistentCalls:
       m_Calls:
@@ -1950,6 +1959,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  grabTransform: {fileID: 0}
 --- !u!4 &1241178934
 Transform:
   m_ObjectHideFlags: 0
@@ -3226,7 +3236,6 @@ MonoBehaviour:
   onDrop:
     m_PersistentCalls:
       m_Calls: []
-  grabTransform: {fileID: 0}
   onHoverChange:
     m_PersistentCalls:
       m_Calls:
@@ -3242,6 +3251,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  grabTransform: {fileID: 0}
 --- !u!4 &1869219391
 Transform:
   m_ObjectHideFlags: 0
@@ -3707,7 +3717,6 @@ MonoBehaviour:
   onDrop:
     m_PersistentCalls:
       m_Calls: []
-  grabTransform: {fileID: 0}
   onHoverChange:
     m_PersistentCalls:
       m_Calls:
@@ -3723,6 +3732,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  grabTransform: {fileID: 0}
 --- !u!4 &1915357482
 Transform:
   m_ObjectHideFlags: 0
@@ -4253,11 +4263,41 @@ PrefabInstance:
       propertyPath: _options.loadingTexture
       value: 
       objectReference: {fileID: 1447848311}
+    - target: {fileID: 4500793346680963092, guid: c179e236172375847bedd75a0b663132,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628496102931008604, guid: c179e236172375847bedd75a0b663132,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628496102931008604, guid: c179e236172375847bedd75a0b663132,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.75
+      objectReference: {fileID: 0}
     - target: {fileID: 4628496103118665442, guid: c179e236172375847bedd75a0b663132,
         type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1606703275}
+    - target: {fileID: 5655235471956596655, guid: c179e236172375847bedd75a0b663132,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8741116835169746080, guid: c179e236172375847bedd75a0b663132,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9143556012033577986, guid: c179e236172375847bedd75a0b663132,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c179e236172375847bedd75a0b663132, type: 3}
 --- !u!1001 &997385473210309863
@@ -4337,6 +4377,11 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1606703275}
+    - target: {fileID: 529428697703121917, guid: fc51cee4b22de4e6d98975af75dd8e61,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1265791168703151780, guid: fc51cee4b22de4e6d98975af75dd8e61,
         type: 3}
       propertyPath: m_AnchorMax.y
