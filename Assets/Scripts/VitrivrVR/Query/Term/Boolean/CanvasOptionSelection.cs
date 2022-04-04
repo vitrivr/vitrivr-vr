@@ -18,12 +18,16 @@ namespace VitrivrVR.Query.Term.Boolean
     private List<string> _options;
 
     private bool _enabled;
+    private bool _numeric;
 
-    public void Initialize(string optionTitle, string entity, List<RelationalOperator> operators, List<string> options)
+    public void Initialize(string optionTitle, string entity, List<RelationalOperator> operators, List<string> options,
+      bool numeric)
     {
       _entity = entity;
       _operators = operators;
       _options = options;
+      // If numeric, do not add quotes around value for query term
+      _numeric = numeric;
 
       optionName.text = optionTitle;
       operatorDropdown.AddOptions(_operators.Select(op => op.ToString()).ToList());
@@ -32,7 +36,13 @@ namespace VitrivrVR.Query.Term.Boolean
 
     public override (string attribute, RelationalOperator op, string[] values) GetTerm()
     {
-      return (_entity, _operators[operatorDropdown.value], new[] { _options[valueDropdown.value] });
+      var value = _options[valueDropdown.value];
+      if (!_numeric)
+      {
+        value = "\"" + value + "\"";
+      }
+
+      return (_entity, _operators[operatorDropdown.value], new[] { value });
     }
 
     public override bool IsEnabled()
