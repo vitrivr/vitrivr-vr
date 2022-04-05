@@ -13,16 +13,18 @@ namespace VitrivrVR.Query.Term.Pose
 
     private void Start()
     {
+      var parent = transform.parent;
       _keyPointIndicators =
-        keyPoints.Select(point => (point, Instantiate(keyPointIndicatorPrefab, transform).transform)).ToList();
+        keyPoints.Select(point => (point, Instantiate(keyPointIndicatorPrefab, parent).transform)).ToList();
     }
 
     private void Update()
     {
+      var t = transform;
       foreach (var (point, indicator) in _keyPointIndicators)
       {
         var position = PointToCanvasSpace(point.transform.position);
-        indicator.localPosition = position;
+        indicator.position = t.TransformPoint(position);
         indicator.gameObject.SetActive(PointWithinBounds(position));
       }
     }
