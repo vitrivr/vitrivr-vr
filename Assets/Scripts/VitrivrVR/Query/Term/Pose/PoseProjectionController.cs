@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -20,12 +19,9 @@ namespace VitrivrVR.Query.Term.Pose
 
     private void Update()
     {
-      var t = transform;
       foreach (var (point, indicator) in _keyPointIndicators)
       {
-        var position = t.InverseTransformPoint(point.transform.position);
-        position.z = -0.001f; // Not set to 0 to prevent z-fighting
-
+        var position = PointToCanvasSpace(point.transform.position);
         indicator.localPosition = position;
         indicator.gameObject.SetActive(PointWithinBounds(position));
       }
@@ -45,6 +41,14 @@ namespace VitrivrVR.Query.Term.Pose
       return point.x is > -xBound and < xBound && point.y is > -yBound and < yBound;
     }
 
+    private Vector3 PointToCanvasSpace(Vector3 point)
+    {
+      var canvasPoint = transform.InverseTransformPoint(point);
+      canvasPoint.z = -0.001f; // Not set to 0 to prevent z-fighting
+
+      return canvasPoint;
+    }
+
     private void OnDrawGizmosSelected()
     {
       Gizmos.color = Color.green;
@@ -58,7 +62,7 @@ namespace VitrivrVR.Query.Term.Pose
         position.z = 0;
         if (!PointWithinBounds(position)) continue;
 
-        Gizmos.DrawSphere(t.TransformPoint(position), .01f);
+        Gizmos.DrawSphere(t.TransformPoint(position), .002f);
       }
     }
   }
