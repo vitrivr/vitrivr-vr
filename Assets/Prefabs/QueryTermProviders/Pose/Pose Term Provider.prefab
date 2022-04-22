@@ -755,16 +755,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 501878290218203882}
     m_Modifications:
-    - target: {fileID: 3918544808104166067, guid: 369719f37eec1474f8eabb9dbfe0484b,
-        type: 3}
-      propertyPath: connectedPoints.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3918544808104166067, guid: 369719f37eec1474f8eabb9dbfe0484b,
-        type: 3}
-      propertyPath: connectedPoints.Array.data[0]
-      value: 
-      objectReference: {fileID: 3289923185992224031}
     - target: {fileID: 4026454223989366301, guid: 369719f37eec1474f8eabb9dbfe0484b,
         type: 3}
       propertyPath: m_RootOrder
@@ -1448,16 +1438,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 501878290218203882}
     m_Modifications:
-    - target: {fileID: 3918544808104166067, guid: 369719f37eec1474f8eabb9dbfe0484b,
-        type: 3}
-      propertyPath: connectedPoints.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3918544808104166067, guid: 369719f37eec1474f8eabb9dbfe0484b,
-        type: 3}
-      propertyPath: connectedPoints.Array.data[0]
-      value: 
-      objectReference: {fileID: 8721530048933092604}
     - target: {fileID: 4026454223989366301, guid: 369719f37eec1474f8eabb9dbfe0484b,
         type: 3}
       propertyPath: m_RootOrder
@@ -1839,7 +1819,7 @@ PrefabInstance:
     - target: {fileID: 3918544808104166067, guid: 369719f37eec1474f8eabb9dbfe0484b,
         type: 3}
       propertyPath: connectedPoints.Array.size
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3918544808104166067, guid: 369719f37eec1474f8eabb9dbfe0484b,
         type: 3}
@@ -1851,6 +1831,16 @@ PrefabInstance:
       propertyPath: connectedPoints.Array.data[1]
       value: 
       objectReference: {fileID: 4725840711478568117}
+    - target: {fileID: 3918544808104166067, guid: 369719f37eec1474f8eabb9dbfe0484b,
+        type: 3}
+      propertyPath: connectedPoints.Array.data[2]
+      value: 
+      objectReference: {fileID: 8721530048933092604}
+    - target: {fileID: 3918544808104166067, guid: 369719f37eec1474f8eabb9dbfe0484b,
+        type: 3}
+      propertyPath: connectedPoints.Array.data[3]
+      value: 
+      objectReference: {fileID: 3289923185992224031}
     - target: {fileID: 4026454223989366301, guid: 369719f37eec1474f8eabb9dbfe0484b,
         type: 3}
       propertyPath: m_RootOrder
