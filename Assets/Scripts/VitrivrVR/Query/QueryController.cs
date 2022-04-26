@@ -36,8 +36,7 @@ namespace VitrivrVR.Query
     public GameObject timer;
     public QueryDisplay queryDisplay;
 
-    public readonly List<(SimilarityQuery query, QueryDisplay display)> queries =
-      new List<(SimilarityQuery, QueryDisplay)>();
+    public readonly List<(SimilarityQuery query, QueryDisplay display)> queries = new();
 
     public int CurrentQuery { get; private set; } = -1;
 
