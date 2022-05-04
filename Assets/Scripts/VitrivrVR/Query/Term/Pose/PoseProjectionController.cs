@@ -8,14 +8,40 @@ namespace VitrivrVR.Query.Term.Pose
   {
     public GameObject keyPointIndicatorPrefab;
     public KeyPointController[] keyPoints = { };
+    public Material lineMaterial;
+    public float lineWidth = 0.001f;
 
     private List<(KeyPointController point, Transform indicator)> _keyPointIndicators;
+    private List<(Transform indicator0, Transform indicator1, LineRenderer line)> _keyPointConnections;
 
     private void Start()
     {
       var parent = transform.parent;
       _keyPointIndicators =
         keyPoints.Select(point => (point, Instantiate(keyPointIndicatorPrefab, parent).transform)).ToList();
+
+      var indicatorDictionary = _keyPointIndicators.ToDictionary(pair => pair.point, pair => pair.indicator);
+
+      _keyPointConnections = _keyPointIndicators.SelectMany(pair =>
+      {
+        var (point, indicator) = pair;
+        return point.connectedPoints.Select(other =>
+        {
+          var otherIndicator = indicatorDictionary[other];
+          var go = new GameObject($"Projection {point.name} - {other.name}", typeof(LineRenderer));
+          go.transform.SetParent(parent);
+
+          var line = go.GetComponent<LineRenderer>();
+          line.material = lineMaterial;
+          line.widthMultiplier = lineWidth;
+          line.numCapVertices = 2;
+          line.numCornerVertices = 2;
+
+          line.SetPositions(new[] { indicator.position, otherIndicator.position });
+
+          return (indicator, otherIndicator, line);
+        });
+      }).ToList();
     }
 
     private void Update()
@@ -26,6 +52,15 @@ namespace VitrivrVR.Query.Term.Pose
         var position = PointToCanvasSpace(point.transform.position);
         indicator.position = t.TransformPoint(position);
         indicator.gameObject.SetActive(PointWithinBounds(position));
+      }
+
+      foreach (var (indicator0, indicator1, line) in _keyPointConnections)
+      {
+        var forward = new Vector3(0, 0, indicator0.localPosition.z);
+        line.SetPosition(0, indicator0.position - 1.01f * forward);
+        line.SetPosition(1, indicator1.position - 1.01f * forward);
+
+        line.gameObject.SetActive(indicator0.gameObject.activeSelf && indicator1.gameObject.activeSelf);
       }
     }
 
