@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.009389731, g: 0.010874586, b: 0.014736901, a: 1}
+  m_IndirectSpecularColor: {r: 0.009389741, g: 0.010874605, b: 0.014736945, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -468,6 +468,12 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6370198948358844717, guid: e3fa50f12bdc33147a210244db865073,
     type: 3}
   m_PrefabInstance: {fileID: 2139883298}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &302934027 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8604429250614414639, guid: df175ee4ebb2ca54da266e0b5fadb613,
+    type: 3}
+  m_PrefabInstance: {fileID: 689719133}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &397728500
 PrefabInstance:
@@ -1212,6 +1218,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 682427346}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &783491306 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8604429250614414639, guid: df175ee4ebb2ca54da266e0b5fadb613,
+    type: 3}
+  m_PrefabInstance: {fileID: 1481874193230003914}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &815619094
 GameObject:
   m_ObjectHideFlags: 0
@@ -1427,6 +1439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesPointer: 1
   onInteraction:
     m_PersistentCalls:
       m_Calls: []
@@ -1935,6 +1948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesPointer: 1
   onInteraction:
     m_PersistentCalls:
       m_Calls: []
@@ -3001,6 +3015,10 @@ MonoBehaviour:
       m_Action: Grab
       m_Flags: 0
     m_Flags: 0
+  uiClickAction: {fileID: 5762402034602797191, guid: fa1ea27f8e475394eb724e13fab25d5b,
+    type: 3}
+  bindingIndex: 3
+  uiLine: {fileID: 302934027}
 --- !u!1 &1686424232
 GameObject:
   m_ObjectHideFlags: 0
@@ -3093,6 +3111,10 @@ MonoBehaviour:
       m_Action: Grab
       m_Flags: 0
     m_Flags: 0
+  uiClickAction: {fileID: 5762402034602797191, guid: fa1ea27f8e475394eb724e13fab25d5b,
+    type: 3}
+  bindingIndex: 4
+  uiLine: {fileID: 783491306}
 --- !u!1 &1743256057
 GameObject:
   m_ObjectHideFlags: 0
@@ -3227,6 +3249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesPointer: 1
   onInteraction:
     m_PersistentCalls:
       m_Calls: []
@@ -3708,6 +3731,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesPointer: 1
   onInteraction:
     m_PersistentCalls:
       m_Calls: []
@@ -5496,7 +5520,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3376425903362387796, guid: 3af4ab6016465a749a4a4b362e999f5c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3af4ab6016465a749a4a4b362e999f5c, type: 3}
 --- !u!114 &4795272055168682764 stripped
 MonoBehaviour:

@@ -302,6 +302,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d9dd3a1966954f6b8c8f6a335003aca, type: 3}
+--- !u!1 &124742494 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8604429250614414639, guid: df175ee4ebb2ca54da266e0b5fadb613,
+    type: 3}
+  m_PrefabInstance: {fileID: 689719133}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &132569255 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
@@ -677,6 +683,12 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1994142194011412244, guid: b99024b35b59a154bbc1d48b498e81a0,
     type: 3}
   m_PrefabInstance: {fileID: 1994142194572592369}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &668206678 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8604429250614414639, guid: df175ee4ebb2ca54da266e0b5fadb613,
+    type: 3}
+  m_PrefabInstance: {fileID: 1481874193230003914}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &682427346
 PrefabInstance:
@@ -1161,6 +1173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesPointer: 1
   onInteraction:
     m_PersistentCalls:
       m_Calls: []
@@ -1403,6 +1416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesPointer: 1
   onInteraction:
     m_PersistentCalls:
       m_Calls: []
@@ -2422,6 +2436,10 @@ MonoBehaviour:
       m_Action: Grab
       m_Flags: 0
     m_Flags: 0
+  uiClickAction: {fileID: 5762402034602797191, guid: fa1ea27f8e475394eb724e13fab25d5b,
+    type: 3}
+  bindingIndex: 3
+  uiLine: {fileID: 124742494}
 --- !u!1 &1686424232
 GameObject:
   m_ObjectHideFlags: 0
@@ -2514,6 +2532,10 @@ MonoBehaviour:
       m_Action: Grab
       m_Flags: 0
     m_Flags: 0
+  uiClickAction: {fileID: 5762402034602797191, guid: fa1ea27f8e475394eb724e13fab25d5b,
+    type: 3}
+  bindingIndex: 4
+  uiLine: {fileID: 668206678}
 --- !u!1 &1743256057
 GameObject:
   m_ObjectHideFlags: 0
@@ -2648,6 +2670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesPointer: 1
   onInteraction:
     m_PersistentCalls:
       m_Calls: []
@@ -3129,6 +3152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesPointer: 1
   onInteraction:
     m_PersistentCalls:
       m_Calls: []
@@ -4176,7 +4200,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3376425903362387796, guid: 3af4ab6016465a749a4a4b362e999f5c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3af4ab6016465a749a4a4b362e999f5c, type: 3}
 --- !u!1001 &6310090573893059420
 PrefabInstance:

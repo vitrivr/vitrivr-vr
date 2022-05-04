@@ -35,7 +35,7 @@ namespace VitrivrVR.Interaction.System
              "last interactor stops hovering over this interactable.")]
     public RegularInteractionEvent onHoverChange;
 
-    private readonly List<Transform> _hovering = new();
+    private readonly HashSet<Transform> _hovering = new();
 
     public override void OnInteraction(Transform interactor, bool start)
     {
@@ -77,6 +77,14 @@ namespace VitrivrVR.Interaction.System
       {
         onHoverChange.Invoke(false);
       }
+    }
+
+    private void OnDisable()
+    {
+      // Disabled interactables are not hoverable --> if currently hovered send hover change event and remove hovering
+      if (_hovering.Count <= 0) return;
+      onHoverChange.Invoke(false);
+      _hovering.Clear();
     }
   }
 }
