@@ -10,10 +10,16 @@ namespace VitrivrVR.Interaction.System
     public InputAction interact;
     public InputAction grab;
 
-    private readonly List<Interactable> _interactables = new List<Interactable>();
+    public InputActionReference uiClickAction;
+    public int bindingIndex;
+    public GameObject uiLine;
 
-    private List<Interactable> _grabbed;
-    private List<Interactable> _interacting;
+    private readonly HashSet<Interactable> _interactables = new();
+
+    private HashSet<Interactable> _grabbed;
+    private HashSet<Interactable> _interacting;
+
+    private bool _uiPointerActive = true;
 
     private void Awake()
     {
@@ -38,10 +44,10 @@ namespace VitrivrVR.Interaction.System
 
     public void Interact(bool start)
     {
-      RemoveDestroyed();
+      RemoveDisabledOrDestroyed();
       if (start)
       {
-        _interacting = new List<Interactable>(_interactables);
+        _interacting = new HashSet<Interactable>(_interactables);
         foreach (var interactable in _interactables)
         {
           interactable.OnInteraction(transform, true);
@@ -49,8 +55,7 @@ namespace VitrivrVR.Interaction.System
       }
       else
       {
-        // TODO: Investigate if Where is still required after removing destroyed interactables from list
-        foreach (var interactable in _interacting.Where(interactable => interactable))
+        foreach (var interactable in _interacting)
         {
           interactable.OnInteraction(transform, false);
 
@@ -61,10 +66,10 @@ namespace VitrivrVR.Interaction.System
 
     public void Grab(bool start)
     {
-      RemoveDestroyed();
+      RemoveDisabledOrDestroyed();
       if (start)
       {
-        _grabbed = new List<Interactable>(_interactables);
+        _grabbed = new HashSet<Interactable>(_interactables);
         foreach (var interactable in _interactables)
         {
           interactable.OnGrab(transform, true);
@@ -87,6 +92,8 @@ namespace VitrivrVR.Interaction.System
 
       _interactables.Add(interactable);
       interactable.OnHoverEnter(transform);
+
+      UpdateUIPointer();
     }
 
     private void OnTriggerExit(Collider other)
@@ -95,13 +102,42 @@ namespace VitrivrVR.Interaction.System
 
       _interactables.Remove(interactable);
       interactable.OnHoverExit(transform);
+
+      UpdateUIPointer();
     }
 
-    private void RemoveDestroyed()
+    private void FixedUpdate()
     {
-      _interactables.RemoveAll(interactable => interactable == null);
-      _grabbed?.RemoveAll(interactable => interactable == null);
-      _interacting?.RemoveAll(interactable => interactable == null);
+      // Reduce chance of interactables containing an interactable this interactor is no longer over
+      RemoveDisabledOrDestroyed();
+      UpdateUIPointer();
+    }
+
+    private void RemoveDisabledOrDestroyed()
+    {
+      _interactables.Remove(null);
+      _interactables.RemoveWhere(interactable => !interactable.gameObject.activeInHierarchy);
+      _grabbed?.Remove(null);
+      _interacting?.Remove(null);
+    }
+
+    private void UpdateUIPointer()
+    {
+      var shouldBeDisabled = _interactables.Any(interactable => interactable.disablesPointer);
+
+      switch (shouldBeDisabled)
+      {
+        case true when _uiPointerActive:
+          uiClickAction.action.ApplyBindingOverride(bindingIndex, string.Empty);
+          _uiPointerActive = false;
+          uiLine.SetActive(false);
+          break;
+        case false when !_uiPointerActive:
+          uiClickAction.action.RemoveBindingOverride(bindingIndex);
+          _uiPointerActive = true;
+          uiLine.SetActive(true);
+          break;
+      }
     }
   }
 }

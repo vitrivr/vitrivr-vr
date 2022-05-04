@@ -172,7 +172,6 @@ namespace VitrivrVR.Submission
         {
           QueryTerm.TypeEnum.IMAGE => QueryEvent.CategoryEnum.IMAGE,
           QueryTerm.TypeEnum.AUDIO => QueryEvent.CategoryEnum.OTHER,
-          QueryTerm.TypeEnum.MOTION => QueryEvent.CategoryEnum.OTHER,
           QueryTerm.TypeEnum.MODEL3D => QueryEvent.CategoryEnum.OTHER,
           QueryTerm.TypeEnum.LOCATION => QueryEvent.CategoryEnum.OTHER,
           QueryTerm.TypeEnum.TIME => QueryEvent.CategoryEnum.OTHER,

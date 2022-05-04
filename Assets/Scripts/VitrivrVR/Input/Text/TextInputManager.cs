@@ -1,5 +1,7 @@
-using System.Collections.Generic;
 using System.Linq;
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace VitrivrVR.Input.Text
 {
@@ -9,99 +11,105 @@ namespace VitrivrVR.Input.Text
   /// </summary>
   public static class TextInputManager
   {
-    private static List<InputFieldController> _inputFields = new List<InputFieldController>();
-    
     /// <summary>
-    /// Registers the given input field to receive text input from non-system sources.
+    /// Inputs the given text into the currently selected text input field.
     /// </summary>
-    public static void Register(InputFieldController inputField)
-    {
-      _inputFields.Add(inputField);
-    }
-
-    /// <summary>
-    /// Unregisters the given input field from receiving text input from non-system sources.
-    /// </summary>
-    public static void Unregister(InputFieldController inputField)
-    {
-      _inputFields.Remove(inputField);
-    }
-
+    /// <param name="text"></param>
     public static void InputText(string text)
     {
-      var inputField = GETSelectedInputField();
-      
+      var inputField = GetSelectedInputField();
+
       if (inputField == null)
       {
         return; // No text field selected, nothing to do
       }
 
-      inputField.InputText(text);
+      foreach (var keyEvent in text.Select(character => new Event {character = character}))
+      {
+        inputField.ProcessEvent(keyEvent);
+      }
+
+      inputField.ForceLabelUpdate();
     }
-    
+
+    /// <summary>
+    /// Inputs the given input event into the currently selected text input field.
+    /// </summary>
+    /// <param name="inputEvent">Input event as event</param>
+    public static void InputEvent(Event inputEvent)
+    {
+      var inputField = GetSelectedInputField();
+
+      if (inputField == null)
+      {
+        return; // No text field selected, nothing to do
+      }
+
+      inputField.ProcessEvent(inputEvent);
+      inputField.ForceLabelUpdate();
+    }
+
+    /// <summary>
+    /// Inputs the given keyboard event into the currently selected text input field.
+    /// </summary>
+    /// <param name="eventString">Keyboard event string</param>
+    public static void InputKeyboardEvent(string eventString)
+    {
+      InputEvent(Event.KeyboardEvent(eventString));
+    }
+
+    /// <summary>
+    /// Inputs a backspace into the currently selected text input field.
+    /// </summary>
     public static void InputBackspace()
     {
-      var inputField = GETSelectedInputField();
-      
-      if (inputField == null)
-      {
-        return; // No text field selected, nothing to do
-      }
-
-      inputField.InputBackspace();
+      InputKeyboardEvent("backspace");
     }
-    
+
+    /// <summary>
+    /// Inputs a return into the currently selected text input field.
+    /// </summary>
     public static void InputReturn()
     {
-      var inputField = GETSelectedInputField();
-      
-      if (inputField == null)
-      {
-        return; // No text field selected, nothing to do
-      }
-
-      inputField.InputReturn();
+      InputKeyboardEvent('\n'.ToString());
     }
-    
+
+    /// <summary>
+    /// Inputs a left arrow navigation event into the currently selected text input field.
+    /// </summary>
     public static void InputLeftArrow()
     {
-      var inputField = GETSelectedInputField();
-      
-      if (inputField == null)
-      {
-        return; // No text field selected, nothing to do
-      }
-
-      inputField.InputLeftArrow();
+      InputKeyboardEvent("LeftArrow");
     }
-    
+
+    /// <summary>
+    /// Inputs a right arrow navigation event into the currently selected text input field.
+    /// </summary>
     public static void InputRightArrow()
     {
-      var inputField = GETSelectedInputField();
-      
-      if (inputField == null)
-      {
-        return; // No text field selected, nothing to do
-      }
-
-      inputField.InputRightArrow();
+      InputKeyboardEvent("RightArrow");
     }
-    
+
+    /// <summary>
+    /// Inputs a tab character into the currently selected text input field.
+    /// </summary>
     public static void InputTabulator()
     {
-      var inputField = GETSelectedInputField();
-      
-      if (inputField == null)
-      {
-        return; // No text field selected, nothing to do
-      }
-
-      inputField.InputTabulator();
+      InputKeyboardEvent('\t'.ToString());
     }
 
-    private static InputFieldController GETSelectedInputField()
+    /// <summary>
+    /// Retrieves the currently selected text input field.
+    /// Returns null in case no text input field is currently selected.
+    /// </summary>
+    /// <returns>The currently selected text input field or null</returns>
+    private static TMP_InputField GetSelectedInputField()
     {
-      return _inputFields.FirstOrDefault(inputField => inputField.IsFocused);
+      var selectedObject = EventSystem.current.currentSelectedGameObject;
+
+      return selectedObject != null && selectedObject.TryGetComponent<TMP_InputField>(out var inputField)
+        ? inputField
+        : null;
     }
   }
 }
