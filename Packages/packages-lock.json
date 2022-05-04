@@ -1,13 +1,13 @@
 {
   "dependencies": {
     "ch.unibas.vr-multimedia-interfaces": {
-      "version": "https://github.com/Spiess/vr-multimedia-interfaces.git",
+      "version": "https://github.com/Spiess/vr-multimedia-interfaces.git#v0.0.1",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "com.mapbox.mapbox-sdk": "2.1.1"
       },
-      "hash": "ec0eb5cae8287651e07c32a3309d0668d53271ab"
+      "hash": "ec73936cb61a654f53c3931319aa74af784f88c1"
     },
     "com.mapbox.mapbox-sdk": {
       "version": "https://github.com/Spiess/mapbox-upm-sdk.git",

@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "ch.unibas.vr-multimedia-interfaces": "https://github.com/Spiess/vr-multimedia-interfaces.git",
+    "ch.unibas.vr-multimedia-interfaces": "https://github.com/Spiess/vr-multimedia-interfaces.git#v0.0.1",
     "com.mapbox.mapbox-sdk": "https://github.com/Spiess/mapbox-upm-sdk.git",
     "com.unity.ide.rider": "3.0.14",
     "com.unity.ide.visualstudio": "2.0.15",
