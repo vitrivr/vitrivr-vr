@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using VitrivrVR.Interaction.System;
 
@@ -6,6 +5,9 @@ namespace VitrivrVR.Query.Term.Pose
 {
   public class CanvasScaleHandle : EventInteractable
   {
+    /// <summary>
+    /// The scale target, in this case most likely the projection surface.
+    /// </summary>
     public Transform target;
 
     private Transform _interactor;
@@ -23,13 +25,19 @@ namespace VitrivrVR.Query.Term.Pose
       if (!_grabbed) return;
 
       var t = transform;
+      // This only serves to preserve local space z value of the handle
       var localPosition = t.localPosition;
+      // All calculations are performed in parent space as both the handle and projection surface are expected to share
+      // the same parent
       var parentSpacePoint = t.parent.InverseTransformPoint(_interactor.position);
+      // Ensure that the handle does not shrink the canvas beyond the minimum size
       localPosition.x = Mathf.Max(0, parentSpacePoint.x + _grabAnchorX);
       localPosition.y = Mathf.Min(0, parentSpacePoint.y + _grabAnchorY);
       t.localPosition = localPosition;
 
-      target.localScale = _initialScale + 2 * new Vector3(localPosition.x, - localPosition.y, 0);
+      // Perform actual canvas scaling
+      target.localScale = _initialScale + new Vector3(localPosition.x, - localPosition.y, 0);
+      target.localPosition = localPosition / 2;
     }
 
     public override void OnGrab(Transform interactor, bool start)
