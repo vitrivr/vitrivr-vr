@@ -511,6 +511,7 @@ GameObject:
   m_Component:
   - component: {fileID: 501878290218203882}
   - component: {fileID: 6606892614530583981}
+  - component: {fileID: 16352891039840631}
   m_Layer: 0
   m_Name: Pose Term Provider
   m_TagString: Untagged
@@ -547,6 +548,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poseProjection: {fileID: 8478847957752751470}
+--- !u!114 &16352891039840631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7095743105336953506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b4902c0a6f1e084bb801ff0ca990dd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  queryTermProvider: {fileID: 6606892614530583981}
 --- !u!1001 &1669961408762191046
 PrefabInstance:
   m_ObjectHideFlags: 0
