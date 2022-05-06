@@ -1,0 +1,45 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Org.Vitrivr.CineastApi.Model;
+using UnityEngine;
+using Vitrivr.UnityInterface.CineastApi.Utils;
+
+namespace VitrivrVR.Query.Term.Pose
+{
+  public class PoseTermProvider : QueryTermProvider
+  {
+    public PoseProjectionController poseProjection;
+
+    public override List<QueryTerm> GetTerms()
+    {
+      var skeletonValues = poseProjection.GetPoints();
+      var poseData = skeletonValues.Select(values =>
+      {
+        var coordinates = values.SelectMany(pair => new List<float> { pair.point.x, pair.point.y }).ToList();
+        var weights = values.Select(pair => pair.weight).ToList();
+
+        return new PoseSkeleton(coordinates, weights);
+      });
+
+      var jsonData = "[" + string.Join(",", poseData.Select(JsonUtility.ToJson)) + "]";
+      Debug.Log(jsonData);
+      var base64data = Base64Converter.JsonToBase64(jsonData);
+
+      return new List<QueryTerm> { new(QueryTerm.TypeEnum.SKELETON, base64data, new List<string> { "pose" }) };
+    }
+
+    [Serializable]
+    private record PoseSkeleton
+    {
+      public List<float> coordinates;
+      public List<float> weights;
+
+      public PoseSkeleton(List<float> coordinates, List<float> weights)
+      {
+        this.coordinates = coordinates;
+        this.weights = weights;
+      }
+    }
+  }
+}

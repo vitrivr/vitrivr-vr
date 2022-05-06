@@ -7,22 +7,50 @@ namespace VitrivrVR.Query.Term.Pose
   public class PoseProjectionController : MonoBehaviour
   {
     public GameObject keyPointIndicatorPrefab;
-    public KeyPointController[] keyPoints = { };
     public Material lineMaterial;
     public float lineWidth = 0.001f;
 
-    private List<(KeyPointController point, Transform indicator)> _keyPointIndicators;
-    private List<(Transform indicator0, Transform indicator1, LineRenderer line)> _keyPointConnections;
+    /// <summary>
+    /// Dictionary mapping pose skeleton controllers to the lists of their projection canvas indicators as well as the
+    /// canvas lines connecting them.
+    /// </summary>
+    private readonly Dictionary<PoseSkeletonController, (
+      List<(KeyPointController point, Transform indicator)> indicators,
+      List<(Transform indicator0, Transform indicator1, LineRenderer line
+        )> connections)> _skeletons = new();
 
-    private void Start()
+    public List<List<(Vector2 point, float weight)>> GetPoints()
     {
+      return _skeletons.Keys
+        .Select(skeleton => skeleton.KeyPoints
+          .Select(point =>
+          {
+            var coordinates = PointToCanvasSpace2(point.transform.position);
+            var weight = point.Active && PointWithinBounds(coordinates) ? 1f : 0f;
+
+            return (coordinates, weight);
+          }).ToList()).ToList();
+    }
+
+    public void AddPoseSkeleton(PoseSkeletonController skeleton)
+    {
+      var indicators = CreateIndicators(skeleton);
+      _skeletons.Add(skeleton, indicators);
+    }
+
+    private (List<(KeyPointController, Transform)>, List<(Transform, Transform, LineRenderer)>) CreateIndicators(
+      PoseSkeletonController skeleton)
+    {
+      // Create canvas indicators
       var parent = transform.parent;
-      _keyPointIndicators =
-        keyPoints.Select(point => (point, Instantiate(keyPointIndicatorPrefab, parent).transform)).ToList();
+      List<(KeyPointController point, Transform indicator)> keyPointIndicators =
+        skeleton.KeyPoints.Select(point => (point, Instantiate(keyPointIndicatorPrefab, parent).transform)).ToList();
 
-      var indicatorDictionary = _keyPointIndicators.ToDictionary(pair => pair.point, pair => pair.indicator);
+      // Build temporary dictionary to allow quicker line connection
+      var indicatorDictionary = keyPointIndicators.ToDictionary(pair => pair.point, pair => pair.indicator);
 
-      _keyPointConnections = _keyPointIndicators.SelectMany(pair =>
+      // Create canvas line connections
+      var keyPointConnections = keyPointIndicators.SelectMany(pair =>
       {
         var (point, indicator) = pair;
         return point.connectedPoints.Select(other =>
@@ -42,25 +70,32 @@ namespace VitrivrVR.Query.Term.Pose
           return (indicator, otherIndicator, line);
         });
       }).ToList();
+
+      return (keyPointIndicators, keyPointConnections);
     }
 
     private void Update()
     {
       var t = transform;
-      foreach (var (point, indicator) in _keyPointIndicators)
+      foreach (var (keyPointIndicators, keyPointConnections) in _skeletons.Values)
       {
-        var position = PointToCanvasSpace(point.transform.position);
-        indicator.position = t.TransformPoint(position);
-        indicator.gameObject.SetActive(PointWithinBounds(position));
-      }
+        // Update indicators
+        foreach (var (point, indicator) in keyPointIndicators)
+        {
+          var position = PointToCanvasSpace(point.transform.position);
+          indicator.position = t.TransformPoint(position);
+          indicator.gameObject.SetActive(PointWithinBounds(position));
+        }
 
-      foreach (var (indicator0, indicator1, line) in _keyPointConnections)
-      {
-        var forward = new Vector3(0, 0, indicator0.localPosition.z);
-        line.SetPosition(0, indicator0.position - 1.01f * forward);
-        line.SetPosition(1, indicator1.position - 1.01f * forward);
+        // Update connections
+        foreach (var (indicator0, indicator1, line) in keyPointConnections)
+        {
+          var forward = new Vector3(0, 0, indicator0.localPosition.z);
+          line.SetPosition(0, indicator0.position - 1.01f * forward);
+          line.SetPosition(1, indicator1.position - 1.01f * forward);
 
-        line.gameObject.SetActive(indicator0.gameObject.activeSelf && indicator1.gameObject.activeSelf);
+          line.gameObject.SetActive(indicator0.gameObject.activeSelf && indicator1.gameObject.activeSelf);
+        }
       }
     }
 
@@ -86,21 +121,11 @@ namespace VitrivrVR.Query.Term.Pose
       return canvasPoint;
     }
 
-    private void OnDrawGizmosSelected()
+    private Vector2 PointToCanvasSpace2(Vector3 point)
     {
-      Gizmos.color = Color.green;
+      var canvasPoint = transform.InverseTransformPoint(point);
 
-      var t = transform;
-      foreach (var point in keyPoints)
-      {
-        if (point == null) continue;
-
-        var position = t.InverseTransformPoint(point.transform.position);
-        position.z = 0;
-        if (!PointWithinBounds(position)) continue;
-
-        Gizmos.DrawSphere(t.TransformPoint(position), .002f);
-      }
+      return canvasPoint;
     }
   }
 }

@@ -8,6 +8,8 @@ namespace VitrivrVR.Query.Term.Pose
   {
     public Material lineMaterial;
     public float lineWidth = 0.01f;
+    public Color activeColor = Color.white;
+    public Color inactiveColor = Color.blue;
 
     /// <summary>
     /// Connected points are only those to which lines should be drawn.
@@ -15,7 +17,24 @@ namespace VitrivrVR.Query.Term.Pose
     /// </summary>
     public KeyPointController[] connectedPoints = { };
 
+    public bool Active { get; private set; } = true;
+
     private List<(KeyPointController point, LineRenderer line)> _lines;
+    private Material _material;
+
+    public void OnInteraction(Transform _, bool start)
+    {
+      if (start)
+      {
+        ToggleActive();
+      }
+    }
+
+    private void ToggleActive()
+    {
+      Active = !Active;
+      _material.color = Active ? activeColor : inactiveColor;
+    }
 
     private void Start()
     {
@@ -24,7 +43,7 @@ namespace VitrivrVR.Query.Term.Pose
       {
         var go = new GameObject($"{gameObject.name} - {point.name}", typeof(LineRenderer));
         go.transform.SetParent(transform);
-        
+
         var line = go.GetComponent<LineRenderer>();
         line.material = lineMaterial;
         line.widthMultiplier = lineWidth;
@@ -35,6 +54,8 @@ namespace VitrivrVR.Query.Term.Pose
 
         return (point, line);
       }).ToList();
+
+      _material = GetComponent<Renderer>().material;
     }
 
     private void Update()

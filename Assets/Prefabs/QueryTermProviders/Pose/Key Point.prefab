@@ -101,6 +101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lineMaterial: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   lineWidth: 0.002
+  activeColor: {r: 1, g: 1, b: 1, a: 1}
+  inactiveColor: {r: 0, g: 0.73154783, b: 1, a: 1}
   connectedPoints: []
 --- !u!135 &1877748286212969836
 SphereCollider:
@@ -143,9 +145,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cac8de724f28d4ca9a7f4f946639ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesPointer: 1
   onInteraction:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918544808104166067}
+        m_TargetAssemblyTypeName: VitrivrVR.Query.Term.Pose.KeyPointController, Assembly-CSharp
+        m_MethodName: OnInteraction
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onGrab:
     m_PersistentCalls:
       m_Calls: []
