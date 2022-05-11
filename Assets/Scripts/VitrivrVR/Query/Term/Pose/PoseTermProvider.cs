@@ -14,9 +14,14 @@ namespace VitrivrVR.Query.Term.Pose
     public override List<QueryTerm> GetTerms()
     {
       var skeletonValues = poseProjection.GetPoints();
+      if (skeletonValues.Count == 0)
+      {
+        return new List<QueryTerm>();
+      }
+
       var poseData = skeletonValues.Select(values =>
       {
-        var coordinates = values.SelectMany(pair => new List<float> { pair.point.x, pair.point.y }).ToList();
+        var coordinates = values.SelectMany(pair => new List<float> {pair.point.x, pair.point.y}).ToList();
         var weights = values.Select(pair => pair.weight).ToList();
 
         return new PoseSkeleton(coordinates, weights);
@@ -26,7 +31,7 @@ namespace VitrivrVR.Query.Term.Pose
       Debug.Log(jsonData);
       var base64data = Base64Converter.JsonToBase64(jsonData);
 
-      return new List<QueryTerm> { new(QueryTerm.TypeEnum.SKELETON, base64data, new List<string> { "pose" }) };
+      return new List<QueryTerm> {new(QueryTerm.TypeEnum.SKELETON, base64data, new List<string> {"pose"})};
     }
 
     [Serializable]
