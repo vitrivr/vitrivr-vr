@@ -36,6 +36,23 @@ namespace VitrivrVR.Query.Term.Pose
     {
       var indicators = CreateIndicators(skeleton);
       _skeletons.Add(skeleton, indicators);
+      skeleton.onClose = () => RemovePoseSkeleton(skeleton);
+    }
+
+    public void RemovePoseSkeleton(PoseSkeletonController skeleton)
+    {
+      var (indicators, connections) = _skeletons[skeleton];
+      foreach (var (_, _, line) in connections)
+      {
+        Destroy(line.gameObject);
+      }
+
+      foreach (var (_, indicator) in indicators)
+      {
+        Destroy(indicator.gameObject);
+      }
+
+      _skeletons.Remove(skeleton);
     }
 
     private (List<(KeyPointController, Transform)>, List<(Transform, Transform, LineRenderer)>) CreateIndicators(
@@ -65,7 +82,7 @@ namespace VitrivrVR.Query.Term.Pose
           line.numCapVertices = 2;
           line.numCornerVertices = 2;
 
-          line.SetPositions(new[] { indicator.position, otherIndicator.position });
+          line.SetPositions(new[] {indicator.position, otherIndicator.position});
 
           return (indicator, otherIndicator, line);
         });

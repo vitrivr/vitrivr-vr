@@ -115,10 +115,10 @@ namespace VitrivrVR.Interaction.System
 
     private void RemoveDisabledOrDestroyed()
     {
-      _interactables.Remove(null);
+      _interactables.RemoveWhere(interactable => interactable == null);
       _interactables.RemoveWhere(interactable => !interactable.gameObject.activeInHierarchy);
-      _grabbed?.Remove(null);
-      _interacting?.Remove(null);
+      _grabbed?.RemoveWhere(interactable => interactable == null);
+      _interacting?.RemoveWhere(interactable => interactable == null);
     }
 
     private void UpdateUIPointer()
