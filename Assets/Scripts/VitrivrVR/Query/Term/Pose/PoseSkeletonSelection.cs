@@ -10,12 +10,10 @@ namespace VitrivrVR.Query.Term.Pose
 
     private bool _grabbed;
     private Vector3 _offset;
-    private Quaternion _rotationOffset;
 
     private void Start()
     {
       _offset = projectionSurfaceRoot.InverseTransformPoint(transform.position);
-      _rotationOffset = Quaternion.Inverse(projectionSurfaceRoot.rotation);
     }
 
     private void Update()
@@ -28,13 +26,13 @@ namespace VitrivrVR.Query.Term.Pose
       // Reset position relative to combined query term provider
       var t = transform;
       t.position = projectionSurfaceRoot.TransformPoint(_offset);
-      t.rotation = projectionSurfaceRoot.rotation * _rotationOffset;
+      t.rotation = projectionSurfaceRoot.rotation;
     }
 
     private void CreatePoseSkeleton()
     {
       var t = transform;
-      var poseSkeleton = Instantiate(poseSkeletonPrefab, t.position, t.rotation);
+      var poseSkeleton = Instantiate(poseSkeletonPrefab, t.position, t.rotation, t.parent);
       projectionSurface.AddPoseSkeleton(poseSkeleton);
     }
 
