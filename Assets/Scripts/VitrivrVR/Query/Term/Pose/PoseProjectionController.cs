@@ -18,6 +18,10 @@ namespace VitrivrVR.Query.Term.Pose
       List<(KeyPointController point, Transform indicator)> indicators,
       List<(Transform indicator0, Transform indicator1, LineRenderer line
         )> connections)> _skeletons = new();
+    
+    private static readonly float NearPlane = .5f / Mathf.Tan(Mathf.Deg2Rad* 30);
+
+    private Matrix4x4 _projectionMatrix = GetProjectionMatrix();
 
     public List<List<(Vector2 point, float weight)>> GetPoints()
     {
@@ -53,6 +57,14 @@ namespace VitrivrVR.Query.Term.Pose
       }
 
       _skeletons.Remove(skeleton);
+    }
+
+    private static Matrix4x4 GetProjectionMatrix()
+    {
+      var matrix = Matrix4x4.Perspective(60, 1, NearPlane, 100);
+      matrix.SetColumn(2, matrix.GetColumn(2) * -1);
+
+      return matrix;
     }
 
     private (List<(KeyPointController, Transform)>, List<(Transform, Transform, LineRenderer)>) CreateIndicators(
@@ -99,17 +111,16 @@ namespace VitrivrVR.Query.Term.Pose
         // Update indicators
         foreach (var (point, indicator) in keyPointIndicators)
         {
-          var position = PointToCanvasSpace(point.transform.position);
-          indicator.position = t.TransformPoint(position);
+          var position = PointToCanvasCoordinates(point.transform.position);
+          indicator.position = t.TransformPoint(new Vector3(position.x * 0.5f, position.y * 0.5f, -0.01f));
           indicator.gameObject.SetActive(PointWithinBounds(position));
         }
 
         // Update connections
         foreach (var (indicator0, indicator1, line) in keyPointConnections)
         {
-          var forward = new Vector3(0, 0, indicator0.localPosition.z);
-          line.SetPosition(0, indicator0.position - 1.01f * forward);
-          line.SetPosition(1, indicator1.position - 1.01f * forward);
+          line.SetPosition(0, indicator0.position);
+          line.SetPosition(1, indicator1.position);
 
           line.gameObject.SetActive(indicator0.gameObject.activeSelf && indicator1.gameObject.activeSelf);
         }
@@ -125,17 +136,16 @@ namespace VitrivrVR.Query.Term.Pose
     /// <returns>True if point is within bounds of the projection surface.</returns>
     private static bool PointWithinBounds(Vector3 point)
     {
-      const float xBound = .5f;
-      const float yBound = .5f;
-      return point.x is > -xBound and < xBound && point.y is > -yBound and < yBound;
+      const float xBound = 1f;
+      const float yBound = 1f;
+      return point.z >= -1 && point.x is > -xBound and < xBound && point.y is > -yBound and < yBound;
     }
 
-    private Vector3 PointToCanvasSpace(Vector3 point)
+    private Vector3 PointToCanvasCoordinates(Vector3 point)
     {
-      var canvasPoint = transform.InverseTransformPoint(point);
-      canvasPoint.z = -0.001f; // Not set to 0 to prevent z-fighting
+      var canvasPoint = transform.InverseTransformPoint(point) + Vector3.forward * NearPlane;
 
-      return canvasPoint;
+      return _projectionMatrix.MultiplyPoint(canvasPoint);
     }
 
     private Vector2 PointToCanvasSpace2(Vector3 point)

@@ -28,10 +28,9 @@ namespace VitrivrVR.Query.Term.Pose
       });
 
       var jsonData = "[" + string.Join(",", poseData.Select(JsonUtility.ToJson)) + "]";
-      Debug.Log(jsonData);
       var base64data = Base64Converter.JsonToBase64(jsonData);
 
-      return new List<QueryTerm> {new(QueryTerm.TypeEnum.SKELETON, base64data, new List<string> {"pose"})};
+      return new List<QueryTerm> {new(QueryTerm.TypeEnum.SKELETON, base64data, new List<string> {"skeletonpose"})};
     }
 
     [Serializable]
