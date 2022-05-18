@@ -21,7 +21,8 @@ namespace VitrivrVR.Query.Term.Pose
 
       var poseData = skeletonValues.Select(values =>
       {
-        var coordinates = values.SelectMany(pair => new List<float> {pair.point.x, pair.point.y}).ToList();
+        // Flip y coordinates because feature internally origin is top left and these coordinates are bottom left
+        var coordinates = values.SelectMany(pair => new List<float> {pair.point.x, -pair.point.y}).ToList();
         var weights = values.Select(pair => pair.weight).ToList();
 
         return new PoseSkeleton(coordinates, weights);
