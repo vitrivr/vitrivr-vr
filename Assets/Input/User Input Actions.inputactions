@@ -990,8 +990,19 @@
                 },
                 {
                     "name": "",
-                    "id": "7416de9a-a309-482c-83a6-0ad1839c3924",
-                    "path": "<XRController>/pointerPosition",
+                    "id": "19beb5b8-cddd-4eea-ae9b-78605c5f1b25",
+                    "path": "<XRController>{LeftHand}/pointerPosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "af496fd1-033a-415e-a6a0-83a12a75e36a",
+                    "path": "<XRController>{RightHand}/pointerPosition",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

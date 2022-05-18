@@ -2438,7 +2438,10 @@ MonoBehaviour:
     m_Flags: 0
   uiClickAction: {fileID: 5762402034602797191, guid: fa1ea27f8e475394eb724e13fab25d5b,
     type: 3}
-  bindingIndex: 3
+  clickBindingIndex: 3
+  uiPointAction: {fileID: -7373596065324864924, guid: fa1ea27f8e475394eb724e13fab25d5b,
+    type: 3}
+  pointBindingIndex: 0
   uiLine: {fileID: 124742494}
 --- !u!1 &1686424232
 GameObject:
@@ -2534,7 +2537,10 @@ MonoBehaviour:
     m_Flags: 0
   uiClickAction: {fileID: 5762402034602797191, guid: fa1ea27f8e475394eb724e13fab25d5b,
     type: 3}
-  bindingIndex: 4
+  clickBindingIndex: 4
+  uiPointAction: {fileID: -7373596065324864924, guid: fa1ea27f8e475394eb724e13fab25d5b,
+    type: 3}
+  pointBindingIndex: 1
   uiLine: {fileID: 668206678}
 --- !u!1 &1743256057
 GameObject:

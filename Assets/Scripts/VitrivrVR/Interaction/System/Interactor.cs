@@ -11,7 +11,9 @@ namespace VitrivrVR.Interaction.System
     public InputAction grab;
 
     public InputActionReference uiClickAction;
-    public int bindingIndex;
+    public int clickBindingIndex;
+    public InputActionReference uiPointAction;
+    public int pointBindingIndex;
     public GameObject uiLine;
 
     private readonly HashSet<Interactable> _interactables = new();
@@ -128,12 +130,14 @@ namespace VitrivrVR.Interaction.System
       switch (shouldBeDisabled)
       {
         case true when _uiPointerActive:
-          uiClickAction.action.ApplyBindingOverride(bindingIndex, string.Empty);
+          uiClickAction.action.ApplyBindingOverride(clickBindingIndex, string.Empty);
+          uiPointAction.action.ApplyBindingOverride(pointBindingIndex, string.Empty);
           _uiPointerActive = false;
           uiLine.SetActive(false);
           break;
         case false when !_uiPointerActive:
-          uiClickAction.action.RemoveBindingOverride(bindingIndex);
+          uiClickAction.action.RemoveBindingOverride(clickBindingIndex);
+          uiPointAction.action.RemoveBindingOverride(pointBindingIndex);
           _uiPointerActive = true;
           uiLine.SetActive(true);
           break;
