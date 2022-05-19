@@ -32,7 +32,7 @@ namespace VitrivrVR.Query
 
     public static QueryController Instance { get; private set; }
 
-    public QueryTermProvider defaultQueryTermProvider;
+    public QueryTermManager defaultQueryTermManager;
     public GameObject timer;
     public QueryDisplay queryDisplay;
 
@@ -73,14 +73,38 @@ namespace VitrivrVR.Query
 
     public void RunQuery()
     {
-      RunQuery(defaultQueryTermProvider);
+      RunQuery(defaultQueryTermManager);
     }
 
 
-    public void RunQuery(QueryTermProvider queryTermProvider)
+    public void RunQuery(QueryTermManager queryTermManager)
     {
-      var queryTerms = queryTermProvider.GetTerms();
-      RunQuery(queryTerms);
+      var queryTerms = queryTermManager.GetTerms();
+
+      switch (queryTerms.Count)
+      {
+        case 0:
+          NotificationController.Notify("Cannot run query: No terms specified.");
+          return;
+        // No temporal context specified
+        case 1:
+        {
+          var stages = queryTerms.First();
+          // No stages specified
+          if (stages.Count == 1)
+          {
+            RunQuery(stages.First());
+            return;
+          }
+        
+          // With stages
+          RunQuery(stages);
+          return;
+        }
+        default:
+          RunQuery(queryTerms);
+          break;
+      }
     }
 
     public async void RunQuery(List<QueryTerm> queryTerms)
@@ -122,6 +146,16 @@ namespace VitrivrVR.Query
       if (_localQueryGuid != localGuid) return;
       timer.transform.localRotation = Quaternion.identity;
       timer.SetActive(false);
+    }
+
+    public async void RunQuery(List<List<QueryTerm>> stages)
+    {
+      Debug.LogError("Not yet implemented!");
+    }
+    
+    public async void RunQuery(List<List<List<QueryTerm>>> stages)
+    {
+      Debug.LogError("Not yet implemented!");
     }
 
     public void SelectQuery(QueryDisplay display)
