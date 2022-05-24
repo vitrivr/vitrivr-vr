@@ -17,7 +17,7 @@ namespace VitrivrVR.UI
       var currentQuery = QueryController.Instance.CurrentQuery;
       var results = currentQuery == -1
         ? "-----"
-        : QueryController.Instance.queries[currentQuery].display.NumberOfResults.ToString();
+        : QueryController.Instance.queries[currentQuery].NumberOfResults.ToString();
 
       statisticsTable.table = new[,]
       {
@@ -44,7 +44,7 @@ namespace VitrivrVR.UI
     {
       var results = queryIndex == -1
         ? "-----"
-        : QueryController.Instance.queries[queryIndex].display.NumberOfResults.ToString();
+        : QueryController.Instance.queries[queryIndex].NumberOfResults.ToString();
 
       statisticsTable.SetCell(0, 1, results);
     }

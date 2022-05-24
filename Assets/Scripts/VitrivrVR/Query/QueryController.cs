@@ -36,7 +36,7 @@ namespace VitrivrVR.Query
     public GameObject timer;
     public QueryDisplay queryDisplay;
 
-    public readonly List<(SimilarityQuery query, QueryDisplay display)> queries = new();
+    public readonly List<QueryDisplay> queries = new();
 
     public int CurrentQuery { get; private set; } = -1;
 
@@ -101,6 +101,7 @@ namespace VitrivrVR.Query
           RunQuery(stages);
           return;
         }
+        // With temporal context (more than 1 temporal container)
         default:
           RunQuery(queryTerms);
           break;
@@ -139,7 +140,7 @@ namespace VitrivrVR.Query
         return;
       }
 
-      InstantiateQueryDisplay(query, queryData);
+      InstantiateQueryDisplay(queryData);
 
       // Query display already created and initialized, but if this is no longer the newest query, do not disable query
       // indicator
@@ -150,17 +151,47 @@ namespace VitrivrVR.Query
 
     public async void RunQuery(List<List<QueryTerm>> stages)
     {
-      Debug.LogError("Not yet implemented!");
+      var localGuid = Guid.NewGuid();
+      _localQueryGuid = localGuid;
+
+      var config = ConfigManager.Config;
+      var maxResults = config.maxResults;
+      var prefetch = config.maxPrefetch;
+
+      var query = QueryBuilder.BuildStagedQuery(stages);
+      // TODO: Move to QueryBuilder
+      query.Config = new QueryConfig(resultsPerModule: maxResults);
+
+      if (!timer.activeSelf)
+      {
+        timer.SetActive(true);
+      }
+
+      var queryData = await CineastWrapper.ExecuteQuery(query, maxResults, prefetch);
+
+      if (_localQueryGuid != localGuid)
+      {
+        // A new query has been started while this one was still busy, discard results
+        return;
+      }
+
+      InstantiateQueryDisplay(queryData);
+
+      // Query display already created and initialized, but if this is no longer the newest query, do not disable query
+      // indicator
+      if (_localQueryGuid != localGuid) return;
+      timer.transform.localRotation = Quaternion.identity;
+      timer.SetActive(false);
     }
     
-    public async void RunQuery(List<List<List<QueryTerm>>> stages)
+    public async void RunQuery(List<List<List<QueryTerm>>> temporalTerms)
     {
       Debug.LogError("Not yet implemented!");
     }
 
     public void SelectQuery(QueryDisplay display)
     {
-      var index = queries.Select(pair => pair.display).ToList().IndexOf(display);
+      var index = queries.IndexOf(display);
       SelectQuery(index);
     }
 
@@ -189,7 +220,7 @@ namespace VitrivrVR.Query
     /// </summary>
     public void RemoveQuery(QueryDisplay display)
     {
-      var index = queries.Select(pair => pair.display).ToList().IndexOf(display);
+      var index = queries.IndexOf(display);
       RemoveQuery(index);
     }
 
@@ -215,7 +246,7 @@ namespace VitrivrVR.Query
       }
 
       queryRemovedEvent.Invoke(index);
-      Destroy(queries[index].display.gameObject);
+      Destroy(queries[index].gameObject);
       queries.RemoveAt(index);
       DresClientManager.LogInteraction("queryManagement", $"delete {index}");
     }
@@ -248,22 +279,22 @@ namespace VitrivrVR.Query
         return;
       }
 
-      var (query, display) = queries[CurrentQuery];
+      var display = queries[CurrentQuery];
       if (display.GetType() == queryDisplay.GetType())
       {
         NotificationController.Notify($"Current query display already of type {display.GetType().Name}!");
         return;
       }
 
-      InstantiateQueryDisplay(query, display.QueryData);
+      InstantiateQueryDisplay(display.QueryData);
     }
 
     private void SetQueryActive(int index, bool active)
     {
-      queries[index].display.gameObject.SetActive(active);
+      queries[index].gameObject.SetActive(active);
     }
 
-    private void InstantiateQueryDisplay(SimilarityQuery query, QueryResponse queryData)
+    private void InstantiateQueryDisplay(QueryResponse queryData)
     {
       if (CurrentQuery != -1)
       {
@@ -274,7 +305,7 @@ namespace VitrivrVR.Query
 
       display.Initialize(queryData);
 
-      queries.Add((query, display));
+      queries.Add(display);
       var queryIndex = queries.Count - 1;
       queryAddedEvent.Invoke(queryIndex);
       queryFocusEvent.Invoke(CurrentQuery, queryIndex);
