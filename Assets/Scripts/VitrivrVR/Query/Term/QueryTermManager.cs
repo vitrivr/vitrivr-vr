@@ -11,7 +11,13 @@ namespace VitrivrVR.Query.Term
   /// </summary>
   public class QueryTermManager : MonoBehaviour
   {
-    private List<List<List<QueryTermProvider>>> _queryTermProviders = new();
+    public float representationSpacing = 0.05f;
+    public float stageSpacing = 0.1f;
+    public float temporalSpacing = 0.2f;
+    public QueryTermProviderRepresentation queryTermProviderRepresentationPrefab;
+
+    private readonly List<List<List<(QueryTermProvider provider, QueryTermProviderRepresentation representation)>>>
+      _queryTermProviders = new();
 
     /// <summary>
     /// Retrieves the <see cref="QueryTerm"/>s sorted into stages and temporal contexts.
@@ -22,7 +28,7 @@ namespace VitrivrVR.Query.Term
       var terms = _queryTermProviders
         .Select(temporal => temporal
           .Select(stages => stages
-            .SelectMany(termProvider => termProvider.GetTerms()).ToList()
+            .SelectMany(tuple => tuple.provider.GetTerms()).ToList()
           ).ToList()
         ).ToList();
 
@@ -33,22 +39,32 @@ namespace VitrivrVR.Query.Term
 
     public void Add(QueryTermProvider termProvider)
     {
+      var representation = Instantiate(queryTermProviderRepresentationPrefab);
+      representation.Initialize(this, termProvider, Vector3.up * 0.1f);
+
       // No temporal contexts yet
       if (_queryTermProviders.Count == 0)
       {
-        _queryTermProviders.Add(new List<List<QueryTermProvider>> {new() {termProvider}});
+        _queryTermProviders.Add(new List<List<(QueryTermProvider, QueryTermProviderRepresentation)>>
+          {new() {(termProvider, representation)}});
         return;
       }
 
       // A temporal context cannot exist without at least a single stage, so we can safely assume that this exists
-      _queryTermProviders.Last().Last().Add(termProvider);
+      _queryTermProviders.Last().Last().Add((termProvider, representation));
+      UpdateOffsets();
     }
 
     public void Remove(QueryTermProvider termProvider)
     {
       foreach (var stage in _queryTermProviders.SelectMany(temporal => temporal))
       {
-        stage.Remove(termProvider);
+        stage.RemoveAll(tuple =>
+        {
+          if (tuple.provider != termProvider && tuple.provider != null) return false;
+          Destroy(tuple.representation.gameObject);
+          return true;
+        });
       }
 
       // Remove empty stages and temporal contexts
@@ -58,6 +74,38 @@ namespace VitrivrVR.Query.Term
       }
 
       _queryTermProviders.RemoveAll(temporal => temporal.Count == 0);
+      UpdateOffsets();
+    }
+
+    private void UpdateOffsets()
+    {
+      // Calculate total width
+      var width = (_queryTermProviders.Count - 1) * temporalSpacing + _queryTermProviders.Sum(
+        temporal => (temporal.Count - 1) * stageSpacing + temporal.Sum(
+          stage => (stage.Count - 1) * representationSpacing
+        )
+      );
+
+      var halfWidth = width / 2;
+
+      // Position representations
+      var x = 0f;
+
+      foreach (var temporal in _queryTermProviders)
+      {
+        foreach (var stage in temporal)
+        {
+          foreach (var (_, representation) in stage)
+          {
+            representation.UpdateOffset(x - halfWidth);
+            x += representationSpacing;
+          }
+
+          x += stageSpacing - representationSpacing;
+        }
+
+        x += temporalSpacing - stageSpacing;
+      }
     }
   }
 }

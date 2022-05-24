@@ -88,23 +88,29 @@ namespace VitrivrVR.Interaction.System
       }
     }
 
+    private static bool GetInteractable(Collider collider, out Interactable interactable)
+    {
+      // Check collider for interactable, then check attached rigidbody
+      return collider.TryGetComponent(out interactable) || collider.attachedRigidbody.TryGetComponent(out interactable);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-      if (!other.TryGetComponent<Interactable>(out var interactable)) return;
+      if (!GetInteractable(other, out var interactable)) return;
 
-      _interactables.Add(interactable);
+      if (!_interactables.Add(interactable)) return;
+
       interactable.OnHoverEnter(transform);
-
       UpdateUIPointer();
     }
 
     private void OnTriggerExit(Collider other)
     {
-      if (!other.TryGetComponent<Interactable>(out var interactable)) return;
+      if (!GetInteractable(other, out var interactable)) return;
 
-      _interactables.Remove(interactable);
+      if (!_interactables.Remove(interactable)) return;
+
       interactable.OnHoverExit(transform);
-
       UpdateUIPointer();
     }
 
