@@ -5,6 +5,7 @@ using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Query;
 using VitrivrVR.Query.Display;
@@ -118,7 +119,7 @@ namespace VitrivrVR.UI
       textButton.colors = colors;
 
       var tmp = textButton.GetComponentInChildren<TextMeshProUGUI>();
-      tmp.text = $"[{display.GetType().Name}] {QueryToString(display.QueryData.Query)}";
+      tmp.text = $"[{display.GetType().Name}] {QueryToString(display.QueryData)}";
       var textRect = textButton.GetComponent<RectTransform>();
       textRect.sizeDelta = new Vector2(tmp.GetPreferredValues().x + padding, textRect.sizeDelta.y);
       textButton.onClick.AddListener(() => QueryController.Instance.SelectQuery(display));
@@ -149,11 +150,22 @@ namespace VitrivrVR.UI
       button.colors = colors;
     }
 
-    private static string QueryToString(SimilarityQuery query)
+    private static string QueryToString(QueryResponse query)
     {
       var stringBuilder = new StringBuilder();
       stringBuilder.Append("{");
-      stringBuilder.Append(string.Join(", ", query.Terms.Select(TermToString)));
+      if (query.Query != null)
+      {
+        stringBuilder.Append(string.Join(", ", query.Query.Terms.Select(TermToString)));
+      }
+      else if (query.StagedQuery != null)
+      {
+        stringBuilder.Append("{");
+        stringBuilder.Append(string.Join("}, {",
+          query.StagedQuery.Stages.Select(stage => string.Join(", ", stage.Terms.Select(TermToString)))));
+        stringBuilder.Append("}");
+      }
+
       stringBuilder.Append("}");
 
       return stringBuilder.ToString();

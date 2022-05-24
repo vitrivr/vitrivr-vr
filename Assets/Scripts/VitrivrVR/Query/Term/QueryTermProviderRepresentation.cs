@@ -54,6 +54,16 @@ namespace VitrivrVR.Query.Term
 
       _interactor = start ? interactor : null;
       _grabbed = start;
+
+      if (start)
+      {
+        _termManager.StartReordering();
+      }
+      else
+      {
+        _termManager.EndReordering();
+        _termManager.Reorganize(this, _termManager.transform.InverseTransformPoint(transform.position).x);
+      }
     }
 
     #endregion
