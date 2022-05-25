@@ -35,6 +35,7 @@ namespace VitrivrVR.Query
     public QueryTermManager defaultQueryTermManager;
     public GameObject timer;
     public QueryDisplay queryDisplay;
+    public TemporalQueryDisplay temporalQueryDisplay;
 
     public readonly List<QueryDisplay> queries = new();
 
@@ -186,7 +187,37 @@ namespace VitrivrVR.Query
     
     public async void RunQuery(List<List<List<QueryTerm>>> temporalTerms)
     {
-      Debug.LogError("Not yet implemented!");
+      var localGuid = Guid.NewGuid();
+      _localQueryGuid = localGuid;
+
+      var config = ConfigManager.Config;
+      var maxResults = config.maxResults;
+      var prefetch = config.maxPrefetch;
+
+      var query = QueryBuilder.BuildTemporalQuery(temporalTerms);
+      // TODO: Move to QueryBuilder
+      query.Config = new TemporalQueryConfig(maxResults: maxResults);
+
+      if (!timer.activeSelf)
+      {
+        timer.SetActive(true);
+      }
+
+      var queryData = await CineastWrapper.ExecuteQuery(query, prefetch);
+
+      if (_localQueryGuid != localGuid)
+      {
+        // A new query has been started while this one was still busy, discard results
+        return;
+      }
+
+      InstantiateQueryDisplay(queryData);
+
+      // Query display already created and initialized, but if this is no longer the newest query, do not disable query
+      // indicator
+      if (_localQueryGuid != localGuid) return;
+      timer.transform.localRotation = Quaternion.identity;
+      timer.SetActive(false);
     }
 
     public void SelectQuery(QueryDisplay display)
@@ -302,6 +333,24 @@ namespace VitrivrVR.Query
       }
 
       var display = Instantiate(queryDisplay);
+
+      display.Initialize(queryData);
+
+      queries.Add(display);
+      var queryIndex = queries.Count - 1;
+      queryAddedEvent.Invoke(queryIndex);
+      queryFocusEvent.Invoke(CurrentQuery, queryIndex);
+      CurrentQuery = queryIndex;
+    }
+    
+    private void InstantiateQueryDisplay(TemporalQueryResponse queryData)
+    {
+      if (CurrentQuery != -1)
+      {
+        ClearQuery();
+      }
+
+      var display = Instantiate(temporalQueryDisplay);
 
       display.Initialize(queryData);
 

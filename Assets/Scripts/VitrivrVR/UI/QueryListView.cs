@@ -1,12 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Vitrivr.UnityInterface.CineastApi.Model.Data;
-using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Query;
 using VitrivrVR.Query.Display;
 
@@ -119,7 +114,7 @@ namespace VitrivrVR.UI
       textButton.colors = colors;
 
       var tmp = textButton.GetComponentInChildren<TextMeshProUGUI>();
-      tmp.text = $"[{display.GetType().Name}] {QueryToString(display.QueryData)}";
+      tmp.text = $"[{display.GetType().Name}] {display.GetQueryStringRepresentation()}";
       var textRect = textButton.GetComponent<RectTransform>();
       textRect.sizeDelta = new Vector2(tmp.GetPreferredValues().x + padding, textRect.sizeDelta.y);
       textButton.onClick.AddListener(() => QueryController.Instance.SelectQuery(display));
@@ -148,46 +143,6 @@ namespace VitrivrVR.UI
       var colors = button.colors;
       colors.normalColor = new Color(1f, .5f, .3f);
       button.colors = colors;
-    }
-
-    private static string QueryToString(QueryResponse query)
-    {
-      var stringBuilder = new StringBuilder();
-      stringBuilder.Append("{");
-      if (query.Query != null)
-      {
-        stringBuilder.Append(string.Join(", ", query.Query.Terms.Select(TermToString)));
-      }
-      else if (query.StagedQuery != null)
-      {
-        stringBuilder.Append("{");
-        stringBuilder.Append(string.Join("}, {",
-          query.StagedQuery.Stages.Select(stage => string.Join(", ", stage.Terms.Select(TermToString)))));
-        stringBuilder.Append("}");
-      }
-
-      stringBuilder.Append("}");
-
-      return stringBuilder.ToString();
-    }
-
-    private static string TermToString(QueryTerm term)
-    {
-      var categories = string.Join(", ", term.Categories);
-      var baseString = $"{term.Type} ({categories})";
-      switch (term.Type)
-      {
-        case QueryTerm.TypeEnum.IMAGE:
-          return baseString;
-        case QueryTerm.TypeEnum.BOOLEAN:
-        case QueryTerm.TypeEnum.TAG:
-        {
-          var data = Base64Converter.StringFromBase64(term.Data[Base64Converter.JsonPrefix.Length..]);
-          return $"{baseString}: {data}";
-        }
-        default:
-          return $"{baseString}: {term.Data}";
-      }
     }
   }
 }

@@ -1515,6 +1515,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
         type: 3}
+      propertyPath: temporalQueryDisplay
+      value: 
+      objectReference: {fileID: 4530341693124885058, guid: c20bd8391b36b5c45b1f3f2049b05ab7,
+        type: 3}
+    - target: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
+        type: 3}
       propertyPath: defaultQueryTermManager
       value: 
       objectReference: {fileID: 6179780}
