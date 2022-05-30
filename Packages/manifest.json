@@ -13,7 +13,7 @@
     "com.unity.xr.openxr": "1.3.1",
     "deepspeech": "https://github.com/Spiess/deep-speech-upm.git",
     "org.vitrivr.unityinterface.cineastapi": "https://github.com/vitrivr/CineastUnityInterface.git#feature/staged-temporal-query",
-    "org.vitrivr.unityinterface.dresapi": "https://github.com/dres-dev/UnityClient.git#v1.0.0",
+    "dev.dres.unityclient": "https://github.com/dres-dev/UnityClient.git#dev",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
