@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using VitrivrVR.Interaction.System;
+using VitrivrVR.Util;
 
 namespace VitrivrVR.Query.Term
 {
@@ -10,6 +11,7 @@ namespace VitrivrVR.Query.Term
   public class QueryTermProviderRepresentation : EventInteractable
   {
     public TMP_Text text;
+    public ConnectionLineController connectionLine;
 
     private QueryTermManager _termManager;
 
@@ -18,6 +20,7 @@ namespace VitrivrVR.Query.Term
       text.text = provider.name;
       _offset = offset;
       _termManager = termManager;
+      connectionLine.end = provider.transform;
     }
 
     public void UpdateOffset(float offsetX)
