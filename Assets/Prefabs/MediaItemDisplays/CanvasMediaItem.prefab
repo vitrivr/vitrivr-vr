@@ -269,6 +269,14 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Submit
       m_Flags: 0
+    - m_Name: 
+      m_Id: 320f63da-220b-4960-9b6b-54023576bb71
+      m_Path: <XRController>/secondaryButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Submit
+      m_Flags: 0
     m_Flags: 0
 --- !u!114 &6327175653774180933
 MonoBehaviour:
