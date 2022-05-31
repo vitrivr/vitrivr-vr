@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee990e9c48b646cba6bfaafad3fa59b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mediaItemDisplay: {fileID: 8930343491133665097, guid: 3b0ff72b8eab047e6b730386cf8ce7b7,
+  temporalMediaItemDisplay: {fileID: 1025600313619751934, guid: e8db207bfa6abf947a8a1bed02eb0e13,
     type: 3}
   rows: 4
   rotationSpeed: 90

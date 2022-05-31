@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 
 namespace VitrivrVR.Media.Display

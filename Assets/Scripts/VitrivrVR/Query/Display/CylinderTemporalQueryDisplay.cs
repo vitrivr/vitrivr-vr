@@ -15,7 +15,7 @@ namespace VitrivrVR.Query.Display
 {
   public class CylinderTemporalQueryDisplay : TemporalQueryDisplay
   {
-    public MediaItemDisplay mediaItemDisplay;
+    public TemporalMediaItemDisplay temporalMediaItemDisplay;
     public int rows = 4;
     public float rotationSpeed = 90;
     public float distance = 1;
@@ -26,7 +26,7 @@ namespace VitrivrVR.Query.Display
 
     public override int NumberOfResults => _nResults;
 
-    private readonly List<MediaItemDisplay> _mediaDisplays = new();
+    private readonly List<TemporalMediaItemDisplay> _mediaDisplays = new();
 
     private readonly Queue<TemporalObject> _instantiationQueue = new();
 
@@ -142,7 +142,7 @@ namespace VitrivrVR.Query.Display
       var index = _mediaDisplays.Count;
       var (position, rotation) = GetResultLocalPosRot(index);
 
-      var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, Quaternion.identity, transform);
+      var itemDisplay = Instantiate(temporalMediaItemDisplay, Vector3.zero, Quaternion.identity, transform);
 
       var transform2 = itemDisplay.transform;
       transform2.localPosition = position;
@@ -153,10 +153,7 @@ namespace VitrivrVR.Query.Display
       // Add to media displays list
       _mediaDisplays.Add(itemDisplay);
 
-      var segment = SegmentRegistry.GetSegment(temporalObject.Segments.First());
-      var scoredSegment = new ScoredSegment(segment, temporalObject.Score);
-
-      itemDisplay.Initialize(scoredSegment);
+      itemDisplay.Initialize(temporalObject);
 
       itemDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
     }
