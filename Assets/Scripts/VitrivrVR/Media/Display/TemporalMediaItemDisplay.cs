@@ -12,6 +12,7 @@ namespace VitrivrVR.Media.Display
   public class TemporalMediaItemDisplay : MonoBehaviour
   {
     public MediaItemDisplay mediaItemDisplay;
+    public Transform displayParent;
 
     private const float DisplayDistance = 0.3f;
 
@@ -21,7 +22,7 @@ namespace VitrivrVR.Media.Display
 
       foreach (var (segmentId, i) in temporalObject.Segments.Select((sid, i) => (sid, i)))
       {
-        var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, rotation, transform);
+        var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, rotation, displayParent);
 
         var it = itemDisplay.transform;
         it.localPosition = Vector3.forward * (DisplayDistance * i);
@@ -31,6 +32,16 @@ namespace VitrivrVR.Media.Display
 
         itemDisplay.Initialize(scoredSegment);
       }
+
+      if (!displayParent.TryGetComponent<BoxCollider>(out var boxCollider)) return;
+      var size = boxCollider.size;
+      var center = boxCollider.center;
+
+      size.z = temporalObject.Segments.Count * DisplayDistance;
+      center.z = (size.z - DisplayDistance) / 2;
+
+      boxCollider.size = size;
+      boxCollider.center = center;
     }
   }
 }
