@@ -371,6 +371,7 @@ GameObject:
   - component: {fileID: 5480677324102640979}
   - component: {fileID: 3828441986592527859}
   - component: {fileID: 8478847957752751470}
+  - component: {fileID: 4689663350007189706}
   - component: {fileID: 6994598118241067613}
   - component: {fileID: 1478062840836997175}
   - component: {fileID: 2435478221584938231}
@@ -463,6 +464,19 @@ MonoBehaviour:
     type: 3}
   lineMaterial: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   lineWidth: 0.001
+--- !u!114 &4689663350007189706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3259711634237875116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73ad0edcc8a24775aa5923880c8f4052, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poseProjection: {fileID: 8478847957752751470}
 --- !u!65 &6994598118241067613
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -792,7 +806,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 501878290218203882}
-  - component: {fileID: 6606892614530583981}
   - component: {fileID: 16352891039840631}
   m_Layer: 0
   m_Name: Pose Term Provider
@@ -818,19 +831,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6606892614530583981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7095743105336953506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73ad0edcc8a24775aa5923880c8f4052, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  poseProjection: {fileID: 8478847957752751470}
 --- !u!114 &16352891039840631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -843,7 +843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b4902c0a6f1e084bb801ff0ca990dd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  queryTermProvider: {fileID: 6606892614530583981}
+  queryTermProvider: {fileID: 4689663350007189706}
 --- !u!1001 &1669961408762191046
 PrefabInstance:
   m_ObjectHideFlags: 0
