@@ -20,5 +20,10 @@ namespace VitrivrVR.Query.Term
           .ToList()
         : new List<QueryTerm>();
     }
+
+    public override string GetTypeName()
+    {
+      return "Map";
+    }
   }
 }

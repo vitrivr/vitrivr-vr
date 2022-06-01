@@ -15,5 +15,10 @@ namespace VitrivrVR.Query.Term
       }
       return terms;
     }
+
+    public override string GetTypeName()
+    {
+      return "Combined";
+    }
   }
 }

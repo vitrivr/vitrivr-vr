@@ -11,9 +11,21 @@ namespace VitrivrVR.Query.Term
   /// </summary>
   public class QueryTermManager : MonoBehaviour
   {
+    /// <summary>
+    /// Space between representations within a stage.
+    /// </summary>
     public float representationSpacing = 0.05f;
+
+    /// <summary>
+    /// Space between stages within a temporal context.
+    /// </summary>
     public float stageSpacing = 0.1f;
+
+    /// <summary>
+    /// Space between temporal contexts.
+    /// </summary>
     public float temporalSpacing = 0.2f;
+
     public QueryTermProviderRepresentation queryTermProviderRepresentationPrefab;
     public Transform newTemporalIndicator0, newTemporalIndicator1;
     public Transform newStageIndicator0, newStageIndicator1;
@@ -47,7 +59,8 @@ namespace VitrivrVR.Query.Term
     public void Add(QueryTermProvider termProvider)
     {
       var representation = Instantiate(queryTermProviderRepresentationPrefab);
-      representation.Initialize(this, termProvider, Vector3.up * 0.1f);
+      var (providerName, n) = GetNewName(termProvider);
+      representation.Initialize(this, termProvider, Vector3.up * 0.1f, providerName, n);
 
       // No temporal contexts yet
       if (_queryTermProviders.Count == 0)
@@ -153,6 +166,21 @@ namespace VitrivrVR.Query.Term
       UpdateOffsets();
     }
 
+    private (string, int) GetNewName(QueryTermProvider termProvider)
+    {
+      var baseName = termProvider.GetTypeName();
+
+      var maxN = _queryTermProviders.SelectMany(
+          temporal => temporal.SelectMany(
+            stage => stage.Select(pair => pair.representation)
+          )
+        ).Where(rep => rep.TypeName.Equals(baseName))
+        .Select(rep => rep.N)
+        .DefaultIfEmpty().Max();
+
+      return (baseName, maxN + 1);
+    }
+
     private (int, int) GetStageIndex(QueryTermProviderRepresentation representation)
     {
       for (var i = 0; i < _queryTermProviders.Count; i++)
@@ -250,6 +278,9 @@ namespace VitrivrVR.Query.Term
       );
     }
 
+    /// <summary>
+    /// Updates the offsets (positions if not grabbed) of all representations (and the four indicators if appropriate).
+    /// </summary>
     private void UpdateOffsets()
     {
       // Calculate total width

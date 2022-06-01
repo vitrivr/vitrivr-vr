@@ -13,11 +13,25 @@ namespace VitrivrVR.Query.Term
     public TMP_Text text;
     public ConnectionLineController connectionLine;
 
+    public string TypeName { get; private set; }
+    public int N { get; private set; }
+
     private QueryTermManager _termManager;
 
-    public void Initialize(QueryTermManager termManager, QueryTermProvider provider, Vector3 offset)
+    /// <summary>
+    /// Initializes this representation with a offset and name information.
+    /// </summary>
+    /// <param name="termManager">The associated term manager.</param>
+    /// <param name="provider">The associated term provider.</param>
+    /// <param name="offset">The position offset to the term manager in term manager coordinates.</param>
+    /// <param name="typeName">The name of the type of term provider.</param>
+    /// <param name="n">A number to differentiate this representation from others of the same term type.</param>
+    public void Initialize(QueryTermManager termManager, QueryTermProvider provider, Vector3 offset, string typeName,
+      int n)
     {
-      text.text = provider.name;
+      TypeName = typeName;
+      N = n;
+      text.text = $"{typeName} {n}";
       _offset = offset;
       _termManager = termManager;
       connectionLine.end = provider.transform;
