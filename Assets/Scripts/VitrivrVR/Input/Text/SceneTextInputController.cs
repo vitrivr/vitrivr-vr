@@ -1,6 +1,6 @@
-using Org.Vitrivr.DresApi.Model;
 using UnityEngine;
 using VitrivrVR.Config;
+using Dev.Dres.ClientApi.Model;
 using VitrivrVR.Submission;
 
 namespace VitrivrVR.Input.Text

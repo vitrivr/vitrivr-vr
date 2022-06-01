@@ -4,13 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Dev.Dres.ClientApi.Model;
+using Dres.Unityclient;
 using Org.Vitrivr.CineastApi.Model;
-using Org.Vitrivr.DresApi.Model;
 using UnityEngine;
 using Vitrivr.UnityInterface.CineastApi.Model.Config;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using Vitrivr.UnityInterface.CineastApi.Model.Registries;
-using Vitrivr.UnityInterface.DresApi;
 using VitrivrVR.Config;
 using VitrivrVR.Notification;
 
@@ -20,7 +20,7 @@ namespace VitrivrVR.Submission
   {
     public static DresClient Instance;
 
-    private static readonly List<QueryEvent> InteractionEvents = new List<QueryEvent>();
+    private static readonly List<QueryEvent> InteractionEvents = new();
     private static float _interactionEventTimer;
 
     private static string _interactionLogPath;

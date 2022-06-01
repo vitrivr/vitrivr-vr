@@ -302,6 +302,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d9dd3a1966954f6b8c8f6a335003aca, type: 3}
+--- !u!114 &6179780 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4398201079036992528, guid: 9d9dd3a1966954f6b8c8f6a335003aca,
+    type: 3}
+  m_PrefabInstance: {fileID: 6179779}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37bfaf04ceac41c78725eac6e5465b8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &132569255 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
@@ -993,18 +1005,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   grabTransform: {fileID: 0}
---- !u!114 &1004493312 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5562196535703572270, guid: 9d9dd3a1966954f6b8c8f6a335003aca,
-    type: 3}
-  m_PrefabInstance: {fileID: 6179779}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be7c09a523d224e42a99cc4192b51838, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1083301797 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7327159854900270515, guid: 9e86f8938bf545645ac69df2d86083ec,
@@ -1515,9 +1515,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
         type: 3}
+      propertyPath: temporalQueryDisplay
+      value: 
+      objectReference: {fileID: 4530341693124885058, guid: c20bd8391b36b5c45b1f3f2049b05ab7,
+        type: 3}
+    - target: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
+        type: 3}
+      propertyPath: defaultQueryTermManager
+      value: 
+      objectReference: {fileID: 6179780}
+    - target: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
+        type: 3}
       propertyPath: defaultQueryTermProvider
       value: 
-      objectReference: {fileID: 1004493312}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef63ab4df42c54592be7590645832b7e, type: 3}
 --- !u!114 &1549049000 stripped
@@ -2568,7 +2579,7 @@ PrefabInstance:
         type: 3}
       propertyPath: combinedQueryTermProvider
       value: 
-      objectReference: {fileID: 1004493312}
+      objectReference: {fileID: 6179780}
     - target: {fileID: 4966802847637547533, guid: a12d4f3654e25174ea623a13993ed9a6,
         type: 3}
       propertyPath: m_RootOrder
@@ -2642,7 +2653,7 @@ PrefabInstance:
         type: 3}
       propertyPath: combinedQueryTermProvider
       value: 
-      objectReference: {fileID: 1004493312}
+      objectReference: {fileID: 6179780}
     - target: {fileID: 3920134374037079725, guid: 77e6183fcedb8044e80a063a1ba9abfe,
         type: 3}
       propertyPath: m_RootOrder
@@ -3026,7 +3037,7 @@ PrefabInstance:
         type: 3}
       propertyPath: combinedQueryTermProvider
       value: 
-      objectReference: {fileID: 1004493312}
+      objectReference: {fileID: 6179780}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50bca41c9b8dfa745882e9c74565ba98, type: 3}
 --- !u!1001 &6317846112967465987
@@ -3176,7 +3187,7 @@ PrefabInstance:
         type: 3}
       propertyPath: combinedQueryTermProvider
       value: 
-      objectReference: {fileID: 1004493312}
+      objectReference: {fileID: 6179780}
     - target: {fileID: 1124154672167200939, guid: 46bafca4ed5dfa84f8cea27bbaf01f12,
         type: 3}
       propertyPath: m_Name
@@ -3200,7 +3211,7 @@ PrefabInstance:
         type: 3}
       propertyPath: combinedQueryTermProvider
       value: 
-      objectReference: {fileID: 1004493312}
+      objectReference: {fileID: 6179780}
     - target: {fileID: 1862774836151956285, guid: 0b3d9dda998e60b40a2da8947b3e0a55,
         type: 3}
       propertyPath: m_RootOrder

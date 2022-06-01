@@ -17,5 +17,11 @@ namespace VitrivrVR.Query.Term
     /// </summary>
     /// <returns>A list of <see cref="QueryTerm"/>s specified through this query term provider (may be empty).</returns>
     public abstract List<QueryTerm> GetTerms();
+
+    /// <summary>
+    /// Returns the descriptive name of the type of query term provider this is.
+    /// </summary>
+    /// <returns>The type of provider for display purposes.</returns>
+    public abstract string GetTypeName();
   }
 }

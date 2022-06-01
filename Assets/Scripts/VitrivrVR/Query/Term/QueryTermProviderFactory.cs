@@ -7,7 +7,7 @@ namespace VitrivrVR.Query.Term
   /// </summary>
   public class QueryTermProviderFactory : MonoBehaviour
   {
-    public CombinedQueryTermProvider combinedQueryTermProvider;
+    public QueryTermManager combinedQueryTermProvider;
     public QueryTermProviderController queryTermProviderPrefab;
 
     private bool _grabbed;
@@ -39,9 +39,9 @@ namespace VitrivrVR.Query.Term
     {
       var transform1 = transform;
       var providerController = Instantiate(queryTermProviderPrefab, transform1.position, transform1.rotation);
-      combinedQueryTermProvider.queryTermProviders.Add(providerController.queryTermProvider);
+      combinedQueryTermProvider.Add(providerController.queryTermProvider);
       providerController.onClose = () =>
-        combinedQueryTermProvider.queryTermProviders.Remove(providerController.queryTermProvider);
+        combinedQueryTermProvider.Remove(providerController.queryTermProvider);
     }
 
     public void OnGrab()

@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using Dres.Unityclient;
+using UnityEngine;
 using Vitrivr.UnityInterface.CineastApi.Utils;
-using Vitrivr.UnityInterface.DresApi;
 using VitrivrVR.Config;
 
 namespace VitrivrVR.UI

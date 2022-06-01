@@ -115,6 +115,11 @@ namespace VitrivrVR.Query.Term
         };
     }
 
+    public override string GetTypeName()
+    {
+      return "Boolean";
+    }
+
     private static List<string> SortOptions(List<string> options, string sortOrder)
     {
       if (Enum.TryParse<SortOrder>(sortOrder, out var order))

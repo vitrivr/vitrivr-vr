@@ -30,6 +30,11 @@ namespace VitrivrVR.Query.Term
       return terms;
     }
 
+    public override string GetTypeName()
+    {
+      return "Text (Multiple)";
+    }
+
     public void AddTextTermProvider()
     {
       var provider = Instantiate(textTermProviderPrefab, transform);

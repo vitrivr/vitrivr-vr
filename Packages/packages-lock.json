@@ -141,19 +141,19 @@
       "dependencies": {},
       "hash": "b5c2335720146358ae35a3ca25807140da33713d"
     },
-    "org.vitrivr.unityinterface.cineastapi": {
-      "version": "https://github.com/vitrivr/CineastUnityInterface.git#v0.0.3",
+    "dev.dres.unityclient": {
+      "version": "https://github.com/dres-dev/UnityClient.git#dev",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "3a5d9f1fc552026f01dee50f3ca7e8b9564b1414"
+      "hash": "17282ffd2ee4a7f8026e22ffc5f910a6a798114c"
     },
-    "org.vitrivr.unityinterface.dresapi": {
-      "version": "https://github.com/dres-dev/UnityClient.git#v1.0.0",
+    "org.vitrivr.unityinterface.cineastapi": {
+      "version": "https://github.com/vitrivr/CineastUnityInterface.git#feature/staged-temporal-query",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "d9cfc9e7502b95572ea1a0a3c3285fc1d45c5091"
+      "hash": "47ad83620fade6bcf5f0ff67bdfd825d15f3330b"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

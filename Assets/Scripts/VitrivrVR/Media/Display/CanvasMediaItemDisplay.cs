@@ -23,6 +23,7 @@ namespace VitrivrVR.Media.Display
     public RectTransform imageFrame;
     public int scoreFrameSize = 25;
 
+    // Action for quick submit
     public InputAction submitAction;
 
     private ScoredSegment _scoredSegment;

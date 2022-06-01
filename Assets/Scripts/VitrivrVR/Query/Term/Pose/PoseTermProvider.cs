@@ -34,6 +34,11 @@ namespace VitrivrVR.Query.Term.Pose
       return new List<QueryTerm> {new(QueryTerm.TypeEnum.SKELETON, base64data, new List<string> {"skeletonpose"})};
     }
 
+    public override string GetTypeName()
+    {
+      return "Pose";
+    }
+
     [Serializable]
     private record PoseSkeleton
     {

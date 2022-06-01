@@ -1,11 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Query;
 using VitrivrVR.Query.Display;
 
@@ -17,7 +13,7 @@ namespace VitrivrVR.UI
     public RectTransform listItemPrefab;
     public Transform list;
 
-    private readonly List<RectTransform> _queries = new List<RectTransform>();
+    private readonly List<RectTransform> _queries = new();
 
     private void Start()
     {
@@ -38,8 +34,8 @@ namespace VitrivrVR.UI
 
     private void OnQueryAdded(int index)
     {
-      var (query, display) = QueryController.Instance.queries[index];
-      AddQuery(query, display);
+      var display = QueryController.Instance.queries[index];
+      AddQuery(display);
     }
 
     private void OnQueryRemoved(int index)
@@ -76,9 +72,9 @@ namespace VitrivrVR.UI
       }
       else
       {
-        foreach (var (query, display) in QueryController.Instance.queries)
+        foreach (var display in QueryController.Instance.queries)
         {
-          AddQuery(query, display);
+          AddQuery(display);
         }
 
         if (QueryController.Instance.CurrentQuery != -1)
@@ -99,7 +95,7 @@ namespace VitrivrVR.UI
       textRect.sizeDelta = new Vector2(tmp.GetPreferredValues().x, textRect.sizeDelta.y);
     }
 
-    private void AddQuery(SimilarityQuery query, QueryDisplay display)
+    private void AddQuery(QueryDisplay display)
     {
       const int padding = 20;
       if (_queries.Count == 0 && list.childCount > 0)
@@ -118,7 +114,7 @@ namespace VitrivrVR.UI
       textButton.colors = colors;
 
       var tmp = textButton.GetComponentInChildren<TextMeshProUGUI>();
-      tmp.text = $"[{display.GetType().Name}] {QueryToString(query)}";
+      tmp.text = $"[{display.GetType().Name}] {display.GetQueryStringRepresentation()}";
       var textRect = textButton.GetComponent<RectTransform>();
       textRect.sizeDelta = new Vector2(tmp.GetPreferredValues().x + padding, textRect.sizeDelta.y);
       textButton.onClick.AddListener(() => QueryController.Instance.SelectQuery(display));
@@ -147,35 +143,6 @@ namespace VitrivrVR.UI
       var colors = button.colors;
       colors.normalColor = new Color(1f, .5f, .3f);
       button.colors = colors;
-    }
-
-    private static string QueryToString(SimilarityQuery query)
-    {
-      var stringBuilder = new StringBuilder();
-      stringBuilder.Append("{");
-      stringBuilder.Append(string.Join(", ", query.Terms.Select(TermToString)));
-      stringBuilder.Append("}");
-
-      return stringBuilder.ToString();
-    }
-
-    private static string TermToString(QueryTerm term)
-    {
-      var categories = string.Join(", ", term.Categories);
-      var baseString = $"{term.Type} ({categories})";
-      switch (term.Type)
-      {
-        case QueryTerm.TypeEnum.IMAGE:
-          return baseString;
-        case QueryTerm.TypeEnum.BOOLEAN:
-        case QueryTerm.TypeEnum.TAG:
-        {
-          var data = Base64Converter.StringFromBase64(term.Data.Substring(Base64Converter.JsonPrefix.Length));
-          return $"{baseString}: {data}";
-        }
-        default:
-          return $"{baseString}: {term.Data}";
-      }
     }
   }
 }
