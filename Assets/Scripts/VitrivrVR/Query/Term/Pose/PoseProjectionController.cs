@@ -10,6 +10,8 @@ namespace VitrivrVR.Query.Term.Pose
     public Material lineMaterial;
     public float lineWidth = 0.001f;
 
+    private const float FOV = 90;
+
     /// <summary>
     /// Dictionary mapping pose skeleton controllers to the lists of their projection canvas indicators as well as the
     /// canvas lines connecting them.
@@ -18,8 +20,8 @@ namespace VitrivrVR.Query.Term.Pose
       List<(KeyPointController point, Transform indicator)> indicators,
       List<(Transform indicator0, Transform indicator1, LineRenderer line
         )> connections)> _skeletons = new();
-    
-    private static readonly float NearPlane = .5f / Mathf.Tan(Mathf.Deg2Rad* 30);
+
+    private static readonly float NearPlane = .5f / Mathf.Tan(Mathf.Deg2Rad * (FOV / 2));
 
     private Matrix4x4 _projectionMatrix = GetProjectionMatrix();
 
@@ -61,7 +63,7 @@ namespace VitrivrVR.Query.Term.Pose
 
     private static Matrix4x4 GetProjectionMatrix()
     {
-      var matrix = Matrix4x4.Perspective(60, 1, NearPlane, 100);
+      var matrix = Matrix4x4.Perspective(FOV, 1, NearPlane, 100);
       matrix.SetColumn(2, matrix.GetColumn(2) * -1);
 
       return matrix;
