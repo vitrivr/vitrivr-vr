@@ -7,7 +7,7 @@ This repository contains the source code for vitrivr-VR, a Unity Engine based VR
 
 ## Setup
 Setup is very easy and should not involve much more than having a working OpenXR runtime and a compatible version of the Unity engine installed.
-There are two things to be aware of:
+There are a few things to be aware of:
 - **Errors on first import:** During first import there may be errors because Unity incorrectly loads the different versions of certain libraries included in itself and different packages. Simply close the editor and reopen the project to fix this issue.
 - **MapBox:** To use the map query formulation method using MapBox, follow the MapBox popup instructions to acquire an API-key. If you do not intend to use the map this step is not required.
 - **DeepSpeech:** To use the DeepSpeech speech-to-text functionality, follow the instructions on the [DeepSpeech UPM](https://github.com/Spiess/deep-speech-upm) repository to download and correctly place the required model file.
@@ -45,12 +45,12 @@ For increased flexibility, vitrivr-VR is structured to allow easy switching of i
 
 ### Control Flow
 At the core of vitrivr-VR is the [QueryController](Assets/Scripts/VitrivrVR/Query/QueryController.cs), which sends a query to [Cineast](https://github.com/vitrivr/cineast) when the asynchronous function `RunQuery` is invoked.
-An already instantiated [QueryTermProvider](Assets/Scripts/VitrivrVR/Query/Term/QueryTermProvider.cs) is required to provide the query terms for the query.
+[QueryTermProvider](Assets/Scripts/VitrivrVR/Query/Term/QueryTermProvider.cs)s are required to provide the query terms for the query.
 Once the query results arrive, the QueryController will instantiate the provided type of [QueryDisplay](Assets/Scripts/VitrivrVR/Query/Display/QueryDisplay.cs) with the scored result list.
 The QueryDisplay will then instantiate the results in the form of [MediaItemDisplays](Assets/Scripts/VitrivrVR/Media/Display/MediaItemDisplay.cs).
 Ultimately, individual MediaItemDisplays should also provide functionality for a detailed media view, but this has not yet been formalized into an interface.
 
-Once a new query is launched or the current query should be cleared, the QueryController initiates the required changes in the scene.
+Once a new query is started or the current query should be cleared, the QueryController initiates the required changes in the scene.
 
 ### Component Responsibilities
 - **QueryController:** Sends queries to Cineast, instantiates QueryDisplays from query results and manages QueryDisplay instances.
