@@ -124,7 +124,7 @@ namespace VitrivrVR.Submission
       var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
       try
       {
-        using var file = new StreamWriter(_submissionLogPath, true);
+        await using var file = new StreamWriter(_submissionLogPath, true);
         var row = $"{timestamp},{mediaObjectId}";
         if (frame != null)
           row += $",{frame}";
