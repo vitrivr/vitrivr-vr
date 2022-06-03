@@ -60,12 +60,10 @@ namespace VitrivrVR.Submission
 
       //Update timer
       _interactionEventTimer += Time.deltaTime;
-      if (_interactionEventTimer > ConfigManager.Config.interactionLogSubmissionInterval)
-      {
-        // Reset timer
-        _interactionEventTimer %= ConfigManager.Config.interactionLogSubmissionInterval;
-        LogInteraction();
-      }
+      if (!(_interactionEventTimer > ConfigManager.Config.interactionLogSubmissionInterval)) return;
+      // Reset timer
+      _interactionEventTimer %= ConfigManager.Config.interactionLogSubmissionInterval;
+      LogInteraction();
     }
 
     private void OnDestroy()
@@ -143,51 +141,27 @@ namespace VitrivrVR.Submission
     /// </summary>
     /// <param name="sortType">The sorting of the results display.</param>
     /// <param name="results">The results as list of scored segments.</param>
-    /// <param name="query">The query that lead to these results.</param>
+    /// <param name="queryEvents">The query that lead to these results represented as enumerable of query events.</param>
+    /// <param name="timestamp">Timestamp of result log.</param>
     /// <param name="assumeFullyFetched">Skips trying to batch fetch segment data if true.</param>
-    public static async void LogResults(string sortType, List<ScoredSegment> results, SimilarityQuery query,
-      bool assumeFullyFetched = false)
+    public static async void LogResults(string sortType, List<(ScoredSegment segment, int rank)> results,
+      IEnumerable<QueryEvent> queryEvents, long timestamp, bool assumeFullyFetched = false)
     {
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
       if (!assumeFullyFetched)
       {
-        await SegmentRegistry.BatchFetchSegmentData(results.Select(result => result.segment));
+        await SegmentRegistry.BatchFetchSegmentData(results.Select(pair => pair.segment.segment));
       }
 
-      var queryResults = await Task.WhenAll(results.Select(async (result, i) =>
+      var queryResults = await Task.WhenAll(results.Select(async pair =>
       {
-        var segment = result.segment;
+        var segment = pair.segment.segment;
         var objectId = await segment.GetObjectId();
         objectId = RemovePrefix(objectId);
         var sequenceNumber = await segment.GetSequenceNumber();
         var frame = await segment.GetStart();
 
-        return new QueryResult(objectId, sequenceNumber, frame, result.score, i);
+        return new QueryResult(objectId, sequenceNumber, frame, pair.segment.score, pair.rank);
       }));
-
-      var queryEvents = query.Terms.Select(term =>
-      {
-        // Convert term type to Dres category
-        var category = term.Type switch
-        {
-          QueryTerm.TypeEnum.IMAGE => QueryEvent.CategoryEnum.IMAGE,
-          QueryTerm.TypeEnum.AUDIO => QueryEvent.CategoryEnum.OTHER,
-          QueryTerm.TypeEnum.MODEL3D => QueryEvent.CategoryEnum.OTHER,
-          QueryTerm.TypeEnum.LOCATION => QueryEvent.CategoryEnum.OTHER,
-          QueryTerm.TypeEnum.TIME => QueryEvent.CategoryEnum.OTHER,
-          QueryTerm.TypeEnum.TEXT => QueryEvent.CategoryEnum.TEXT,
-          QueryTerm.TypeEnum.TAG => QueryEvent.CategoryEnum.TEXT,
-          QueryTerm.TypeEnum.SEMANTIC => QueryEvent.CategoryEnum.SKETCH,
-          QueryTerm.TypeEnum.ID => QueryEvent.CategoryEnum.OTHER,
-          QueryTerm.TypeEnum.BOOLEAN => QueryEvent.CategoryEnum.FILTER,
-          _ => QueryEvent.CategoryEnum.OTHER
-        };
-
-        var type = string.Join(",", term.Categories.Select(CategoryToType));
-        var value = term.Data;
-
-        return new QueryEvent(timestamp, category, type, value);
-      });
 
       var queryResultsList = queryResults.ToList();
       var queryEventsList = queryEvents.ToList();
@@ -220,6 +194,55 @@ namespace VitrivrVR.Submission
           NotificationController.NotifyError($"Error logging to file: {e.Message}", e);
         }
       }
+    }
+
+    public static void LogResults(string sortType, List<ScoredSegment> results, SimilarityQuery query)
+    {
+      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+      var queryEvents = query.Terms.Select(term =>
+      {
+        // Convert term type to Dres category
+        var category = TermTypeToDresCategory(term.Type);
+
+        var type = string.Join(",", term.Categories.Select(CategoryToType));
+        var value = term.Data;
+
+        return new QueryEvent(timestamp, category, type, value);
+      });
+
+      var rankedResults = results.Select((segment, rank) => (segment, rank)).ToList();
+
+      LogResults(sortType, rankedResults, queryEvents, timestamp);
+    }
+
+    public static void LogResults(string sortType, IEnumerable<TemporalObject> results, TemporalQuery query)
+    {
+      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+      var queryEvents = query.Queries.SelectMany(
+        (temporal, ti) => temporal.Stages.SelectMany(
+          (stage, si) => stage.Terms.Select(term =>
+          {
+            // Convert term type to Dres category
+            var category = TermTypeToDresCategory(term.Type);
+
+            var type = string.Join(",", term.Categories.Select(CategoryToType));
+            var value = term.Data;
+
+            // Also provide temporal and stage indexes in type
+            return new QueryEvent(timestamp, category, $"{ti}:{si}:{type}", value);
+          })
+        )
+      );
+
+      var resultsList = results.SelectMany(
+        (to, rank) => to.Segments.Select(
+          sId => (new ScoredSegment(SegmentRegistry.GetSegment(sId), to.Score), rank)
+        )
+      ).ToList();
+
+      LogResults(sortType, resultsList, queryEvents, timestamp);
     }
 
     private static async void LogInteraction()
@@ -292,6 +315,24 @@ namespace VitrivrVR.Submission
         CategoryMappings.GLOBAL_COLOR_CATEGORY => "globalFeatures",
         CategoryMappings.EDGE_CATEGORY => "localFeatures",
         _ => category
+      };
+    }
+
+    private static QueryEvent.CategoryEnum TermTypeToDresCategory(QueryTerm.TypeEnum? type)
+    {
+      return type switch
+      {
+        QueryTerm.TypeEnum.IMAGE => QueryEvent.CategoryEnum.IMAGE,
+        QueryTerm.TypeEnum.AUDIO => QueryEvent.CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.MODEL3D => QueryEvent.CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.LOCATION => QueryEvent.CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.TIME => QueryEvent.CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.TEXT => QueryEvent.CategoryEnum.TEXT,
+        QueryTerm.TypeEnum.TAG => QueryEvent.CategoryEnum.TEXT,
+        QueryTerm.TypeEnum.SEMANTIC => QueryEvent.CategoryEnum.SKETCH,
+        QueryTerm.TypeEnum.ID => QueryEvent.CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.BOOLEAN => QueryEvent.CategoryEnum.FILTER,
+        _ => QueryEvent.CategoryEnum.OTHER
       };
     }
 
