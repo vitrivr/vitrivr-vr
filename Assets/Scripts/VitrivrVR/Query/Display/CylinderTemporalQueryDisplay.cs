@@ -4,8 +4,6 @@ using System.Linq;
 using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Vitrivr.UnityInterface.CineastApi.Model.Data;
-using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using VitrivrVR.Config;
 using VitrivrVR.Media.Display;
 using VitrivrVR.Notification;
@@ -90,8 +88,7 @@ namespace VitrivrVR.Query.Display
 
       if (ConfigManager.Config.dresEnabled)
       {
-        // TODO: Log results to DRES
-        Debug.LogWarning("Temporal results logging not implemented!");
+        DresClientManager.LogResults("temporal", _results, temporalQueryData.Query);
       }
     }
 
