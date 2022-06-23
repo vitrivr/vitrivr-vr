@@ -98,12 +98,7 @@ namespace VitrivrVR.Query.Term
                 numeric = Enum.TryParse<SortOrder>(sortOrder, out var order) && order == SortOrder.Numeric;
               }
 
-              dynamicOptions.Initialize(category.name, entity,
-                new List<RelationalOperator>
-                {
-                  RelationalOperator.Eq,
-                  RelationalOperator.NEq
-                }, dynOpt, numeric);
+              dynamicOptions.Initialize(category.name, entity, dynOpt, numeric);
               _termProviders.Add(dynamicOptions);
               break;
             default:
