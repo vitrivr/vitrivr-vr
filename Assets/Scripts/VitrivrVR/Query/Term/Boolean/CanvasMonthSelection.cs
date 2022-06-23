@@ -32,12 +32,13 @@ namespace VitrivrVR.Query.Term.Boolean
       {
         Debug.LogWarning("More than 12 options provided to MonthSelection!");
       }
-      
+
       foreach (var (active, toggle) in monthIds.Select(availableMonths.Contains).Zip(toggles, Tuple.Create))
       {
         toggle.interactable = active;
       }
     }
+
     public override (string attribute, RelationalOperator op, string[] values) GetTerm()
     {
       var selection = toggles.Select(toggle => toggle.isOn).ToArray();
@@ -50,7 +51,7 @@ namespace VitrivrVR.Query.Term.Boolean
       var options = selection
         .Zip(_options, (use, option) => (use, option))
         .Where(value => value.use)
-        .Select(value => "\"" + value.option + "\"")
+        .Select(value => int.TryParse(value.option, out _) ? value.option : "\"" + value.option + "\"")
         .ToArray();
 
       return options.Length == 1
