@@ -61,7 +61,7 @@ namespace VitrivrVR.Query.Term.Boolean
 
     public override bool IsEnabled()
     {
-      return toggles.Select(toggle => toggle.isOn).Any(x => x);
+      return toggles.Any(x => x.isOn);
     }
   }
 }

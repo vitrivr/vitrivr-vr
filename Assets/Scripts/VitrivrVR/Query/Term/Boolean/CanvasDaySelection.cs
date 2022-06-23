@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -7,27 +8,32 @@ using Vitrivr.UnityInterface.CineastApi.Model.Query;
 
 namespace VitrivrVR.Query.Term.Boolean
 {
-  public class CanvasYearSelection : CanvasBooleanTerm
+  public class CanvasDaySelection : CanvasBooleanTerm
   {
     public TMP_Text optionName;
     public Transform togglesParent;
-    public Toggle yearTogglePrefab;
 
-    private readonly List<Toggle> _toggles = new();
+    private Toggle[] _toggles;
     private string _attribute;
     private string[] _options;
 
-    public void Initialize(string optionTitle, string attribute, List<string> availableYears)
+    public void Initialize(string optionTitle, string attribute, List<string> availableDays)
     {
       optionName.text = optionTitle;
       _attribute = attribute;
-      _options = availableYears.ToArray();
+      _options = availableDays.ToArray();
 
-      foreach (var year in availableYears)
+      _toggles = togglesParent.GetComponentsInChildren<Toggle>();
+
+      if (_toggles.Length != 31)
       {
-        var toggle = Instantiate(yearTogglePrefab, togglesParent);
-        _toggles.Add(toggle);
-        toggle.GetComponentInChildren<TMP_Text>().text = year;
+        Debug.LogError($"Expected 31 day toggles, but found {_toggles.Length}!");
+      }
+
+      foreach (var (day, toggle) in Enumerable.Range(1, 31).Select(i => i.ToString()).Zip(_toggles, Tuple.Create))
+      {
+        toggle.GetComponentInChildren<TMP_Text>().text = day;
+        toggle.interactable = availableDays.Contains(day);
       }
     }
 
@@ -35,7 +41,7 @@ namespace VitrivrVR.Query.Term.Boolean
     {
       if (!_toggles.Any(x => x.isOn))
       {
-        Debug.LogError("Requested term from CanvasYearSelection despite no selection!");
+        Debug.LogError("Requested term from CanvasDaySelection despite no selection!");
         return (null, RelationalOperator.Eq, null);
       }
 
