@@ -15,6 +15,7 @@ namespace VitrivrVR.Query.Term
   {
     public CanvasWeekdaySelection weekdaySelection;
     public CanvasMonthSelection monthSelection;
+    public CanvasYearSelection yearSelection;
     public CanvasOptionSelection optionSelection;
     public CanvasIntegerRange integerRange;
 
@@ -23,6 +24,7 @@ namespace VitrivrVR.Query.Term
       IntegerRange,
       WeekdayOptions,
       MonthOptions,
+      YearOptions,
       DynamicOptions
     }
 
@@ -68,6 +70,13 @@ namespace VitrivrVR.Query.Term
               var availableMonths = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
               monthOptions.Initialize(category.name, entity, category.options, availableMonths);
               _termProviders.Add(monthOptions);
+              break;
+            case BooleanTermTypes.YearOptions:
+              var yearOptions = Instantiate(yearSelection, transform);
+              var years = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
+              years = SortOptions(years, SortOrder.Numeric);
+              yearOptions.Initialize(category.name, entity, years);
+              _termProviders.Add(yearOptions);
               break;
             case BooleanTermTypes.DynamicOptions:
               var dynamicOptions = Instantiate(optionSelection, transform);
@@ -120,22 +129,27 @@ namespace VitrivrVR.Query.Term
       return "Boolean";
     }
 
+    private static List<string> SortOptions(List<string> options, SortOrder sortOrder)
+    {
+      switch (sortOrder)
+      {
+        case SortOrder.Alphabetic:
+          options.Sort();
+          return options;
+        case SortOrder.Numeric:
+          var numericSorted = options.Select(int.Parse).ToList();
+          numericSorted.Sort();
+          return numericSorted.Select(n => n.ToString()).ToList();
+        default:
+          throw new ArgumentOutOfRangeException();
+      }
+    }
+
     private static List<string> SortOptions(List<string> options, string sortOrder)
     {
       if (Enum.TryParse<SortOrder>(sortOrder, out var order))
       {
-        switch (order)
-        {
-          case SortOrder.Alphabetic:
-            options.Sort();
-            return options;
-          case SortOrder.Numeric:
-            var numericSorted = options.Select(int.Parse).ToList();
-            numericSorted.Sort();
-            return numericSorted.Select(n => n.ToString()).ToList();
-          default:
-            throw new ArgumentOutOfRangeException();
-        }
+        return SortOptions(options, order);
       }
 
       Debug.LogError($"Unknown sort order {sortOrder} specified!");

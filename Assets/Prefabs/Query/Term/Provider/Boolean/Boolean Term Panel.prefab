@@ -30,6 +30,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -92,6 +93,8 @@ MonoBehaviour:
   weekdaySelection: {fileID: 9187971182253083715, guid: 890bd40c30e9f41dbaeaa1b192db7c00,
     type: 3}
   monthSelection: {fileID: 7114719018915921729, guid: 9261525a80c4c404aa1171c72f7dad33,
+    type: 3}
+  yearSelection: {fileID: 4611024176390252789, guid: 31f9887cefb8dc846ab1a604d25bf929,
     type: 3}
   optionSelection: {fileID: 1131156460057547074, guid: a821ed34b320845b9b69938400dd2175,
     type: 3}
