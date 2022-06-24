@@ -216,6 +216,26 @@ namespace VitrivrVR.Submission
       LogResults(sortType, rankedResults, queryEvents, timestamp);
     }
 
+    public static void LogResults(string sortType, List<ScoredSegment> results, StagedSimilarityQuery query)
+    {
+      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+      var queryEvents = query.Stages.SelectMany(stage => stage.Terms.Select(term =>
+      {
+        // Convert term type to Dres category
+        var category = TermTypeToDresCategory(term.Type);
+
+        var type = string.Join(",", term.Categories.Select(CategoryToType));
+        var value = term.Data;
+
+        return new QueryEvent(timestamp, category, type, value);
+      }));
+
+      var rankedResults = results.Select((segment, rank) => (segment, rank)).ToList();
+
+      LogResults(sortType, rankedResults, queryEvents, timestamp);
+    }
+
     public static void LogResults(string sortType, IEnumerable<TemporalObject> results, TemporalQuery query)
     {
       var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();

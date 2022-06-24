@@ -92,7 +92,14 @@ namespace VitrivrVR.Query.Display
 
       if (ConfigManager.Config.dresEnabled)
       {
-        DresClientManager.LogResults("segment", _results, queryData.Query);
+        if (queryData.Query != null)
+        {
+          DresClientManager.LogResults("segment", _results, queryData.Query);
+        }
+        else
+        {
+          DresClientManager.LogResults("segment", _results, queryData.StagedQuery);
+        }
       }
     }
 
