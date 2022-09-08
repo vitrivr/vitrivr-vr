@@ -32,9 +32,9 @@ namespace VitrivrVR.Query.Display
 
     public override int NumberOfResults => _nResults;
 
-    private readonly List<MediaItemDisplay> _mediaDisplays = new List<MediaItemDisplay>();
+    private readonly List<MediaItemDisplay> _mediaDisplays = new();
 
-    private readonly Queue<ScoredSegment> _instantiationQueue = new Queue<ScoredSegment>();
+    private readonly Queue<ScoredSegment> _instantiationQueue = new();
 
     private List<ScoredSegment> _results;
 
@@ -44,9 +44,9 @@ namespace VitrivrVR.Query.Display
     /// Dictionary containing for each media object in the results the index of the list of corresponding media item
     /// displays in _mediaObjectSegmentDisplays.
     /// </summary>
-    private readonly Dictionary<string, int> _objectMap = new Dictionary<string, int>();
+    private readonly Dictionary<string, int> _objectMap = new();
 
-    private readonly List<List<MediaItemDisplay>> _mediaObjectSegmentDisplays = new List<List<MediaItemDisplay>>();
+    private readonly List<List<MediaItemDisplay>> _mediaObjectSegmentDisplays = new();
 
     private int _nResults;
     private float _columnAngle;
@@ -108,7 +108,14 @@ namespace VitrivrVR.Query.Display
 
       if (ConfigManager.Config.dresEnabled)
       {
-        DresClientManager.LogResults("object", _results, queryData.Query);
+        if (queryData.Query != null)
+        {
+          DresClientManager.LogResults("segment", _results, queryData.Query);
+        }
+        else
+        {
+          DresClientManager.LogResults("segment", _results, queryData.StagedQuery);
+        }
       }
     }
 

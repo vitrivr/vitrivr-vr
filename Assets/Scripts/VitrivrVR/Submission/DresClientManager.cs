@@ -196,7 +196,7 @@ namespace VitrivrVR.Submission
       }
     }
 
-    public static void LogResults(string sortType, List<ScoredSegment> results, SimilarityQuery query)
+    public static void LogResults(string sortType, IEnumerable<ScoredSegment> results, SimilarityQuery query)
     {
       var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
@@ -216,7 +216,7 @@ namespace VitrivrVR.Submission
       LogResults(sortType, rankedResults, queryEvents, timestamp);
     }
 
-    public static void LogResults(string sortType, List<ScoredSegment> results, StagedSimilarityQuery query)
+    public static void LogResults(string sortType, IEnumerable<ScoredSegment> results, StagedSimilarityQuery query)
     {
       var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
