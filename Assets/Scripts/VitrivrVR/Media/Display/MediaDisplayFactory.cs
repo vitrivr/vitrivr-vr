@@ -53,6 +53,7 @@ namespace VitrivrVR.Media.Display
 
     public MediaDisplay videoDisplayPrefab;
     public MediaDisplay imageSequenceDisplayPrefab;
+    public MediaDisplay imageDisplayPrefab;
 
     public static MediaDisplayFactory Instance { get; private set; }
 
@@ -91,7 +92,9 @@ namespace VitrivrVR.Media.Display
           videoDisplay.Initialize(scoredSegment, onClose);
           return videoDisplay;
         case MediaObjectDescriptor.MediatypeEnum.IMAGE:
-          throw new NotImplementedException($"{mediaType} support is not yet implemented (oID: {mediaObject.Id})");
+          var imageDisplay = Instantiate(imageDisplayPrefab, position, rotation);
+          imageDisplay.Initialize(scoredSegment, onClose);
+          return imageDisplay;
         case MediaObjectDescriptor.MediatypeEnum.AUDIO:
           throw new NotImplementedException($"{mediaType} support is not yet implemented (oID: {mediaObject.Id})");
         case MediaObjectDescriptor.MediatypeEnum.MODEL3D:
