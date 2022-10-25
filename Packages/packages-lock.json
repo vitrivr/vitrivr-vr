@@ -9,6 +9,13 @@
       },
       "hash": "ec73936cb61a654f53c3931319aa74af784f88c1"
     },
+    "ch.unibas.wgkeyboard": {
+      "version": "https://github.com/Philipp1202/WGKeyboard.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "70ce80016f8e2724fb7438c217987a86e047ffc3"
+    },
     "com.mapbox.mapbox-sdk": {
       "version": "https://github.com/Spiess/mapbox-upm-sdk.git",
       "depth": 0,
