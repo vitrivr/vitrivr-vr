@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -12,16 +13,36 @@ namespace VitrivrVR.Input.Text
   public static class TextInputManager
   {
     /// <summary>
+    /// Stores the last input field into which more than a single character has been input at once.
+    /// Clears after any other interaction.
+    /// </summary>
+    private static TMP_InputField _lastLargeInputField;
+
+    /// <summary>
+    /// Stores the cursor position at the end of the last input if it was an input of more than a single character.
+    /// </summary>
+    private static int _lastLargeInputCursorPosition = -1;
+
+    /// <summary>
     /// Inputs the given text into the currently selected text input field.
     /// </summary>
     /// <param name="text"></param>
     public static void InputText(string text)
     {
+      // Check if input is more than a single character
+      var largeInput = text.Length > 1;
+
       var inputField = GetSelectedInputField();
 
       if (inputField == null)
       {
         return; // No text field selected, nothing to do
+      }
+
+      // Prepend space if input is word/phrase or last input was a word/phrase and this input is not a space
+      if ((largeInput || (text != " " && LargeLastInput(inputField))) && SpaceNecessary(inputField))
+      {
+        text = " " + text;
       }
 
       foreach (var keyEvent in text.Select(character => new Event {character = character}))
@@ -30,13 +51,17 @@ namespace VitrivrVR.Input.Text
       }
 
       inputField.ForceLabelUpdate();
+
+      // If input is larger than single character, store necessary information, otherwise reset
+      _lastLargeInputField = largeInput ? inputField : null;
+      _lastLargeInputCursorPosition = largeInput ? inputField.caretPosition : -1;
     }
 
     /// <summary>
-    /// Inputs the given input event into the currently selected text input field.
+    /// Inputs the given input events into the currently selected text input field.
     /// </summary>
-    /// <param name="inputEvent">Input event as event</param>
-    public static void InputEvent(Event inputEvent)
+    /// <param name="inputEvents">Input events as events</param>
+    public static void InputEvent(params Event[] inputEvents)
     {
       var inputField = GetSelectedInputField();
 
@@ -45,25 +70,47 @@ namespace VitrivrVR.Input.Text
         return; // No text field selected, nothing to do
       }
 
-      inputField.ProcessEvent(inputEvent);
+      foreach (var inputEvent in inputEvents)
+      {
+        inputField.ProcessEvent(inputEvent);
+      }
+
       inputField.ForceLabelUpdate();
+
+      // Reset large input information
+      _lastLargeInputField = null;
+      _lastLargeInputCursorPosition = 0;
     }
 
     /// <summary>
-    /// Inputs the given keyboard event into the currently selected text input field.
+    /// Inputs the given keyboard events into the currently selected text input field.
     /// </summary>
-    /// <param name="eventString">Keyboard event string</param>
-    public static void InputKeyboardEvent(string eventString)
+    /// <param name="eventStrings">Keyboard event strings</param>
+    public static void InputKeyboardEvent(params string[] eventStrings)
     {
-      InputEvent(Event.KeyboardEvent(eventString));
+      InputEvent(eventStrings.Select(Event.KeyboardEvent).ToArray());
     }
 
     /// <summary>
     /// Inputs a backspace into the currently selected text input field.
+    /// In case the last input was more than a single character, 
     /// </summary>
     public static void InputBackspace()
     {
-      InputKeyboardEvent("backspace");
+      var inputField = GetSelectedInputField();
+
+      if (LargeLastInput(inputField))
+      {
+        // Determine length of last word
+        var wordLength = inputField.text[.._lastLargeInputCursorPosition].Split(" ").Last().Length;
+        var events = new string[wordLength];
+        Array.Fill(events, "backspace");
+        InputKeyboardEvent(events);
+      }
+      else
+      {
+        InputKeyboardEvent("backspace");
+      }
     }
 
     /// <summary>
@@ -110,6 +157,27 @@ namespace VitrivrVR.Input.Text
       return selectedObject != null && selectedObject.TryGetComponent<TMP_InputField>(out var inputField)
         ? inputField
         : null;
+    }
+
+    /// <summary>
+    /// Determines if a space is necessary to insert a new word or phrase into the given input field.
+    /// This is the case if the cursor is not at the start of the input field and the previous character is not a space.
+    /// </summary>
+    private static bool SpaceNecessary(TMP_InputField inputField)
+    {
+      var cursor = inputField.caretPosition;
+      return cursor != 0 && inputField.text.Substring(cursor - 1, 1) != " ";
+    }
+
+    /// <summary>
+    /// Checks if the last input was more than a character and no inputs or selections have happened since then.
+    /// </summary>
+    private static bool LargeLastInput(TMP_InputField inputField)
+    {
+      var sameInputField = inputField == _lastLargeInputField;
+      var samePosition = inputField.caretPosition == _lastLargeInputCursorPosition;
+      var noSelection = inputField.selectionAnchorPosition == inputField.selectionFocusPosition;
+      return sameInputField && samePosition && noSelection;
     }
   }
 }
