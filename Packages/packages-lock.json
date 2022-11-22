@@ -14,7 +14,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "70ce80016f8e2724fb7438c217987a86e047ffc3"
+      "hash": "d07537d564216a6b0c26dc2a7ee774bd2177f5e9"
     },
     "com.mapbox.mapbox-sdk": {
       "version": "https://github.com/Spiess/mapbox-upm-sdk.git",
@@ -49,7 +49,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
-      "version": "1.4.3",
+      "version": "1.4.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -131,13 +131,13 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.openxr": {
-      "version": "1.4.2",
+      "version": "1.5.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.xr.management": "4.0.1",
         "com.unity.xr.legacyinputhelpers": "2.1.2",
-        "com.unity.inputsystem": "1.3.0"
+        "com.unity.inputsystem": "1.4.2"
       },
       "url": "https://packages.unity.com"
     },
