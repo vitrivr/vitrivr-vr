@@ -18,7 +18,7 @@ namespace VitrivrVR.Submission
 {
   public class DresClientManager : MonoBehaviour
   {
-    public static DresClient Instance;
+    private static DresClient _instance;
 
     private static readonly List<QueryEvent> InteractionEvents = new();
     private static float _interactionEventTimer;
@@ -33,16 +33,16 @@ namespace VitrivrVR.Submission
 
       if (ConfigManager.Config.allowInvalidCertificate)
       {
-        ServicePointManager.ServerCertificateValidationCallback +=
-          (sender, certificate, chain, sslPolicyErrors) => true;
+        ServicePointManager.ServerCertificateValidationCallback += (_, _, _, _) => true;
+        // (sender, certificate, chain, sslPolicyErrors) => true;
       }
 
-      Instance = new DresClient();
-      await Instance.Login();
+      _instance = new DresClient();
+      await _instance.Login();
       var logDir = ConfigManager.Config.logFileLocation;
       var startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-      var username = Instance.UserDetails.Username;
-      var session = Instance.UserDetails.SessionId;
+      var username = _instance.UserDetails.Username;
+      var session = _instance.UserDetails.SessionId;
       _interactionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_interaction.txt");
       _resultsLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_results.txt");
       _submissionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_submission.txt");
@@ -78,7 +78,7 @@ namespace VitrivrVR.Submission
 
       try
       {
-        var result = await Instance.SubmitResult(mediaObjectId, frame);
+        var result = await _instance.SubmitResult(mediaObjectId, frame);
         NotificationController.Notify($"Submission: {result.Submission}");
       }
       catch (Exception e)
@@ -167,7 +167,7 @@ namespace VitrivrVR.Submission
       var queryEventsList = queryEvents.ToList();
       try
       {
-        var success = await Instance.LogResults(timestamp, sortType, "top", queryResultsList, queryEventsList);
+        var success = await _instance.LogResults(timestamp, sortType, "top", queryResultsList, queryEventsList);
 
         if (!success.Status)
         {
@@ -183,7 +183,7 @@ namespace VitrivrVR.Submission
       {
         try
         {
-          using var file = new StreamWriter(_resultsLogPath, true);
+          await using var file = new StreamWriter(_resultsLogPath, true);
           var jsonResults = string.Join(",", queryResultsList.Select(q => q.ToJson().Replace("\n", "")));
           var jsonEvents = string.Join(",", queryEventsList.Select(q => q.ToJson().Replace("\n", "")));
           var resultLog = $"{timestamp},{sortType},top,[{jsonResults}],[{jsonEvents}]";
@@ -220,7 +220,7 @@ namespace VitrivrVR.Submission
     {
       var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-      var queryEvents = query.Stages.SelectMany(stage => stage.Terms.Select(term =>
+      var queryEvents = query.Stages.SelectMany((stage, si) => stage.Terms.Select(term =>
       {
         // Convert term type to Dres category
         var category = TermTypeToDresCategory(term.Type);
@@ -228,7 +228,8 @@ namespace VitrivrVR.Submission
         var type = string.Join(",", term.Categories.Select(CategoryToType));
         var value = term.Data;
 
-        return new QueryEvent(timestamp, category, type, value);
+        // Also provide stage index in type
+        return new QueryEvent(timestamp, category, $"{si}:{type}", value);
       }));
 
       var rankedResults = results.Select((segment, rank) => (segment, rank)).ToList();
@@ -274,7 +275,7 @@ namespace VitrivrVR.Submission
       // Submit to DRES
       try
       {
-        var success = await Instance.LogQueryEvents(timestamp, InteractionEvents);
+        var success = await _instance.LogQueryEvents(timestamp, InteractionEvents);
 
         if (!success.Status)
         {
