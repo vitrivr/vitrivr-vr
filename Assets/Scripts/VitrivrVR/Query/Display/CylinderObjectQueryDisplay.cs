@@ -110,11 +110,11 @@ namespace VitrivrVR.Query.Display
       {
         if (queryData.Query != null)
         {
-          DresClientManager.LogResults("segment", _results, queryData.Query);
+          DresClientManager.LogResults("object", _results, queryData.Query);
         }
         else
         {
-          DresClientManager.LogResults("segment", _results, queryData.StagedQuery);
+          DresClientManager.LogResults("object", _results, queryData.StagedQuery);
         }
       }
     }
