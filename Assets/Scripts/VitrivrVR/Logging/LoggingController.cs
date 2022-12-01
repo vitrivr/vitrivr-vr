@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Dev.Dres.ClientApi.Model;
 using Newtonsoft.Json;
 using Org.Vitrivr.CineastApi.Model;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
@@ -25,9 +26,13 @@ namespace VitrivrVR.Logging
     private static readonly string LogDir = Path.Combine(ConfigManager.Config.logFileLocation, StartDate);
     private static readonly string ResultLogLocation = Path.Combine(LogDir, "results.txt");
     private static readonly string SubmissionLogLocation = Path.Combine(LogDir, "submission.txt");
+    private static readonly string InteractionLogLocation = Path.Combine(LogDir, "interactions.txt");
 
-    private static readonly SemaphoreSlim SubmissionLogLock = new SemaphoreSlim(1, 1);
-    private static readonly SemaphoreSlim ResultLogLock = new SemaphoreSlim(1, 1);
+    private static readonly SemaphoreSlim SubmissionLogLock = new(1, 1);
+    private static readonly SemaphoreSlim ResultLogLock = new(1, 1);
+    private static readonly SemaphoreSlim InteractionLogLock = new(1, 1);
+
+    private static long CurrentTimestamp => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
     /// <summary>
     /// Logs ranked results lists for similarity and staged similarity queries.
@@ -37,7 +42,7 @@ namespace VitrivrVR.Logging
     /// <param name="queryResponse">Query response containing the source query.</param>
     public static void LogQueryResults(string sortOrder, List<ScoredSegment> results, QueryResponse queryResponse)
     {
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+      var timestamp = CurrentTimestamp;
 
       // Log to DRES
       if (ConfigManager.Config.dresEnabled)
@@ -68,7 +73,7 @@ namespace VitrivrVR.Logging
     public static void LogQueryResults(string sortOrder, List<TemporalObject> results,
       TemporalQueryResponse queryResponse)
     {
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+      var timestamp = CurrentTimestamp;
 
       // Log to DRES
       if (ConfigManager.Config.dresEnabled)
@@ -85,7 +90,7 @@ namespace VitrivrVR.Logging
 
     public static void LogSubmission(string mediaObjectId, int? frame)
     {
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+      var timestamp = CurrentTimestamp;
       // Log to file
       if (ConfigManager.Config.writeLogsToFile)
       {
@@ -93,7 +98,22 @@ namespace VitrivrVR.Logging
       }
     }
 
-    // TODO: Log interaction
+    public static void LogInteraction(string type, string value, QueryEvent.CategoryEnum category)
+    {
+      var timestamp = CurrentTimestamp;
+
+      // Log to DRES
+      if (ConfigManager.Config.dresEnabled)
+      {
+        DresClientManager.LogInteraction(timestamp, type, value, category);
+      }
+
+      // Log to file
+      if (ConfigManager.Config.writeLogsToFile)
+      {
+        LogInteractionToFile(timestamp, type, value, category.ToString());
+      }
+    }
 
     #region FileLogger
 
@@ -199,6 +219,35 @@ namespace VitrivrVR.Logging
       finally
       {
         SubmissionLogLock.Release();
+      }
+    }
+
+    private static async void LogInteractionToFile(long timestamp, string type, string value, string category)
+    {
+      EnsureDirectoryExists();
+      await InteractionLogLock.WaitAsync();
+      try
+      {
+        await using var file = new StreamWriter(InteractionLogLocation, true);
+        var dict = new Dictionary<string, string>
+        {
+          { "timestamp", timestamp.ToString() },
+          { "type", type },
+          { "value", value },
+          { "category", category }
+        };
+
+        var json = JsonConvert.SerializeObject(dict, Formatting.None);
+
+        await file.WriteLineAsync(json);
+      }
+      catch (Exception e)
+      {
+        NotificationController.NotifyError($"Error logging to file: {e.Message}");
+      }
+      finally
+      {
+        InteractionLogLock.Release();
       }
     }
 

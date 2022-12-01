@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Dev.Dres.ClientApi.Model;
 using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
@@ -8,6 +9,7 @@ using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using VitrivrVR.Config;
+using VitrivrVR.Logging;
 using VitrivrVR.Notification;
 using VitrivrVR.Submission;
 using VitrivrVR.UI;
@@ -67,7 +69,7 @@ namespace VitrivrVR.Media.Display
       if (ConfigManager.Config.dresEnabled)
       {
         submitButton.SetActive(true);
-        DresClientManager.LogInteraction("imageSequenceDisplay", $"initialized {_mediaObject.Id} {Segment.Id}");
+        LoggingController.LogInteraction("imageSequenceDisplay", $"initialized {_mediaObject.Id} {Segment.Id}", QueryEvent.CategoryEnum.BROWSING);
       }
     }
 
@@ -79,7 +81,7 @@ namespace VitrivrVR.Media.Display
 
     private void OnDestroy()
     {
-      DresClientManager.LogInteraction("imageDisplay", $"closed {_mediaObject.Id} {Segment.Id}");
+      LoggingController.LogInteraction("imageDisplay", $"closed {_mediaObject.Id} {Segment.Id}", QueryEvent.CategoryEnum.BROWSING);
     }
 
     public async void ToggleMetadata()
@@ -88,7 +90,7 @@ namespace VitrivrVR.Media.Display
       {
         Destroy(_metadataTable);
         _metadataShown = false;
-        DresClientManager.LogInteraction("mediaSegmentMetadata", $"closed {_mediaObject.Id}");
+        LoggingController.LogInteraction("mediaSegmentMetadata", $"closed {_mediaObject.Id}", QueryEvent.CategoryEnum.BROWSING);
         return;
       }
 
@@ -123,7 +125,7 @@ namespace VitrivrVR.Media.Display
       var uiTableTransform = _metadataTable.GetComponent<RectTransform>();
       uiTableTransform.sizeDelta = new Vector2(100, 600); // x is completely irrelevant here, since width is auto
 
-      DresClientManager.LogInteraction("mediaObjectMetadata", $"opened {_mediaObject.Id}");
+      LoggingController.LogInteraction("mediaObjectMetadata", $"opened {_mediaObject.Id}", QueryEvent.CategoryEnum.BROWSING);
     }
 
     public async void ToggleTagList()
@@ -132,7 +134,7 @@ namespace VitrivrVR.Media.Display
       {
         Destroy(_tagList.gameObject);
         _tagListShown = false;
-        DresClientManager.LogInteraction("segmentTags", $"closed {_mediaObject.Id}");
+        LoggingController.LogInteraction("segmentTags", $"closed {_mediaObject.Id}", QueryEvent.CategoryEnum.BROWSING);
         return;
       }
 
@@ -157,7 +159,7 @@ namespace VitrivrVR.Media.Display
         tagItem.GetComponentInChildren<TextMeshProUGUI>().text = tagData.Name;
       }
 
-      DresClientManager.LogInteraction("segmentTags", $"opened {_mediaObject.Id} {Segment.Id}");
+      LoggingController.LogInteraction("segmentTags", $"opened {_mediaObject.Id} {Segment.Id}", QueryEvent.CategoryEnum.BROWSING);
     }
 
     public void Submit()

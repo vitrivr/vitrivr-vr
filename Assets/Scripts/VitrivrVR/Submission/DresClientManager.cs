@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -24,8 +23,6 @@ namespace VitrivrVR.Submission
     private static readonly List<QueryEvent> InteractionEvents = new();
     private static float _interactionEventTimer;
 
-    private static string _interactionLogPath;
-
     private async void Start()
     {
       if (!ConfigManager.Config.dresEnabled) return;
@@ -38,17 +35,8 @@ namespace VitrivrVR.Submission
 
       _instance = new DresClient();
       await _instance.Login();
-      var logDir = ConfigManager.Config.logFileLocation;
-      var startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
       var username = _instance.UserDetails.Username;
-      var session = _instance.UserDetails.SessionId;
-      _interactionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_interaction.txt");
-      NotificationController.Notify($"Dres connected: {username}");
-
-      if (ConfigManager.Config.writeLogsToFile)
-      {
-        Directory.CreateDirectory(ConfigManager.Config.logFileLocation);
-      }
+      NotificationController.Notify($"DRES connected: {username}");
     }
 
     private void Update()
@@ -114,7 +102,7 @@ namespace VitrivrVR.Submission
     }
 
     /// <summary>
-    /// Logs results to the connected Dres instance.
+    /// Logs results to the connected DRES instance.
     /// </summary>
     /// <param name="sortType">The sorting of the results display.</param>
     /// <param name="results">The results as list of scored segments.</param>
@@ -163,7 +151,7 @@ namespace VitrivrVR.Submission
     {
       var queryEvents = query.Terms.Select(term =>
       {
-        // Convert term type to Dres category
+        // Convert term type to DRES category
         var category = TermTypeToDresCategory(term.Type);
 
         var type = string.Join(",", term.Categories.Select(CategoryToType));
@@ -182,7 +170,7 @@ namespace VitrivrVR.Submission
     {
       var queryEvents = query.Stages.SelectMany((stage, si) => stage.Terms.Select(term =>
       {
-        // Convert term type to Dres category
+        // Convert term type to DRES category
         var category = TermTypeToDresCategory(term.Type);
 
         var type = string.Join(",", term.Categories.Select(CategoryToType));
@@ -204,7 +192,7 @@ namespace VitrivrVR.Submission
         (temporal, ti) => temporal.Stages.SelectMany(
           (stage, si) => stage.Terms.Select(term =>
           {
-            // Convert term type to Dres category
+            // Convert term type to DRES category
             var category = TermTypeToDresCategory(term.Type);
 
             var type = string.Join(",", term.Categories.Select(CategoryToType));
@@ -246,33 +234,14 @@ namespace VitrivrVR.Submission
         NotificationController.NotifyError($"Error logging interaction: {e.Message}", e);
       }
 
-      var events = InteractionEvents.ToArray();
       InteractionEvents.Clear();
-
-      // Write to file
-      if (ConfigManager.Config.writeLogsToFile)
-      {
-        try
-        {
-          using var file = new StreamWriter(_interactionLogPath, true);
-          foreach (var interactionEvent in events)
-          {
-            await file.WriteLineAsync(interactionEvent.ToJson().Replace("\n", ""));
-          }
-        }
-        catch (Exception e)
-        {
-          NotificationController.NotifyError($"Error logging to file: {e.Message}", e);
-        }
-      }
     }
 
-    public static void LogInteraction(string type, string value,
+    public static void LogInteraction(long timestamp, string type, string value,
       QueryEvent.CategoryEnum category = QueryEvent.CategoryEnum.BROWSING)
     {
       if (!ConfigManager.Config.dresEnabled) return;
 
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
       var queryEvent = new QueryEvent(timestamp, category, type, value);
       InteractionEvents.Add(queryEvent);
     }
