@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Newtonsoft.Json;
 using Org.Vitrivr.CineastApi.Model;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
@@ -23,6 +24,10 @@ namespace VitrivrVR.Logging
     private static readonly string StartDate = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
     private static readonly string LogDir = Path.Combine(ConfigManager.Config.logFileLocation, StartDate);
     private static readonly string ResultLogLocation = Path.Combine(LogDir, "results.txt");
+    private static readonly string SubmissionLogLocation = Path.Combine(LogDir, "submission.txt");
+
+    private static readonly SemaphoreSlim SubmissionLogLock = new SemaphoreSlim(1, 1);
+    private static readonly SemaphoreSlim ResultLogLock = new SemaphoreSlim(1, 1);
 
     /// <summary>
     /// Logs ranked results lists for similarity and staged similarity queries.
@@ -78,7 +83,15 @@ namespace VitrivrVR.Logging
       }
     }
 
-    // TODO: Log submission
+    public static void LogSubmission(string mediaObjectId, int? frame)
+    {
+      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+      // Log to file
+      if (ConfigManager.Config.writeLogsToFile)
+      {
+        LogSubmissionToFile(timestamp, mediaObjectId, frame);
+      }
+    }
 
     // TODO: Log interaction
 
@@ -94,6 +107,7 @@ namespace VitrivrVR.Logging
       QueryResponse queryResponse)
     {
       EnsureDirectoryExists();
+      await ResultLogLock.WaitAsync();
       try
       {
         await using var file = new StreamWriter(ResultLogLocation, true);
@@ -113,12 +127,17 @@ namespace VitrivrVR.Logging
       {
         NotificationController.NotifyError($"Error logging to file: {e.Message}", e);
       }
+      finally
+      {
+        ResultLogLock.Release();
+      }
     }
 
     private static async void LogQueryResultsToFile(long timestamp, string sortOrder, List<TemporalObject> results,
       TemporalQueryResponse queryResponse)
     {
       EnsureDirectoryExists();
+      await ResultLogLock.WaitAsync();
       try
       {
         await using var file = new StreamWriter(ResultLogLocation, true);
@@ -132,6 +151,10 @@ namespace VitrivrVR.Logging
       catch (Exception e)
       {
         NotificationController.NotifyError($"Error logging to file: {e.Message}", e);
+      }
+      finally
+      {
+        ResultLogLock.Release();
       }
     }
 
@@ -148,6 +171,35 @@ namespace VitrivrVR.Logging
       }
 
       throw new Exception("Query response contains neither similarity nor staged similarity query.");
+    }
+
+    private static async void LogSubmissionToFile(long timestamp, string mediaObjectId, int? frame)
+    {
+      EnsureDirectoryExists();
+      await SubmissionLogLock.WaitAsync();
+      try
+      {
+        await using var file = new StreamWriter(SubmissionLogLocation, true);
+        var dict = new Dictionary<string, string>
+        {
+          { "timestamp", timestamp.ToString() },
+          { "mediaObjectId", mediaObjectId }
+        };
+        if (frame.HasValue)
+          dict["frame"] = frame.ToString();
+
+        var json = JsonConvert.SerializeObject(dict, Formatting.None);
+
+        await file.WriteLineAsync(json);
+      }
+      catch (Exception e)
+      {
+        NotificationController.NotifyError($"Error logging to file: {e.Message}");
+      }
+      finally
+      {
+        SubmissionLogLock.Release();
+      }
     }
 
     #endregion

@@ -12,6 +12,7 @@ using Vitrivr.UnityInterface.CineastApi.Model.Config;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using VitrivrVR.Config;
+using VitrivrVR.Logging;
 using VitrivrVR.Notification;
 
 namespace VitrivrVR.Submission
@@ -24,7 +25,6 @@ namespace VitrivrVR.Submission
     private static float _interactionEventTimer;
 
     private static string _interactionLogPath;
-    private static string _submissionLogPath;
 
     private async void Start()
     {
@@ -43,7 +43,6 @@ namespace VitrivrVR.Submission
       var username = _instance.UserDetails.Username;
       var session = _instance.UserDetails.SessionId;
       _interactionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_interaction.txt");
-      _submissionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_submission.txt");
       NotificationController.Notify($"Dres connected: {username}");
 
       if (ConfigManager.Config.writeLogsToFile)
@@ -84,10 +83,7 @@ namespace VitrivrVR.Submission
         NotificationController.Notify(e.Message);
       }
 
-      if (ConfigManager.Config.writeLogsToFile)
-      {
-        LogSubmissionToFile(mediaObjectId, frame);
-      }
+      LoggingController.LogSubmission(mediaObjectId, frame);
     }
 
     /// <summary>
@@ -114,23 +110,6 @@ namespace VitrivrVR.Submission
         default:
           SubmitResult(mediaObjectId);
           break;
-      }
-    }
-
-    private static async void LogSubmissionToFile(string mediaObjectId, int? frame)
-    {
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-      try
-      {
-        await using var file = new StreamWriter(_submissionLogPath, true);
-        var row = $"{timestamp},{mediaObjectId}";
-        if (frame != null)
-          row += $",{frame}";
-        await file.WriteLineAsync(row);
-      }
-      catch (Exception e)
-      {
-        NotificationController.Notify($"Error logging to file: {e.Message}");
       }
     }
 
