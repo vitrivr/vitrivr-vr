@@ -24,7 +24,6 @@ namespace VitrivrVR.Submission
     private static float _interactionEventTimer;
 
     private static string _interactionLogPath;
-    private static string _resultsLogPath;
     private static string _submissionLogPath;
 
     private async void Start()
@@ -44,7 +43,6 @@ namespace VitrivrVR.Submission
       var username = _instance.UserDetails.Username;
       var session = _instance.UserDetails.SessionId;
       _interactionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_interaction.txt");
-      _resultsLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_results.txt");
       _submissionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_submission.txt");
       NotificationController.Notify($"Dres connected: {username}");
 
@@ -144,8 +142,9 @@ namespace VitrivrVR.Submission
     /// <param name="queryEvents">The query that lead to these results represented as enumerable of query events.</param>
     /// <param name="timestamp">Timestamp of result log.</param>
     /// <param name="assumeFullyFetched">Skips trying to batch fetch segment data if true.</param>
-    public static async void LogResults(string sortType, List<(ScoredSegment segment, int rank)> results,
-      IEnumerable<QueryEvent> queryEvents, long timestamp, bool assumeFullyFetched = false)
+    private static async void LogResults(string sortType,
+      IReadOnlyCollection<(ScoredSegment segment, int rank)> results, IEnumerable<QueryEvent> queryEvents,
+      long timestamp, bool assumeFullyFetched = false)
     {
       if (!assumeFullyFetched)
       {
@@ -178,28 +177,11 @@ namespace VitrivrVR.Submission
       {
         NotificationController.Notify(e.Message);
       }
-
-      if (ConfigManager.Config.writeLogsToFile)
-      {
-        try
-        {
-          await using var file = new StreamWriter(_resultsLogPath, true);
-          var jsonResults = string.Join(",", queryResultsList.Select(q => q.ToJson().Replace("\n", "")));
-          var jsonEvents = string.Join(",", queryEventsList.Select(q => q.ToJson().Replace("\n", "")));
-          var resultLog = $"{timestamp},{sortType},top,[{jsonResults}],[{jsonEvents}]";
-          await file.WriteLineAsync(resultLog);
-        }
-        catch (Exception e)
-        {
-          NotificationController.NotifyError($"Error logging to file: {e.Message}", e);
-        }
-      }
     }
 
-    public static void LogResults(string sortType, IEnumerable<ScoredSegment> results, SimilarityQuery query)
+    public static void LogResults(long timestamp, string sortType, IEnumerable<ScoredSegment> results,
+      SimilarityQuery query)
     {
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
       var queryEvents = query.Terms.Select(term =>
       {
         // Convert term type to Dres category
@@ -216,10 +198,9 @@ namespace VitrivrVR.Submission
       LogResults(sortType, rankedResults, queryEvents, timestamp);
     }
 
-    public static void LogResults(string sortType, IEnumerable<ScoredSegment> results, StagedSimilarityQuery query)
+    public static void LogResults(long timestamp, string sortType, IEnumerable<ScoredSegment> results,
+      StagedSimilarityQuery query)
     {
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
       var queryEvents = query.Stages.SelectMany((stage, si) => stage.Terms.Select(term =>
       {
         // Convert term type to Dres category
@@ -237,10 +218,9 @@ namespace VitrivrVR.Submission
       LogResults(sortType, rankedResults, queryEvents, timestamp);
     }
 
-    public static void LogResults(string sortType, IEnumerable<TemporalObject> results, TemporalQuery query)
+    public static void LogResults(long timestamp, string sortType, IEnumerable<TemporalObject> results,
+      TemporalQuery query)
     {
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
       var queryEvents = query.Queries.SelectMany(
         (temporal, ti) => temporal.Stages.SelectMany(
           (stage, si) => stage.Terms.Select(term =>
@@ -363,7 +343,7 @@ namespace VitrivrVR.Submission
     private static string RemovePrefix(string id)
     {
       var prefixLength = ConfigManager.Config.submissionIdPrefixLength;
-      return prefixLength > 0 ? id.Substring(prefixLength) : id;
+      return prefixLength > 0 ? id[prefixLength..] : id;
     }
   }
 }

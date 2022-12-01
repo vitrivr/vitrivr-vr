@@ -6,6 +6,7 @@ using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VitrivrVR.Config;
+using VitrivrVR.Logging;
 using VitrivrVR.Media.Display;
 using VitrivrVR.Notification;
 using VitrivrVR.Submission;
@@ -106,17 +107,7 @@ namespace VitrivrVR.Query.Display
         _enqueued++;
       }
 
-      if (ConfigManager.Config.dresEnabled)
-      {
-        if (queryData.Query != null)
-        {
-          DresClientManager.LogResults("object", _results, queryData.Query);
-        }
-        else
-        {
-          DresClientManager.LogResults("object", _results, queryData.StagedQuery);
-        }
-      }
+      LoggingController.LogQueryResults("object", _results, queryData);
     }
 
     /// <summary>
@@ -156,6 +147,8 @@ namespace VitrivrVR.Query.Display
 
         _currentStart = enabledStart;
         _currentEnd = enabledEnd;
+        
+        DresClientManager.LogInteraction("rankedList", $"browse {Mathf.Sign(degrees)}");
       }
     }
 
@@ -181,7 +174,7 @@ namespace VitrivrVR.Query.Display
       else
       {
         _objectMap[objectId] = _mediaObjectSegmentDisplays.Count;
-        _mediaObjectSegmentDisplays.Add(new List<MediaItemDisplay> {itemDisplay});
+        _mediaObjectSegmentDisplays.Add(new List<MediaItemDisplay> { itemDisplay });
       }
 
       var index = _objectMap[objectId];

@@ -5,6 +5,7 @@ using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VitrivrVR.Config;
+using VitrivrVR.Logging;
 using VitrivrVR.Media.Display;
 using VitrivrVR.Notification;
 using VitrivrVR.Submission;
@@ -90,17 +91,7 @@ namespace VitrivrVR.Query.Display
         _instantiationQueue.Enqueue(segment);
       }
 
-      if (ConfigManager.Config.dresEnabled)
-      {
-        if (queryData.Query != null)
-        {
-          DresClientManager.LogResults("segment", _results, queryData.Query);
-        }
-        else
-        {
-          DresClientManager.LogResults("segment", _results, queryData.StagedQuery);
-        }
-      }
+      LoggingController.LogQueryResults("segment", _results, queryData);
     }
 
     /// <summary>
