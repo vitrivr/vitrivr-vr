@@ -1,6 +1,4 @@
 using UnityEngine;
-using VitrivrVR.Config;
-using Dev.Dres.ClientApi.Model;
 using VitrivrVR.Logging;
 
 namespace VitrivrVR.Input.Text
@@ -13,45 +11,43 @@ namespace VitrivrVR.Input.Text
     public void InputText(string text)
     {
       TextInputManager.InputText(text);
-      LoggingController.LogInteraction("keyboard", $"input {text}", QueryEvent.CategoryEnum.TEXT);
+      LoggingController.LogInteraction("keyboard", $"input {text}", Logging.Interaction.TextInput);
     }
 
     public void InputBackspace()
     {
       TextInputManager.InputBackspace();
-      LoggingController.LogInteraction("keyboard", "backspace", QueryEvent.CategoryEnum.TEXT);
+      LoggingController.LogInteraction("keyboard", "backspace", Logging.Interaction.TextInput);
     }
-    
+
     public void InputReturn()
     {
       TextInputManager.InputReturn();
-      LoggingController.LogInteraction("keyboard", "return", QueryEvent.CategoryEnum.TEXT);
+      LoggingController.LogInteraction("keyboard", "return", Logging.Interaction.TextInput);
     }
-    
+
     public void InputLeftArrow()
     {
       TextInputManager.InputLeftArrow();
-      LoggingController.LogInteraction("keyboard", "ArrowLeft", QueryEvent.CategoryEnum.TEXT);
+      LoggingController.LogInteraction("keyboard", "ArrowLeft", Logging.Interaction.TextInput);
     }
-    
+
     public void InputRightArrow()
     {
       TextInputManager.InputRightArrow();
-      LoggingController.LogInteraction("keyboard", "ArrowRight", QueryEvent.CategoryEnum.TEXT);
+      LoggingController.LogInteraction("keyboard", "ArrowRight", Logging.Interaction.TextInput);
     }
+
     public void InputTabulator()
     {
       TextInputManager.InputTabulator();
-      LoggingController.LogInteraction("keyboard", "Tabulator", QueryEvent.CategoryEnum.TEXT);
+      LoggingController.LogInteraction("keyboard", "Tabulator", Logging.Interaction.TextInput);
     }
 
     public void ReceiveDictationResult(string text)
     {
       InputText(text);
-      if (ConfigManager.Config.dresEnabled)
-      {
-        LoggingController.LogInteraction("speechToText", $"input {text} DeepSpeech", QueryEvent.CategoryEnum.TEXT);
-      }
+      LoggingController.LogInteraction("speechToText", $"input {text} DeepSpeech", Logging.Interaction.TextInput);
     }
   }
 }

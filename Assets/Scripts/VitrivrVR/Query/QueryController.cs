@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Vitrivr.UnityInterface.CineastApi;
-using Vitrivr.UnityInterface.CineastApi.Utils;
 using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
 using UnityEngine.Events;
+using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
+using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Config;
 using VitrivrVR.Logging;
 using VitrivrVR.Notification;
 using VitrivrVR.Query.Display;
 using VitrivrVR.Query.Term;
-using static Dev.Dres.ClientApi.Model.QueryEvent;
+using static VitrivrVR.Logging.Interaction;
 
 namespace VitrivrVR.Query
 {
@@ -243,7 +243,7 @@ namespace VitrivrVR.Query
       queryFocusEvent.Invoke(CurrentQuery, index);
       CurrentQuery = index;
 
-      LoggingController.LogInteraction("queryManagement", $"select {index}", CategoryEnum.BROWSING);
+      LoggingController.LogInteraction("queryManagement", $"select {index}", QueryManagement);
     }
 
     /// <summary>
@@ -280,7 +280,7 @@ namespace VitrivrVR.Query
       queryRemovedEvent.Invoke(index);
       Destroy(queries[index].gameObject);
       queries.RemoveAt(index);
-      LoggingController.LogInteraction("queryManagement", $"delete {index}", CategoryEnum.BROWSING);
+      LoggingController.LogInteraction("queryManagement", $"delete {index}", QueryManagement);
     }
 
     public void RemoveAllQueries()
@@ -297,7 +297,7 @@ namespace VitrivrVR.Query
       SetQueryActive(CurrentQuery, false);
       queryFocusEvent.Invoke(CurrentQuery, -1);
       CurrentQuery = -1;
-      LoggingController.LogInteraction("queryManagement", "clear", CategoryEnum.BROWSING);
+      LoggingController.LogInteraction("queryManagement", "clear", QueryManagement);
     }
 
     /// <summary>

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Dev.Dres.ClientApi.Model;
 using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
@@ -23,6 +22,7 @@ using VitrivrVR.Query;
 using VitrivrVR.Submission;
 using VitrivrVR.UI;
 using VitrivrVR.Util;
+using static VitrivrVR.Logging.Interaction;
 
 namespace VitrivrVR.Media.Display
 {
@@ -118,9 +118,9 @@ namespace VitrivrVR.Media.Display
       if (ConfigManager.Config.dresEnabled)
       {
         submitButton.SetActive(true);
-        LoggingController.LogInteraction("videoPlayer", $"initialized {_mediaObject.Id} {_segment.Id}",
-          QueryEvent.CategoryEnum.BROWSING);
       }
+
+      LoggingController.LogInteraction("videoPlayer", $"initialized {_mediaObject.Id} {_segment.Id}", ResultExpansion);
     }
 
     public void Close()
@@ -136,8 +136,7 @@ namespace VitrivrVR.Media.Display
         Destroy(_objectSegmentView);
       }
 
-      LoggingController.LogInteraction("videoPlayer", $"closed {_mediaObject.Id} {_segment.Id}",
-        QueryEvent.CategoryEnum.BROWSING);
+      LoggingController.LogInteraction("videoPlayer", $"closed {_mediaObject.Id} {_segment.Id}", Other);
     }
 
     public void ShowObjectSegmentView()
@@ -161,8 +160,7 @@ namespace VitrivrVR.Media.Display
       {
         Destroy(_metadataTable);
         _metadataShown = false;
-        LoggingController.LogInteraction("mediaObjectMetadata", $"closed {_mediaObject.Id}",
-          QueryEvent.CategoryEnum.BROWSING);
+        LoggingController.LogInteraction("mediaObjectMetadata", $"closed {_mediaObject.Id}", Other);
         return;
       }
 
@@ -199,8 +197,7 @@ namespace VitrivrVR.Media.Display
       var uiTableTransform = _metadataTable.GetComponent<RectTransform>();
       uiTableTransform.sizeDelta = new Vector2(100, 600); // x is completely irrelevant here, since width is auto
 
-      LoggingController.LogInteraction("mediaObjectMetadata", $"opened {_mediaObject.Id}",
-        QueryEvent.CategoryEnum.BROWSING);
+      LoggingController.LogInteraction("mediaObjectMetadata", $"opened {_mediaObject.Id}", ResultExpansion);
     }
 
     public async void ToggleTagList()
@@ -209,7 +206,7 @@ namespace VitrivrVR.Media.Display
       {
         Destroy(_tagList.gameObject);
         _tagListShown = false;
-        LoggingController.LogInteraction("segmentTags", $"closed {_mediaObject.Id}", QueryEvent.CategoryEnum.BROWSING);
+        LoggingController.LogInteraction("segmentTags", $"closed {_mediaObject.Id}", Other);
         return;
       }
 
@@ -237,8 +234,7 @@ namespace VitrivrVR.Media.Display
         tagItem.GetComponentInChildren<TextMeshProUGUI>().text = tagData.Name;
       }
 
-      LoggingController.LogInteraction("segmentTags", $"opened {_mediaObject.Id} {segment.Id}",
-        QueryEvent.CategoryEnum.BROWSING);
+      LoggingController.LogInteraction("segmentTags", $"opened {_mediaObject.Id} {segment.Id}", ResultExpansion);
     }
 
     public void SubmitCurrentFrame()
@@ -313,8 +309,7 @@ namespace VitrivrVR.Media.Display
         UpdateText(time);
       }
 
-      LoggingController.LogInteraction("videoPlayer", $"skipped {_mediaObject.Id} {time} {sign}",
-        QueryEvent.CategoryEnum.BROWSING);
+      LoggingController.LogInteraction("videoPlayer", $"skipped {_mediaObject.Id} {time} {sign}", Browsing);
     }
 
     private void Update()
@@ -333,13 +328,13 @@ namespace VitrivrVR.Media.Display
       {
         _videoPlayerController.Pause();
         LoggingController.LogInteraction("videoPlayer", $"pause {_mediaObject.Id} {_videoPlayerController.ClockTime}",
-          QueryEvent.CategoryEnum.BROWSING);
+          Browsing);
       }
       else
       {
         _videoPlayerController.Play();
         LoggingController.LogInteraction("videoPlayer", $"play {_mediaObject.Id} {_videoPlayerController.ClockTime}",
-          QueryEvent.CategoryEnum.BROWSING);
+          Browsing);
       }
     }
 
@@ -359,7 +354,7 @@ namespace VitrivrVR.Media.Display
       UpdateProgressIndicator(newTime);
       UpdateText(newTime);
       LoggingController.LogInteraction("videoPlayer", $"jump {_mediaObject.Id} {newTime}",
-        QueryEvent.CategoryEnum.BROWSING);
+        Browsing);
     }
 
     private void SetVideoTime(double time)

@@ -13,6 +13,7 @@ using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using VitrivrVR.Config;
 using VitrivrVR.Logging;
 using VitrivrVR.Notification;
+using static Dev.Dres.ClientApi.Model.QueryEvent;
 
 namespace VitrivrVR.Submission
 {
@@ -237,12 +238,11 @@ namespace VitrivrVR.Submission
       InteractionEvents.Clear();
     }
 
-    public static void LogInteraction(long timestamp, string type, string value,
-      QueryEvent.CategoryEnum category = QueryEvent.CategoryEnum.BROWSING)
+    public static void LogInteraction(long timestamp, string type, string value, Logging.Interaction category)
     {
       if (!ConfigManager.Config.dresEnabled) return;
 
-      var queryEvent = new QueryEvent(timestamp, category, type, value);
+      var queryEvent = new QueryEvent(timestamp, InteractionToDresCategory(category), type, value);
       InteractionEvents.Add(queryEvent);
     }
 
@@ -267,21 +267,37 @@ namespace VitrivrVR.Submission
       };
     }
 
-    private static QueryEvent.CategoryEnum TermTypeToDresCategory(QueryTerm.TypeEnum? type)
+    private static CategoryEnum TermTypeToDresCategory(QueryTerm.TypeEnum? type)
     {
       return type switch
       {
-        QueryTerm.TypeEnum.IMAGE => QueryEvent.CategoryEnum.IMAGE,
-        QueryTerm.TypeEnum.AUDIO => QueryEvent.CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.MODEL3D => QueryEvent.CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.LOCATION => QueryEvent.CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.TIME => QueryEvent.CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.TEXT => QueryEvent.CategoryEnum.TEXT,
-        QueryTerm.TypeEnum.TAG => QueryEvent.CategoryEnum.TEXT,
-        QueryTerm.TypeEnum.SEMANTIC => QueryEvent.CategoryEnum.SKETCH,
-        QueryTerm.TypeEnum.ID => QueryEvent.CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.BOOLEAN => QueryEvent.CategoryEnum.FILTER,
-        _ => QueryEvent.CategoryEnum.OTHER
+        QueryTerm.TypeEnum.IMAGE => CategoryEnum.IMAGE,
+        QueryTerm.TypeEnum.AUDIO => CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.MODEL3D => CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.LOCATION => CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.TIME => CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.TEXT => CategoryEnum.TEXT,
+        QueryTerm.TypeEnum.TAG => CategoryEnum.TEXT,
+        QueryTerm.TypeEnum.SEMANTIC => CategoryEnum.SKETCH,
+        QueryTerm.TypeEnum.ID => CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.BOOLEAN => CategoryEnum.FILTER,
+        _ => CategoryEnum.OTHER
+      };
+    }
+
+    private static CategoryEnum InteractionToDresCategory(Logging.Interaction category)
+    {
+      return category switch
+      {
+        Logging.Interaction.TextInput => CategoryEnum.TEXT,
+        Logging.Interaction.Browsing => CategoryEnum.BROWSING,
+        Logging.Interaction.ResultExpansion => CategoryEnum.BROWSING,
+        Logging.Interaction.QueryFormulation => CategoryEnum.OTHER,
+        Logging.Interaction.Query => CategoryEnum.OTHER,
+        Logging.Interaction.Filter => CategoryEnum.FILTER,
+        Logging.Interaction.Other => CategoryEnum.OTHER,
+        Logging.Interaction.QueryManagement => CategoryEnum.BROWSING,
+        _ => throw new ArgumentOutOfRangeException(nameof(category), category, null)
       };
     }
 

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Dev.Dres.ClientApi.Model;
 using UnityEngine;
 using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
@@ -11,6 +10,7 @@ using VitrivrVR.Interaction.System;
 using VitrivrVR.Interaction.System.Grab;
 using VitrivrVR.Logging;
 using VitrivrVR.Media.Controller;
+using static VitrivrVR.Logging.Interaction;
 
 namespace VitrivrVR.Media.Display
 {
@@ -43,8 +43,8 @@ namespace VitrivrVR.Media.Display
       if (other.TryGetComponent<Interactor>(out var interactor))
       {
         _enteredInteractors.Add(interactor, -1);
-        LoggingController.LogInteraction("videoSummary", $"browse started {_mediaObject.Id}",
-          QueryEvent.CategoryEnum.BROWSING);
+        LoggingController.LogInteraction("videoSummary", $"browse started {_mediaObject.Id} {interactor.name}",
+          Browsing);
       }
     }
 
@@ -59,8 +59,8 @@ namespace VitrivrVR.Media.Display
         }
 
         _enteredInteractors.Remove(interactor);
-        LoggingController.LogInteraction("videoSummary", $"browse stopped {_mediaObject.Id}",
-          QueryEvent.CategoryEnum.BROWSING);
+        LoggingController.LogInteraction("videoSummary", $"browse stopped {_mediaObject.Id} {interactor.name}",
+          Browsing);
       }
     }
 
@@ -90,7 +90,7 @@ namespace VitrivrVR.Media.Display
 
     private void OnDestroy()
     {
-      LoggingController.LogInteraction("videoSummary", $"closed {_mediaObject.Id}", QueryEvent.CategoryEnum.BROWSING);
+      LoggingController.LogInteraction("videoSummary", $"closed {_mediaObject.Id}", Other);
     }
 
     public async void Initialize(ObjectData mediaObject, Action<int, Vector3> onSegmentSelection, int min = 0,
@@ -119,8 +119,7 @@ namespace VitrivrVR.Media.Display
       StartCoroutine(InstantiateSegmentIndicators(segmentInfo, segmentInfo.Length));
 
       // TODO: Translate type in DresClientManager to support other media object types
-      LoggingController.LogInteraction("videoSummary", $"initialized {_mediaObject.Id}",
-        QueryEvent.CategoryEnum.BROWSING);
+      LoggingController.LogInteraction("videoSummary", $"initialized {_mediaObject.Id}", ResultExpansion);
     }
 
     public override void OnInteraction(Transform interactor, bool start)
@@ -129,8 +128,8 @@ namespace VitrivrVR.Media.Display
       var rawIndex = GetSegmentIndex(interactor);
       var segmentIndex = rawIndex + _minIndex - 1;
       _onSegmentSelection(segmentIndex, interactor.position);
-      LoggingController.LogInteraction("videoSummary", $"selected {_mediaObject.Id} {segmentIndex}",
-        QueryEvent.CategoryEnum.BROWSING);
+      LoggingController.LogInteraction("videoSummary", $"selected {_mediaObject.Id} {segmentIndex} {interactor.name}",
+        ResultExpansion);
     }
 
     private IEnumerator InstantiateSegmentIndicators(IEnumerable<(SegmentData segment, int seqNum)> segmentInfo,

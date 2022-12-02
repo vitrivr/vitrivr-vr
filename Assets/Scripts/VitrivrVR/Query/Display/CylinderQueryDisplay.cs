@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Dev.Dres.ClientApi.Model;
-using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Config;
 using VitrivrVR.Logging;
 using VitrivrVR.Media.Display;
 using VitrivrVR.Notification;
+using static VitrivrVR.Logging.Interaction;
 
 namespace VitrivrVR.Query.Display
 {
@@ -131,7 +131,7 @@ namespace VitrivrVR.Query.Display
         _currentStart = enabledStart;
         _currentEnd = enabledEnd;
 
-        LoggingController.LogInteraction("rankedList", $"browse {Mathf.Sign(degrees)}", QueryEvent.CategoryEnum.BROWSING);
+        LoggingController.LogInteraction("rankedList", $"browse {Mathf.Sign(degrees)}", Browsing);
       }
     }
 

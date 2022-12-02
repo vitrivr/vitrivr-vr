@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Dev.Dres.ClientApi.Model;
 using Newtonsoft.Json;
 using Org.Vitrivr.CineastApi.Model;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
@@ -98,7 +97,7 @@ namespace VitrivrVR.Logging
       }
     }
 
-    public static void LogInteraction(string type, string value, QueryEvent.CategoryEnum category)
+    public static void LogInteraction(string type, string value, Interaction category)
     {
       var timestamp = CurrentTimestamp;
 
