@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -100,6 +101,7 @@ namespace VitrivrVR.Logging
     public static void LogInteraction(string type, string value, Interaction category)
     {
       var timestamp = CurrentTimestamp;
+      var source = new StackTrace().GetFrame(1).GetMethod().ReflectedType?.Name;
 
       // Log to DRES
       if (ConfigManager.Config.dresEnabled)
@@ -110,7 +112,7 @@ namespace VitrivrVR.Logging
       // Log to file
       if (ConfigManager.Config.writeLogsToFile)
       {
-        LogInteractionToFile(timestamp, type, value, category.ToString());
+        LogInteractionToFile(timestamp, source, type, value, category.ToString());
       }
     }
 
@@ -221,7 +223,8 @@ namespace VitrivrVR.Logging
       }
     }
 
-    private static async void LogInteractionToFile(long timestamp, string type, string value, string category)
+    private static async void LogInteractionToFile(long timestamp, string source, string type, string value,
+      string category)
     {
       EnsureDirectoryExists();
       await InteractionLogLock.WaitAsync();
@@ -231,6 +234,7 @@ namespace VitrivrVR.Logging
         var dict = new Dictionary<string, string>
         {
           { "timestamp", timestamp.ToString() },
+          { "source", source },
           { "type", type },
           { "value", value },
           { "category", category }

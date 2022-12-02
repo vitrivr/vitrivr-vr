@@ -28,9 +28,9 @@ namespace VitrivrVR.Query.Display
 
     public override int NumberOfResults => _nResults;
 
-    private readonly List<MediaItemDisplay> _mediaDisplays = new List<MediaItemDisplay>();
+    private readonly List<MediaItemDisplay> _mediaDisplays = new();
 
-    private readonly Queue<ScoredSegment> _instantiationQueue = new Queue<ScoredSegment>();
+    private readonly Queue<ScoredSegment> _instantiationQueue = new();
 
     private List<ScoredSegment> _results;
 
