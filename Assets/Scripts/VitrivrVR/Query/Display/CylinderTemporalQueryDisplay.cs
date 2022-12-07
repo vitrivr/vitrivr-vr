@@ -5,9 +5,10 @@ using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VitrivrVR.Config;
+using VitrivrVR.Logging;
 using VitrivrVR.Media.Display;
 using VitrivrVR.Notification;
-using VitrivrVR.Submission;
+using static VitrivrVR.Logging.Interaction;
 
 namespace VitrivrVR.Query.Display
 {
@@ -74,7 +75,7 @@ namespace VitrivrVR.Query.Display
     protected override void Initialize()
     {
       _results = temporalQueryData.Results.Content;
-      
+
       if (_results.Count == 0)
       {
         NotificationController.Notify("No results returned from query!");
@@ -86,10 +87,7 @@ namespace VitrivrVR.Query.Display
         _instantiationQueue.Enqueue(temporalObject);
       }
 
-      if (ConfigManager.Config.dresEnabled)
-      {
-        DresClientManager.LogResults("temporal", _results, temporalQueryData.Query);
-      }
+      LoggingController.LogQueryResults("temporal", _results, temporalQueryData);
     }
 
     /// <summary>
@@ -129,7 +127,7 @@ namespace VitrivrVR.Query.Display
         _currentStart = enabledStart;
         _currentEnd = enabledEnd;
 
-        DresClientManager.LogInteraction("rankedList", $"browse {Mathf.Sign(degrees)}");
+        LoggingController.LogInteraction("rankedList", $"browse {Mathf.Sign(degrees)}", Browsing);
       }
     }
 

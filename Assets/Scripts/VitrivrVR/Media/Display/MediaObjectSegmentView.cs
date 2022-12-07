@@ -8,8 +8,9 @@ using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Interaction.System;
 using VitrivrVR.Interaction.System.Grab;
+using VitrivrVR.Logging;
 using VitrivrVR.Media.Controller;
-using VitrivrVR.Submission;
+using static VitrivrVR.Logging.Interaction;
 
 namespace VitrivrVR.Media.Display
 {
@@ -42,7 +43,8 @@ namespace VitrivrVR.Media.Display
       if (other.TryGetComponent<Interactor>(out var interactor))
       {
         _enteredInteractors.Add(interactor, -1);
-        DresClientManager.LogInteraction("videoSummary", $"browse started {_mediaObject.Id}");
+        LoggingController.LogInteraction("videoSummary", $"browse started {_mediaObject.Id} {interactor.name}",
+          Browsing);
       }
     }
 
@@ -57,7 +59,8 @@ namespace VitrivrVR.Media.Display
         }
 
         _enteredInteractors.Remove(interactor);
-        DresClientManager.LogInteraction("videoSummary", $"browse stopped {_mediaObject.Id}");
+        LoggingController.LogInteraction("videoSummary", $"browse stopped {_mediaObject.Id} {interactor.name}",
+          Browsing);
       }
     }
 
@@ -87,7 +90,7 @@ namespace VitrivrVR.Media.Display
 
     private void OnDestroy()
     {
-      DresClientManager.LogInteraction("videoSummary", $"closed {_mediaObject.Id}");
+      LoggingController.LogInteraction("videoSummary", $"closed {_mediaObject.Id}", Other);
     }
 
     public async void Initialize(ObjectData mediaObject, Action<int, Vector3> onSegmentSelection, int min = 0,
@@ -116,7 +119,7 @@ namespace VitrivrVR.Media.Display
       StartCoroutine(InstantiateSegmentIndicators(segmentInfo, segmentInfo.Length));
 
       // TODO: Translate type in DresClientManager to support other media object types
-      DresClientManager.LogInteraction("videoSummary", $"initialized {_mediaObject.Id}");
+      LoggingController.LogInteraction("videoSummary", $"initialized {_mediaObject.Id}", ResultExpansion);
     }
 
     public override void OnInteraction(Transform interactor, bool start)
@@ -125,7 +128,8 @@ namespace VitrivrVR.Media.Display
       var rawIndex = GetSegmentIndex(interactor);
       var segmentIndex = rawIndex + _minIndex - 1;
       _onSegmentSelection(segmentIndex, interactor.position);
-      DresClientManager.LogInteraction("videoSummary", $"selected {_mediaObject.Id} {segmentIndex}");
+      LoggingController.LogInteraction("videoSummary", $"selected {_mediaObject.Id} {segmentIndex} {interactor.name}",
+        ResultExpansion);
     }
 
     private IEnumerator InstantiateSegmentIndicators(IEnumerable<(SegmentData segment, int seqNum)> segmentInfo,
@@ -139,7 +143,7 @@ namespace VitrivrVR.Media.Display
         var thumbnail = Instantiate(thumbnailPrefab, transform);
         thumbnail.url = thumbnailUrl;
 
-        thumbnail.transform.localPosition = Vector3.forward * ((float) (seqNum - _minIndex) / numSegments - 0.5f);
+        thumbnail.transform.localPosition = Vector3.forward * ((float)(seqNum - _minIndex) / numSegments - 0.5f);
 
         _thumbnails[seqNum - _minIndex] = thumbnail;
 
@@ -192,7 +196,7 @@ namespace VitrivrVR.Media.Display
     private int GetSegmentIndex(Transform other)
     {
       var otherTransform = transform.InverseTransformPoint(other.position);
-      return (int) Mathf.Min(Mathf.Max((otherTransform.z + 0.5f) * _thumbnails.Length, 0), _thumbnails.Length - 1);
+      return (int)Mathf.Min(Mathf.Max((otherTransform.z + 0.5f) * _thumbnails.Length, 0), _thumbnails.Length - 1);
     }
   }
 }

@@ -8,10 +8,12 @@ using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using VitrivrVR.Config;
+using VitrivrVR.Logging;
 using VitrivrVR.Notification;
 using VitrivrVR.Submission;
 using VitrivrVR.UI;
 using VitrivrVR.Util;
+using static VitrivrVR.Logging.Interaction;
 
 namespace VitrivrVR.Media.Display
 {
@@ -31,7 +33,7 @@ namespace VitrivrVR.Media.Display
     /// <summary>
     /// The number of neighbors to show in the segment view.
     /// </summary>
-    private const int MAXNeighbors = 200;
+    private const int MaxNeighbors = 200;
 
     private ScoredSegment _scoredSegment;
     private SegmentData Segment => _scoredSegment.segment;
@@ -76,8 +78,10 @@ namespace VitrivrVR.Media.Display
       if (ConfigManager.Config.dresEnabled)
       {
         submitButton.SetActive(true);
-        DresClientManager.LogInteraction("imageSequenceDisplay", $"initialized {_mediaObject.Id} {Segment.Id}");
       }
+
+      LoggingController.LogInteraction("imageSequenceDisplay", $"initialized {_mediaObject.Id} {Segment.Id}",
+        ResultExpansion);
     }
 
     public void Close()
@@ -93,7 +97,7 @@ namespace VitrivrVR.Media.Display
         Destroy(_objectSegmentView);
       }
 
-      DresClientManager.LogInteraction("imageSequenceDisplay", $"closed {_mediaObject.Id} {Segment.Id}");
+      LoggingController.LogInteraction("imageSequenceDisplay", $"closed {_mediaObject.Id} {Segment.Id}", Other);
     }
 
     public async void ToggleMetadata()
@@ -102,7 +106,7 @@ namespace VitrivrVR.Media.Display
       {
         Destroy(_metadataTable);
         _metadataShown = false;
-        DresClientManager.LogInteraction("mediaSegmentMetadata", $"closed {_mediaObject.Id}");
+        LoggingController.LogInteraction("mediaSegmentMetadata", $"closed {_mediaObject.Id}", Other);
         return;
       }
 
@@ -137,7 +141,7 @@ namespace VitrivrVR.Media.Display
       var uiTableTransform = _metadataTable.GetComponent<RectTransform>();
       uiTableTransform.sizeDelta = new Vector2(100, 600); // x is completely irrelevant here, since width is auto
 
-      DresClientManager.LogInteraction("mediaObjectMetadata", $"opened {_mediaObject.Id}");
+      LoggingController.LogInteraction("mediaObjectMetadata", $"opened {_mediaObject.Id}", ResultExpansion);
     }
 
     public async void ToggleTagList()
@@ -146,7 +150,7 @@ namespace VitrivrVR.Media.Display
       {
         Destroy(_tagList.gameObject);
         _tagListShown = false;
-        DresClientManager.LogInteraction("segmentTags", $"closed {_mediaObject.Id}");
+        LoggingController.LogInteraction("segmentTags", $"closed {_mediaObject.Id}", Other);
         return;
       }
 
@@ -171,7 +175,7 @@ namespace VitrivrVR.Media.Display
         tagItem.GetComponentInChildren<TextMeshProUGUI>().text = tagData.Name;
       }
 
-      DresClientManager.LogInteraction("segmentTags", $"opened {_mediaObject.Id} {Segment.Id}");
+      LoggingController.LogInteraction("segmentTags", $"opened {_mediaObject.Id} {Segment.Id}", ResultExpansion);
     }
 
     public async void ShowObjectSegmentView()
@@ -183,8 +187,8 @@ namespace VitrivrVR.Media.Display
       else
       {
         var index = await Segment.GetSequenceNumber();
-        var min = index - MAXNeighbors;
-        var max = index + MAXNeighbors;
+        var min = index - MaxNeighbors;
+        var max = index + MaxNeighbors;
         var t = transform;
         _objectSegmentView = Instantiate(mediaObjectSegmentViewPrefab, t.position - 0.2f * t.forward, t.rotation);
         _objectSegmentView.GetComponentInChildren<MediaObjectSegmentView>()

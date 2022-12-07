@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -12,20 +11,18 @@ using Vitrivr.UnityInterface.CineastApi.Model.Config;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using VitrivrVR.Config;
+using VitrivrVR.Logging;
 using VitrivrVR.Notification;
+using static Dev.Dres.ClientApi.Model.QueryEvent;
 
 namespace VitrivrVR.Submission
 {
   public class DresClientManager : MonoBehaviour
   {
-    public static DresClient Instance;
+    private static DresClient _instance;
 
     private static readonly List<QueryEvent> InteractionEvents = new();
     private static float _interactionEventTimer;
-
-    private static string _interactionLogPath;
-    private static string _resultsLogPath;
-    private static string _submissionLogPath;
 
     private async void Start()
     {
@@ -33,25 +30,14 @@ namespace VitrivrVR.Submission
 
       if (ConfigManager.Config.allowInvalidCertificate)
       {
-        ServicePointManager.ServerCertificateValidationCallback +=
-          (sender, certificate, chain, sslPolicyErrors) => true;
+        ServicePointManager.ServerCertificateValidationCallback += (_, _, _, _) => true;
+        // (sender, certificate, chain, sslPolicyErrors) => true;
       }
 
-      Instance = new DresClient();
-      await Instance.Login();
-      var logDir = ConfigManager.Config.logFileLocation;
-      var startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-      var username = Instance.UserDetails.Username;
-      var session = Instance.UserDetails.SessionId;
-      _interactionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_interaction.txt");
-      _resultsLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_results.txt");
-      _submissionLogPath = Path.Combine(logDir, $"{startTime}_{username}_{session}_submission.txt");
-      NotificationController.Notify($"Dres connected: {username}");
-
-      if (ConfigManager.Config.writeLogsToFile)
-      {
-        Directory.CreateDirectory(ConfigManager.Config.logFileLocation);
-      }
+      _instance = new DresClient();
+      await _instance.Login();
+      var username = _instance.UserDetails.Username;
+      NotificationController.Notify($"DRES connected: {username}");
     }
 
     private void Update()
@@ -78,7 +64,7 @@ namespace VitrivrVR.Submission
 
       try
       {
-        var result = await Instance.SubmitResult(mediaObjectId, frame);
+        var result = await _instance.SubmitResult(mediaObjectId, frame);
         NotificationController.Notify($"Submission: {result.Submission}");
       }
       catch (Exception e)
@@ -86,10 +72,7 @@ namespace VitrivrVR.Submission
         NotificationController.Notify(e.Message);
       }
 
-      if (ConfigManager.Config.writeLogsToFile)
-      {
-        LogSubmissionToFile(mediaObjectId, frame);
-      }
+      LoggingController.LogSubmission(mediaObjectId, frame);
     }
 
     /// <summary>
@@ -119,33 +102,17 @@ namespace VitrivrVR.Submission
       }
     }
 
-    private static async void LogSubmissionToFile(string mediaObjectId, int? frame)
-    {
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-      try
-      {
-        await using var file = new StreamWriter(_submissionLogPath, true);
-        var row = $"{timestamp},{mediaObjectId}";
-        if (frame != null)
-          row += $",{frame}";
-        await file.WriteLineAsync(row);
-      }
-      catch (Exception e)
-      {
-        NotificationController.Notify($"Error logging to file: {e.Message}");
-      }
-    }
-
     /// <summary>
-    /// Logs results to the connected Dres instance.
+    /// Logs results to the connected DRES instance.
     /// </summary>
     /// <param name="sortType">The sorting of the results display.</param>
     /// <param name="results">The results as list of scored segments.</param>
     /// <param name="queryEvents">The query that lead to these results represented as enumerable of query events.</param>
     /// <param name="timestamp">Timestamp of result log.</param>
     /// <param name="assumeFullyFetched">Skips trying to batch fetch segment data if true.</param>
-    public static async void LogResults(string sortType, List<(ScoredSegment segment, int rank)> results,
-      IEnumerable<QueryEvent> queryEvents, long timestamp, bool assumeFullyFetched = false)
+    private static async void LogResults(string sortType,
+      IReadOnlyCollection<(ScoredSegment segment, int rank)> results, IEnumerable<QueryEvent> queryEvents,
+      long timestamp, bool assumeFullyFetched = false)
     {
       if (!assumeFullyFetched)
       {
@@ -167,7 +134,7 @@ namespace VitrivrVR.Submission
       var queryEventsList = queryEvents.ToList();
       try
       {
-        var success = await Instance.LogResults(timestamp, sortType, "top", queryResultsList, queryEventsList);
+        var success = await _instance.LogResults(timestamp, sortType, "top", queryResultsList, queryEventsList);
 
         if (!success.Status)
         {
@@ -178,31 +145,14 @@ namespace VitrivrVR.Submission
       {
         NotificationController.Notify(e.Message);
       }
-
-      if (ConfigManager.Config.writeLogsToFile)
-      {
-        try
-        {
-          using var file = new StreamWriter(_resultsLogPath, true);
-          var jsonResults = string.Join(",", queryResultsList.Select(q => q.ToJson().Replace("\n", "")));
-          var jsonEvents = string.Join(",", queryEventsList.Select(q => q.ToJson().Replace("\n", "")));
-          var resultLog = $"{timestamp},{sortType},top,[{jsonResults}],[{jsonEvents}]";
-          await file.WriteLineAsync(resultLog);
-        }
-        catch (Exception e)
-        {
-          NotificationController.NotifyError($"Error logging to file: {e.Message}", e);
-        }
-      }
     }
 
-    public static void LogResults(string sortType, IEnumerable<ScoredSegment> results, SimilarityQuery query)
+    public static void LogResults(long timestamp, string sortType, IEnumerable<ScoredSegment> results,
+      SimilarityQuery query)
     {
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
       var queryEvents = query.Terms.Select(term =>
       {
-        // Convert term type to Dres category
+        // Convert term type to DRES category
         var category = TermTypeToDresCategory(term.Type);
 
         var type = string.Join(",", term.Categories.Select(CategoryToType));
@@ -216,19 +166,19 @@ namespace VitrivrVR.Submission
       LogResults(sortType, rankedResults, queryEvents, timestamp);
     }
 
-    public static void LogResults(string sortType, IEnumerable<ScoredSegment> results, StagedSimilarityQuery query)
+    public static void LogResults(long timestamp, string sortType, IEnumerable<ScoredSegment> results,
+      StagedSimilarityQuery query)
     {
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
-      var queryEvents = query.Stages.SelectMany(stage => stage.Terms.Select(term =>
+      var queryEvents = query.Stages.SelectMany((stage, si) => stage.Terms.Select(term =>
       {
-        // Convert term type to Dres category
+        // Convert term type to DRES category
         var category = TermTypeToDresCategory(term.Type);
 
         var type = string.Join(",", term.Categories.Select(CategoryToType));
         var value = term.Data;
 
-        return new QueryEvent(timestamp, category, type, value);
+        // Also provide stage index in type
+        return new QueryEvent(timestamp, category, $"{si}:{type}", value);
       }));
 
       var rankedResults = results.Select((segment, rank) => (segment, rank)).ToList();
@@ -236,15 +186,14 @@ namespace VitrivrVR.Submission
       LogResults(sortType, rankedResults, queryEvents, timestamp);
     }
 
-    public static void LogResults(string sortType, IEnumerable<TemporalObject> results, TemporalQuery query)
+    public static void LogResults(long timestamp, string sortType, IEnumerable<TemporalObject> results,
+      TemporalQuery query)
     {
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-
       var queryEvents = query.Queries.SelectMany(
         (temporal, ti) => temporal.Stages.SelectMany(
           (stage, si) => stage.Terms.Select(term =>
           {
-            // Convert term type to Dres category
+            // Convert term type to DRES category
             var category = TermTypeToDresCategory(term.Type);
 
             var type = string.Join(",", term.Categories.Select(CategoryToType));
@@ -274,7 +223,7 @@ namespace VitrivrVR.Submission
       // Submit to DRES
       try
       {
-        var success = await Instance.LogQueryEvents(timestamp, InteractionEvents);
+        var success = await _instance.LogQueryEvents(timestamp, InteractionEvents);
 
         if (!success.Status)
         {
@@ -286,34 +235,14 @@ namespace VitrivrVR.Submission
         NotificationController.NotifyError($"Error logging interaction: {e.Message}", e);
       }
 
-      var events = InteractionEvents.ToArray();
       InteractionEvents.Clear();
-
-      // Write to file
-      if (ConfigManager.Config.writeLogsToFile)
-      {
-        try
-        {
-          using var file = new StreamWriter(_interactionLogPath, true);
-          foreach (var interactionEvent in events)
-          {
-            await file.WriteLineAsync(interactionEvent.ToJson().Replace("\n", ""));
-          }
-        }
-        catch (Exception e)
-        {
-          NotificationController.NotifyError($"Error logging to file: {e.Message}", e);
-        }
-      }
     }
 
-    public static void LogInteraction(string type, string value,
-      QueryEvent.CategoryEnum category = QueryEvent.CategoryEnum.BROWSING)
+    public static void LogInteraction(long timestamp, string type, string value, Logging.Interaction category)
     {
       if (!ConfigManager.Config.dresEnabled) return;
 
-      var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-      var queryEvent = new QueryEvent(timestamp, category, type, value);
+      var queryEvent = new QueryEvent(timestamp, InteractionToDresCategory(category), type, value);
       InteractionEvents.Add(queryEvent);
     }
 
@@ -338,21 +267,37 @@ namespace VitrivrVR.Submission
       };
     }
 
-    private static QueryEvent.CategoryEnum TermTypeToDresCategory(QueryTerm.TypeEnum? type)
+    private static CategoryEnum TermTypeToDresCategory(QueryTerm.TypeEnum? type)
     {
       return type switch
       {
-        QueryTerm.TypeEnum.IMAGE => QueryEvent.CategoryEnum.IMAGE,
-        QueryTerm.TypeEnum.AUDIO => QueryEvent.CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.MODEL3D => QueryEvent.CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.LOCATION => QueryEvent.CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.TIME => QueryEvent.CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.TEXT => QueryEvent.CategoryEnum.TEXT,
-        QueryTerm.TypeEnum.TAG => QueryEvent.CategoryEnum.TEXT,
-        QueryTerm.TypeEnum.SEMANTIC => QueryEvent.CategoryEnum.SKETCH,
-        QueryTerm.TypeEnum.ID => QueryEvent.CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.BOOLEAN => QueryEvent.CategoryEnum.FILTER,
-        _ => QueryEvent.CategoryEnum.OTHER
+        QueryTerm.TypeEnum.IMAGE => CategoryEnum.IMAGE,
+        QueryTerm.TypeEnum.AUDIO => CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.MODEL3D => CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.LOCATION => CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.TIME => CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.TEXT => CategoryEnum.TEXT,
+        QueryTerm.TypeEnum.TAG => CategoryEnum.TEXT,
+        QueryTerm.TypeEnum.SEMANTIC => CategoryEnum.SKETCH,
+        QueryTerm.TypeEnum.ID => CategoryEnum.OTHER,
+        QueryTerm.TypeEnum.BOOLEAN => CategoryEnum.FILTER,
+        _ => CategoryEnum.OTHER
+      };
+    }
+
+    private static CategoryEnum InteractionToDresCategory(Logging.Interaction category)
+    {
+      return category switch
+      {
+        Logging.Interaction.TextInput => CategoryEnum.TEXT,
+        Logging.Interaction.Browsing => CategoryEnum.BROWSING,
+        Logging.Interaction.ResultExpansion => CategoryEnum.BROWSING,
+        Logging.Interaction.QueryFormulation => CategoryEnum.OTHER,
+        Logging.Interaction.Query => CategoryEnum.OTHER,
+        Logging.Interaction.Filter => CategoryEnum.FILTER,
+        Logging.Interaction.Other => CategoryEnum.OTHER,
+        Logging.Interaction.QueryManagement => CategoryEnum.BROWSING,
+        _ => throw new ArgumentOutOfRangeException(nameof(category), category, null)
       };
     }
 
@@ -362,7 +307,7 @@ namespace VitrivrVR.Submission
     private static string RemovePrefix(string id)
     {
       var prefixLength = ConfigManager.Config.submissionIdPrefixLength;
-      return prefixLength > 0 ? id.Substring(prefixLength) : id;
+      return prefixLength > 0 ? id[prefixLength..] : id;
     }
   }
 }

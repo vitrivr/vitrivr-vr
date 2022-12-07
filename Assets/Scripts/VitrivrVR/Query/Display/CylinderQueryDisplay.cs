@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Config;
+using VitrivrVR.Logging;
 using VitrivrVR.Media.Display;
 using VitrivrVR.Notification;
-using VitrivrVR.Submission;
+using static VitrivrVR.Logging.Interaction;
 
 namespace VitrivrVR.Query.Display
 {
@@ -27,9 +28,9 @@ namespace VitrivrVR.Query.Display
 
     public override int NumberOfResults => _nResults;
 
-    private readonly List<MediaItemDisplay> _mediaDisplays = new List<MediaItemDisplay>();
+    private readonly List<MediaItemDisplay> _mediaDisplays = new();
 
-    private readonly Queue<ScoredSegment> _instantiationQueue = new Queue<ScoredSegment>();
+    private readonly Queue<ScoredSegment> _instantiationQueue = new();
 
     private List<ScoredSegment> _results;
 
@@ -90,17 +91,7 @@ namespace VitrivrVR.Query.Display
         _instantiationQueue.Enqueue(segment);
       }
 
-      if (ConfigManager.Config.dresEnabled)
-      {
-        if (queryData.Query != null)
-        {
-          DresClientManager.LogResults("segment", _results, queryData.Query);
-        }
-        else
-        {
-          DresClientManager.LogResults("segment", _results, queryData.StagedQuery);
-        }
-      }
+      LoggingController.LogQueryResults("segment", _results, queryData);
     }
 
     /// <summary>
@@ -140,7 +131,7 @@ namespace VitrivrVR.Query.Display
         _currentStart = enabledStart;
         _currentEnd = enabledEnd;
 
-        DresClientManager.LogInteraction("rankedList", $"browse {Mathf.Sign(degrees)}");
+        LoggingController.LogInteraction("rankedList", $"browse {Mathf.Sign(degrees)}", Browsing);
       }
     }
 

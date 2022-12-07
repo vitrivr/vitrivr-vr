@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Vitrivr.UnityInterface.CineastApi;
-using Vitrivr.UnityInterface.CineastApi.Utils;
 using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
 using UnityEngine.Events;
+using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
+using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Config;
+using VitrivrVR.Logging;
 using VitrivrVR.Notification;
 using VitrivrVR.Query.Display;
 using VitrivrVR.Query.Term;
-using VitrivrVR.Submission;
+using static VitrivrVR.Logging.Interaction;
 
 namespace VitrivrVR.Query
 {
@@ -97,7 +98,7 @@ namespace VitrivrVR.Query
             RunQuery(stages.First());
             return;
           }
-        
+
           // With stages
           RunQuery(stages);
           return;
@@ -184,7 +185,7 @@ namespace VitrivrVR.Query
       timer.transform.localRotation = Quaternion.identity;
       timer.SetActive(false);
     }
-    
+
     public async void RunQuery(List<List<List<QueryTerm>>> temporalTerms)
     {
       var localGuid = Guid.NewGuid();
@@ -242,7 +243,7 @@ namespace VitrivrVR.Query
       queryFocusEvent.Invoke(CurrentQuery, index);
       CurrentQuery = index;
 
-      DresClientManager.LogInteraction("queryManagement", $"select {index}");
+      LoggingController.LogInteraction("queryManagement", $"select {index}", QueryManagement);
     }
 
     /// <summary>
@@ -279,7 +280,7 @@ namespace VitrivrVR.Query
       queryRemovedEvent.Invoke(index);
       Destroy(queries[index].gameObject);
       queries.RemoveAt(index);
-      DresClientManager.LogInteraction("queryManagement", $"delete {index}");
+      LoggingController.LogInteraction("queryManagement", $"delete {index}", QueryManagement);
     }
 
     public void RemoveAllQueries()
@@ -296,7 +297,7 @@ namespace VitrivrVR.Query
       SetQueryActive(CurrentQuery, false);
       queryFocusEvent.Invoke(CurrentQuery, -1);
       CurrentQuery = -1;
-      DresClientManager.LogInteraction("queryManagement", "clear");
+      LoggingController.LogInteraction("queryManagement", "clear", QueryManagement);
     }
 
     /// <summary>
@@ -342,7 +343,7 @@ namespace VitrivrVR.Query
       queryFocusEvent.Invoke(CurrentQuery, queryIndex);
       CurrentQuery = queryIndex;
     }
-    
+
     private void InstantiateQueryDisplay(TemporalQueryResponse queryData)
     {
       if (CurrentQuery != -1)

@@ -15,12 +15,14 @@ using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Config;
+using VitrivrVR.Logging;
 using VitrivrVR.Media.Controller;
 using VitrivrVR.Notification;
 using VitrivrVR.Query;
 using VitrivrVR.Submission;
 using VitrivrVR.UI;
 using VitrivrVR.Util;
+using static VitrivrVR.Logging.Interaction;
 
 namespace VitrivrVR.Media.Display
 {
@@ -116,8 +118,9 @@ namespace VitrivrVR.Media.Display
       if (ConfigManager.Config.dresEnabled)
       {
         submitButton.SetActive(true);
-        DresClientManager.LogInteraction("videoPlayer", $"initialized {_mediaObject.Id} {_segment.Id}");
       }
+
+      LoggingController.LogInteraction("videoPlayer", $"initialized {_mediaObject.Id} {_segment.Id}", ResultExpansion);
     }
 
     public void Close()
@@ -133,7 +136,7 @@ namespace VitrivrVR.Media.Display
         Destroy(_objectSegmentView);
       }
 
-      DresClientManager.LogInteraction("videoPlayer", $"closed {_mediaObject.Id} {_segment.Id}");
+      LoggingController.LogInteraction("videoPlayer", $"closed {_mediaObject.Id} {_segment.Id}", Other);
     }
 
     public void ShowObjectSegmentView()
@@ -157,7 +160,7 @@ namespace VitrivrVR.Media.Display
       {
         Destroy(_metadataTable);
         _metadataShown = false;
-        DresClientManager.LogInteraction("mediaObjectMetadata", $"closed {_mediaObject.Id}");
+        LoggingController.LogInteraction("mediaObjectMetadata", $"closed {_mediaObject.Id}", Other);
         return;
       }
 
@@ -194,7 +197,7 @@ namespace VitrivrVR.Media.Display
       var uiTableTransform = _metadataTable.GetComponent<RectTransform>();
       uiTableTransform.sizeDelta = new Vector2(100, 600); // x is completely irrelevant here, since width is auto
 
-      DresClientManager.LogInteraction("mediaObjectMetadata", $"opened {_mediaObject.Id}");
+      LoggingController.LogInteraction("mediaObjectMetadata", $"opened {_mediaObject.Id}", ResultExpansion);
     }
 
     public async void ToggleTagList()
@@ -203,7 +206,7 @@ namespace VitrivrVR.Media.Display
       {
         Destroy(_tagList.gameObject);
         _tagListShown = false;
-        DresClientManager.LogInteraction("segmentTags", $"closed {_mediaObject.Id}");
+        LoggingController.LogInteraction("segmentTags", $"closed {_mediaObject.Id}", Other);
         return;
       }
 
@@ -231,7 +234,7 @@ namespace VitrivrVR.Media.Display
         tagItem.GetComponentInChildren<TextMeshProUGUI>().text = tagData.Name;
       }
 
-      DresClientManager.LogInteraction("segmentTags", $"opened {_mediaObject.Id} {segment.Id}");
+      LoggingController.LogInteraction("segmentTags", $"opened {_mediaObject.Id} {segment.Id}", ResultExpansion);
     }
 
     public void SubmitCurrentFrame()
@@ -244,7 +247,7 @@ namespace VitrivrVR.Media.Display
 
       var frame = _videoPlayerController.Frame;
 
-      DresClientManager.SubmitResult(_mediaObject.Id, (int) frame);
+      DresClientManager.SubmitResult(_mediaObject.Id, (int)frame);
     }
 
     public void SetVolume(float volume)
@@ -256,7 +259,7 @@ namespace VitrivrVR.Media.Display
     {
       var frame = _videoPlayerController.GetCurrentFrame();
       var term = QueryTermBuilder.BuildImageTermForCategories(frame, ConfigManager.Config.defaultImageCategories);
-      QueryController.Instance.RunQuery(new List<QueryTerm> {term});
+      QueryController.Instance.RunQuery(new List<QueryTerm> { term });
     }
 
     private void Awake()
@@ -306,12 +309,12 @@ namespace VitrivrVR.Media.Display
         UpdateText(time);
       }
 
-      DresClientManager.LogInteraction("videoPlayer", $"skipped {_mediaObject.Id} {time} {sign}");
+      LoggingController.LogInteraction("videoPlayer", $"skipped {_mediaObject.Id} {time} {sign}", Browsing);
     }
 
     private void Update()
     {
-      if (_videoPlayerController is {IsPlaying: true})
+      if (_videoPlayerController is { IsPlaying: true })
       {
         var time = _videoPlayerController.ClockTime;
         UpdateProgressIndicator(time);
@@ -324,12 +327,14 @@ namespace VitrivrVR.Media.Display
       if (_videoPlayerController.IsPlaying)
       {
         _videoPlayerController.Pause();
-        DresClientManager.LogInteraction("videoPlayer", $"pause {_mediaObject.Id} {_videoPlayerController.ClockTime}");
+        LoggingController.LogInteraction("videoPlayer", $"pause {_mediaObject.Id} {_videoPlayerController.ClockTime}",
+          Browsing);
       }
       else
       {
         _videoPlayerController.Play();
-        DresClientManager.LogInteraction("videoPlayer", $"play {_mediaObject.Id} {_videoPlayerController.ClockTime}");
+        LoggingController.LogInteraction("videoPlayer", $"play {_mediaObject.Id} {_videoPlayerController.ClockTime}",
+          Browsing);
       }
     }
 
@@ -348,7 +353,8 @@ namespace VitrivrVR.Media.Display
 
       UpdateProgressIndicator(newTime);
       UpdateText(newTime);
-      DresClientManager.LogInteraction("videoPlayer", $"jump {_mediaObject.Id} {newTime}");
+      LoggingController.LogInteraction("videoPlayer", $"jump {_mediaObject.Id} {newTime}",
+        Browsing);
     }
 
     private void SetVideoTime(double time)
@@ -420,7 +426,7 @@ namespace VitrivrVR.Media.Display
       var i = 0;
       foreach (var segStart in segmentStarts)
       {
-        progressTexture.SetPixel((int) (999 * (segStart / _videoPlayerController.Length)), 0, Color.black);
+        progressTexture.SetPixel((int)(999 * (segStart / _videoPlayerController.Length)), 0, Color.black);
         i++;
         if (i == InstantiationBatch)
         {
@@ -442,7 +448,7 @@ namespace VitrivrVR.Media.Display
     private void UpdateProgressIndicator(double time)
     {
       progressIndicator.anchoredPosition =
-        new Vector2((float) (progressBar.rect.width * time / _videoPlayerController.Length), 0);
+        new Vector2((float)(progressBar.rect.width * time / _videoPlayerController.Length), 0);
     }
 
     private async void UpdateText(double time)
@@ -476,8 +482,8 @@ namespace VitrivrVR.Media.Display
     private void SetSegmentIndicator(double start, double end, double length, RectTransform rt)
     {
       var rect = progressBar.rect;
-      rt.anchoredPosition = new Vector2((float) (rect.width * start / length), 0);
-      rt.sizeDelta = new Vector2((float) (rect.width * (end - start) / length), 0);
+      rt.anchoredPosition = new Vector2((float)(rect.width * start / length), 0);
+      rt.sizeDelta = new Vector2((float)(rect.width * (end - start) / length), 0);
     }
   }
 }
