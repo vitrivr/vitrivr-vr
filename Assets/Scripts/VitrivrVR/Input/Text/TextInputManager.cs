@@ -174,6 +174,10 @@ namespace VitrivrVR.Input.Text
     /// </summary>
     private static bool LargeLastInput(TMP_InputField inputField)
     {
+      if (inputField == null)
+      {
+        return false;
+      }
       var sameInputField = inputField == _lastLargeInputField;
       var samePosition = inputField.caretPosition == _lastLargeInputCursorPosition;
       var noSelection = inputField.selectionAnchorPosition == inputField.selectionFocusPosition;
