@@ -44,6 +44,9 @@ namespace VitrivrVR.Query
 
     public int CurrentQuery { get; private set; } = -1;
 
+    public List<string> AvailableCineastClients =>
+      _cineastClients.Select(client => client.CineastConfig.name).ToList();
+
     /// <summary>
     /// Event is triggered when a new query is added to the query list. Argument is query index.
     /// </summary>
@@ -65,7 +68,11 @@ namespace VitrivrVR.Query
     /// </summary>
     private Guid _localQueryGuid;
 
-    private CineastClient _cineastClient;
+    private List<CineastClient> _cineastClients;
+
+    private int _currentCineastClient;
+
+    private CineastClient CurrentClient => _cineastClients[_currentCineastClient];
 
     private void Awake()
     {
@@ -74,7 +81,13 @@ namespace VitrivrVR.Query
         throw new Exception("Multiple QueryControllers registered!");
       }
 
-      _cineastClient = new CineastClient(CineastConfigManager.LoadConfigOrDefault("cineastapi.json"));
+      if (ConfigManager.Config.cineastConfigs.Count == 0)
+      {
+        throw new Exception("No Cineast config path configured!");
+      }
+
+      _cineastClients = ConfigManager.Config.cineastConfigs
+        .Select(configPath => new CineastClient(CineastConfigManager.LoadConfigOrDefault(configPath))).ToList();
 
       Instance = this;
     }
@@ -140,7 +153,7 @@ namespace VitrivrVR.Query
         timer.SetActive(true);
       }
 
-      var queryData = await _cineastClient.ExecuteQuery(query, prefetch);
+      var queryData = await CurrentClient.ExecuteQuery(query, prefetch);
 
       if (_localQueryGuid != localGuid)
       {
@@ -175,7 +188,7 @@ namespace VitrivrVR.Query
         timer.SetActive(true);
       }
 
-      var queryData = await _cineastClient.ExecuteQuery(query, prefetch);
+      var queryData = await CurrentClient.ExecuteQuery(query, prefetch);
 
       if (_localQueryGuid != localGuid)
       {
@@ -210,7 +223,7 @@ namespace VitrivrVR.Query
         timer.SetActive(true);
       }
 
-      var queryData = await _cineastClient.ExecuteQuery(query, prefetch);
+      var queryData = await CurrentClient.ExecuteQuery(query, prefetch);
 
       if (_localQueryGuid != localGuid)
       {
@@ -250,6 +263,17 @@ namespace VitrivrVR.Query
       CurrentQuery = index;
 
       LoggingController.LogInteraction("queryManagement", $"select {index}", QueryManagement);
+    }
+
+    public void SelectCineastClient(int index)
+    {
+      if (index < 0 || index >= _cineastClients.Count)
+      {
+        throw new ArgumentException(
+          $"Cineast client selection index out of range: {index} (available clients: {_cineastClients.Count})");
+      }
+
+      _currentCineastClient = index;
     }
 
     /// <summary>
@@ -352,22 +376,22 @@ namespace VitrivrVR.Query
 
     public SegmentData GetSegment(string segmentId)
     {
-      return _cineastClient.MultimediaRegistry.GetSegment(segmentId);
+      return CurrentClient.MultimediaRegistry.GetSegment(segmentId);
     }
 
     public CineastConfig GetCineastConfig()
     {
-      return _cineastClient.CineastConfig;
+      return CurrentClient.CineastConfig;
     }
 
     public async Task<List<string>> GetDistinctTableValues(string table, string column)
     {
-      return await _cineastClient.GetDistinctTableValues(table, column);
+      return await CurrentClient.GetDistinctTableValues(table, column);
     }
 
     public async Task<List<Tag>> GetMatchingTags(string tagName)
     {
-      return await _cineastClient.GetMatchingTags(tagName);
+      return await CurrentClient.GetMatchingTags(tagName);
     }
 
     private void InstantiateQueryDisplay(TemporalQueryResponse queryData)

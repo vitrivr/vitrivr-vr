@@ -43,6 +43,11 @@ namespace VitrivrVR.Config
     }
 
     /// <summary>
+    /// List of paths relative to persistent path pointing to all enabled Cineast instances.
+    /// </summary>
+    public List<string> cineastConfigs;
+
+    /// <summary>
     /// The maximum number of results to accept from a single query.
     /// </summary>
     public int maxResults;
@@ -124,6 +129,7 @@ namespace VitrivrVR.Config
 
     private VitrivrVrConfig()
     {
+      cineastConfigs = new List<string> { "cineastapi.json" };
       maxResults = 10000;
       maxPrefetch = 1000;
       maxDisplay = 100;

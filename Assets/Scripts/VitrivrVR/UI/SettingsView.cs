@@ -9,6 +9,12 @@ namespace VitrivrVR.UI
   public class SettingsView : MonoBehaviour
   {
     public TMP_InputField segmentIdField;
+    public TMP_Dropdown cineastDropdown;
+
+    private void Start()
+    {
+      cineastDropdown.AddOptions(QueryController.Instance.AvailableCineastClients);
+    }
 
     public async void GetSegmentById(string segmentId)
     {
@@ -18,10 +24,14 @@ namespace VitrivrVR.UI
       await MediaDisplayFactory.CreateDisplay(scoredSegment, () => { }, t.position - 0.2f * t.forward, t.rotation);
     }
 
-
     public void GetSegmentByID()
     {
       GetSegmentById(segmentIdField.text);
+    }
+
+    public void SelectCineast(int cineastIndex)
+    {
+      QueryController.Instance.SelectCineastClient(cineastIndex);
     }
   }
 }
