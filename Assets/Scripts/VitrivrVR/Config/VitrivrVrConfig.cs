@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Vitrivr.UnityInterface.CineastApi.Model.Config;
-using Vitrivr.UnityInterface.CineastApi.Utils;
 using UnityEngine;
+using Vitrivr.UnityInterface.CineastApi.Model.Config;
 
 namespace VitrivrVR.Config
 {
@@ -130,11 +129,10 @@ namespace VitrivrVR.Config
       maxDisplay = 100;
       dissimilarityColor = new ConfigColor(1, 0, 0);
       similarityColor = new ConfigColor(0, 1, 0);
-      var mapping = CineastConfigManager.Instance.Config.categoryMappings.mapping;
       defaultImageCategories = new List<string>
       {
-        mapping[CategoryMappings.GLOBAL_COLOR_CATEGORY],
-        mapping[CategoryMappings.EDGE_CATEGORY]
+        CategoryMappings.GlobalColorCategory,
+        CategoryMappings.EdgeCategory
       };
       textCategories = new List<TextCategory>
       {

@@ -1,13 +1,11 @@
 ﻿using System.Linq;
-using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
-using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 
 namespace VitrivrVR.Media.Display
 {
   /// <summary>
-  /// Displays a <see cref="TemporalObject"/>.
+  /// Displays a <see cref="TemporalResult"/>.
   /// </summary>
   public class TemporalMediaItemDisplay : MonoBehaviour
   {
@@ -16,19 +14,18 @@ namespace VitrivrVR.Media.Display
 
     private const float DisplayDistance = 0.3f;
 
-    public void Initialize(TemporalObject temporalObject)
+    public void Initialize(TemporalResult temporalResult)
     {
       var rotation = transform.rotation;
 
-      foreach (var (segmentId, i) in temporalObject.Segments.Select((sid, i) => (sid, i)))
+      foreach (var (segment, i) in temporalResult.Segments.Select((sid, i) => (sid, i)))
       {
         var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, rotation, displayParent);
 
         var it = itemDisplay.transform;
         it.localPosition = Vector3.forward * (DisplayDistance * i);
 
-        var segment = SegmentRegistry.GetSegment(segmentId);
-        var scoredSegment = new ScoredSegment(segment, temporalObject.Score);
+        var scoredSegment = new ScoredSegment(segment, temporalResult.Score);
 
         itemDisplay.Initialize(scoredSegment);
       }
@@ -37,7 +34,7 @@ namespace VitrivrVR.Media.Display
       var size = boxCollider.size;
       var center = boxCollider.center;
 
-      size.z = temporalObject.Segments.Count * DisplayDistance;
+      size.z = temporalResult.Segments.Count * DisplayDistance;
       center.z = (size.z - DisplayDistance) / 2;
 
       boxCollider.size = size;

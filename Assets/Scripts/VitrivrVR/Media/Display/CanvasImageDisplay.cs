@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Linq;
-using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
-using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using VitrivrVR.Config;
 using VitrivrVR.Logging;
 using VitrivrVR.Notification;
@@ -43,14 +40,14 @@ namespace VitrivrVR.Media.Display
     {
       _scoredSegment = scoredSegment;
       _onClose = onClose;
-      _mediaObject = ObjectRegistry.GetObject(await Segment.GetObjectId());
+      _mediaObject = await Segment.GetObject();
 
       segmentDataText.text = $"{_mediaObject.Id}:\nScore: {_scoredSegment.score:F}";
       LayoutRebuilder.ForceRebuildLayoutImmediate(segmentDataText.rectTransform.parent as RectTransform);
       segmentDataText.rectTransform.sizeDelta = segmentDataText.GetPreferredValues();
 
       // Resolve media URL
-      var mediaUrl = await CineastWrapper.GetMediaUrlOfAsync(_mediaObject);
+      var mediaUrl = await _mediaObject.GetMediaUrl();
 
       StartCoroutine(DownloadHelper.DownloadTexture(mediaUrl,
         () => { previewImage.texture = errorTexture; },
@@ -98,7 +95,7 @@ namespace VitrivrVR.Media.Display
 
       _metadataShown = true;
 
-      var metadata = await Segment.Metadata.GetAll();
+      var metadata = await Segment.GetMetadata();
       var rows = metadata.Values.Select(domain => domain.Count).Aggregate(0, (x, y) => x + y);
       var table = new string[rows, 3];
       var i = 0;
@@ -150,12 +147,9 @@ namespace VitrivrVR.Media.Display
 
       var listContent = _tagList.content;
 
-      // TODO: Preload or cache for all results
-      var tagIds = await CineastWrapper.MetadataApi.FindTagInformationByIdAsync(Segment.Id);
+      var tags = await Segment.GetTags();
 
-      var tags = await CineastWrapper.TagApi.FindTagsByIdAsync(new IdList(tagIds.TagIDs));
-
-      foreach (var tagData in tags.Tags)
+      foreach (var tagData in tags)
       {
         var tagItem = Instantiate(listItemPrefab, listContent);
         tagItem.GetComponentInChildren<TextMeshProUGUI>().text = tagData.Name;

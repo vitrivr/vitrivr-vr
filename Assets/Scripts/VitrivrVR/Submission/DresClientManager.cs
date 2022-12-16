@@ -9,7 +9,6 @@ using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
 using Vitrivr.UnityInterface.CineastApi.Model.Config;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
-using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using VitrivrVR.Config;
 using VitrivrVR.Logging;
 using VitrivrVR.Notification;
@@ -82,7 +81,7 @@ namespace VitrivrVR.Submission
     public static async void QuickSubmitSegment(SegmentData segment)
     {
       var mediaObjectId = await segment.GetObjectId();
-      var mediaObject = ObjectRegistry.GetObject(mediaObjectId);
+      var mediaObject = await segment.GetObject();
       var mediaType = await mediaObject.GetMediaType();
 
       switch (mediaType)
@@ -109,25 +108,18 @@ namespace VitrivrVR.Submission
     /// <param name="results">The results as list of scored segments.</param>
     /// <param name="queryEvents">The query that lead to these results represented as enumerable of query events.</param>
     /// <param name="timestamp">Timestamp of result log.</param>
-    /// <param name="assumeFullyFetched">Skips trying to batch fetch segment data if true.</param>
-    private static async void LogResults(string sortType,
-      IReadOnlyCollection<(ScoredSegment segment, int rank)> results, IEnumerable<QueryEvent> queryEvents,
-      long timestamp, bool assumeFullyFetched = false)
+    private static async void LogResults(string sortType, IEnumerable<(ScoredSegment scoredSegment, int rank)> results,
+      IEnumerable<QueryEvent> queryEvents, long timestamp)
     {
-      if (!assumeFullyFetched)
-      {
-        await SegmentRegistry.BatchFetchSegmentData(results.Select(pair => pair.segment.segment));
-      }
-
       var queryResults = await Task.WhenAll(results.Select(async pair =>
       {
-        var segment = pair.segment.segment;
+        var segment = pair.scoredSegment.segment;
         var objectId = await segment.GetObjectId();
         objectId = RemovePrefix(objectId);
         var sequenceNumber = await segment.GetSequenceNumber();
         var frame = await segment.GetStart();
 
-        return new QueryResult(objectId, sequenceNumber, frame, pair.segment.score, pair.rank);
+        return new QueryResult(objectId, sequenceNumber, frame, pair.scoredSegment.score, pair.rank);
       }));
 
       var queryResultsList = queryResults.ToList();
@@ -161,7 +153,8 @@ namespace VitrivrVR.Submission
         return new QueryEvent(timestamp, category, type, value);
       });
 
-      var rankedResults = results.Select((segment, rank) => (segment, rank)).ToList();
+      List<(ScoredSegment scoredSegment, int rank)> rankedResults =
+        results.Select((segment, rank) => (segment, rank)).ToList();
 
       LogResults(sortType, rankedResults, queryEvents, timestamp);
     }
@@ -181,12 +174,13 @@ namespace VitrivrVR.Submission
         return new QueryEvent(timestamp, category, $"{si}:{type}", value);
       }));
 
-      var rankedResults = results.Select((segment, rank) => (segment, rank)).ToList();
+      List<(ScoredSegment scoredSegment, int rank)> rankedResults =
+        results.Select((segment, rank) => (segment, rank)).ToList();
 
       LogResults(sortType, rankedResults, queryEvents, timestamp);
     }
 
-    public static void LogResults(long timestamp, string sortType, IEnumerable<TemporalObject> results,
+    public static void LogResults(long timestamp, string sortType, IEnumerable<TemporalResult> results,
       TemporalQuery query)
     {
       var queryEvents = query.Queries.SelectMany(
@@ -207,7 +201,7 @@ namespace VitrivrVR.Submission
 
       var resultsList = results.SelectMany(
         (to, rank) => to.Segments.Select(
-          sId => (new ScoredSegment(SegmentRegistry.GetSegment(sId), to.Score), rank)
+          segment => (new ScoredSegment(segment, to.Score), rank)
         )
       ).ToList();
 
@@ -260,9 +254,9 @@ namespace VitrivrVR.Submission
         "asr" => "ASR",
         "scenecaption" => "caption",
         "visualtextcoembedding" => "jointEmbedding",
-        CategoryMappings.TAGS_CATEGORY => "concept",
-        CategoryMappings.GLOBAL_COLOR_CATEGORY => "globalFeatures",
-        CategoryMappings.EDGE_CATEGORY => "localFeatures",
+        CategoryMappings.TagsCategory => "concept",
+        CategoryMappings.GlobalColorCategory => "globalFeatures",
+        CategoryMappings.EdgeCategory => "localFeatures",
         _ => category
       };
     }

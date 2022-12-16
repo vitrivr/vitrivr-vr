@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
 using UnityEngine.Events;
 using Vitrivr.UnityInterface.CineastApi;
+using Vitrivr.UnityInterface.CineastApi.Model.Config;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Config;
@@ -38,7 +40,7 @@ namespace VitrivrVR.Query
     public QueryDisplay queryDisplay;
     public TemporalQueryDisplay temporalQueryDisplay;
 
-    public readonly List<QueryDisplay> queries = new();
+    public readonly List<QueryDisplay> Queries = new();
 
     public int CurrentQuery { get; private set; } = -1;
 
@@ -63,12 +65,16 @@ namespace VitrivrVR.Query
     /// </summary>
     private Guid _localQueryGuid;
 
+    private CineastClient _cineastClient;
+
     private void Awake()
     {
       if (Instance != null)
       {
-        Debug.LogError("Multiple QueryControllers registered!");
+        throw new Exception("Multiple QueryControllers registered!");
       }
+
+      _cineastClient = new CineastClient(CineastConfigManager.LoadConfigOrDefault("cineastapi.json"));
 
       Instance = this;
     }
@@ -134,7 +140,7 @@ namespace VitrivrVR.Query
         timer.SetActive(true);
       }
 
-      var queryData = await CineastWrapper.ExecuteQuery(query, maxResults, prefetch);
+      var queryData = await _cineastClient.ExecuteQuery(query, prefetch);
 
       if (_localQueryGuid != localGuid)
       {
@@ -169,7 +175,7 @@ namespace VitrivrVR.Query
         timer.SetActive(true);
       }
 
-      var queryData = await CineastWrapper.ExecuteQuery(query, maxResults, prefetch);
+      var queryData = await _cineastClient.ExecuteQuery(query, prefetch);
 
       if (_localQueryGuid != localGuid)
       {
@@ -204,7 +210,7 @@ namespace VitrivrVR.Query
         timer.SetActive(true);
       }
 
-      var queryData = await CineastWrapper.ExecuteQuery(query, prefetch);
+      var queryData = await _cineastClient.ExecuteQuery(query, prefetch);
 
       if (_localQueryGuid != localGuid)
       {
@@ -223,15 +229,15 @@ namespace VitrivrVR.Query
 
     public void SelectQuery(QueryDisplay display)
     {
-      var index = queries.IndexOf(display);
+      var index = Queries.IndexOf(display);
       SelectQuery(index);
     }
 
     public void SelectQuery(int index)
     {
-      if (0 > index || index >= queries.Count)
+      if (0 > index || index >= Queries.Count)
       {
-        throw new ArgumentException($"Query selection index out of range: {index} (queries: {queries.Count})");
+        throw new ArgumentException($"Query selection index out of range: {index} (queries: {Queries.Count})");
       }
 
       if (CurrentQuery != -1)
@@ -252,7 +258,7 @@ namespace VitrivrVR.Query
     /// </summary>
     public void RemoveQuery(QueryDisplay display)
     {
-      var index = queries.IndexOf(display);
+      var index = Queries.IndexOf(display);
       RemoveQuery(index);
     }
 
@@ -262,9 +268,9 @@ namespace VitrivrVR.Query
     /// </summary>
     public void RemoveQuery(int index)
     {
-      if (0 > index || index >= queries.Count)
+      if (0 > index || index >= Queries.Count)
       {
-        throw new ArgumentException($"Query selection index out of range: {index} (queries: {queries.Count})");
+        throw new ArgumentException($"Query selection index out of range: {index} (queries: {Queries.Count})");
       }
 
       if (index == CurrentQuery)
@@ -278,14 +284,14 @@ namespace VitrivrVR.Query
       }
 
       queryRemovedEvent.Invoke(index);
-      Destroy(queries[index].gameObject);
-      queries.RemoveAt(index);
+      Destroy(Queries[index].gameObject);
+      Queries.RemoveAt(index);
       LoggingController.LogInteraction("queryManagement", $"delete {index}", QueryManagement);
     }
 
     public void RemoveAllQueries()
     {
-      for (var queryIndex = queries.Count - 1; queryIndex >= 0; queryIndex--)
+      for (var queryIndex = Queries.Count - 1; queryIndex >= 0; queryIndex--)
       {
         RemoveQuery(queryIndex);
       }
@@ -311,7 +317,7 @@ namespace VitrivrVR.Query
         return;
       }
 
-      var display = queries[CurrentQuery];
+      var display = Queries[CurrentQuery];
       if (display.GetType() == queryDisplay.GetType())
       {
         NotificationController.Notify($"Current query display already of type {display.GetType().Name}!");
@@ -323,7 +329,7 @@ namespace VitrivrVR.Query
 
     private void SetQueryActive(int index, bool active)
     {
-      queries[index].gameObject.SetActive(active);
+      Queries[index].gameObject.SetActive(active);
     }
 
     private void InstantiateQueryDisplay(QueryResponse queryData)
@@ -337,11 +343,31 @@ namespace VitrivrVR.Query
 
       display.Initialize(queryData);
 
-      queries.Add(display);
-      var queryIndex = queries.Count - 1;
+      Queries.Add(display);
+      var queryIndex = Queries.Count - 1;
       queryAddedEvent.Invoke(queryIndex);
       queryFocusEvent.Invoke(CurrentQuery, queryIndex);
       CurrentQuery = queryIndex;
+    }
+
+    public SegmentData GetSegment(string segmentId)
+    {
+      return _cineastClient.MultimediaRegistry.GetSegment(segmentId);
+    }
+
+    public CineastConfig GetCineastConfig()
+    {
+      return _cineastClient.CineastConfig;
+    }
+
+    public async Task<List<string>> GetDistinctTableValues(string table, string column)
+    {
+      return await _cineastClient.GetDistinctTableValues(table, column);
+    }
+
+    public async Task<List<Tag>> GetMatchingTags(string tagName)
+    {
+      return await _cineastClient.GetMatchingTags(tagName);
     }
 
     private void InstantiateQueryDisplay(TemporalQueryResponse queryData)
@@ -355,8 +381,8 @@ namespace VitrivrVR.Query
 
       display.Initialize(queryData);
 
-      queries.Add(display);
-      var queryIndex = queries.Count - 1;
+      Queries.Add(display);
+      var queryIndex = Queries.Count - 1;
       queryAddedEvent.Invoke(queryIndex);
       queryFocusEvent.Invoke(CurrentQuery, queryIndex);
       CurrentQuery = queryIndex;

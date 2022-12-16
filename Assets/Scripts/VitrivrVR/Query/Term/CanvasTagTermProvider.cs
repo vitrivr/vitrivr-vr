@@ -4,7 +4,6 @@ using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Util;
 
@@ -20,14 +19,14 @@ namespace VitrivrVR.Query.Term
     public TextMeshProUGUI toolTipText;
     public int maxResults = 100;
 
-    private readonly List<TagData> _tagItems = new List<TagData>();
-    private readonly HashSet<string> _tagIds = new HashSet<string>();
+    private readonly List<TagData> _tagItems = new();
+    private readonly HashSet<string> _tagIds = new();
 
     /// <summary>
     /// Stores the latest tag search input to determine if search results are still relevant.
     /// </summary>
     private string _latestInput;
-    
+
     /// <summary>
     /// Retrieves tags similar to the text input and adds corresponding buttons to the search scroll view.
     /// </summary>
@@ -41,7 +40,7 @@ namespace VitrivrVR.Query.Term
         return;
       }
 
-      var tags = await CineastWrapper.GetMatchingTags(input);
+      var tags = await QueryController.Instance.GetMatchingTags(input);
       if (input != _latestInput)
       {
         // A tag search with a different input has been started and the results from this search are no longer relevant

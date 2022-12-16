@@ -10,9 +10,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.Video;
-using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
-using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Config;
 using VitrivrVR.Logging;
@@ -88,14 +86,14 @@ namespace VitrivrVR.Media.Display
         }
       }
 
-      _mediaObject = ObjectRegistry.GetObject(await _segment.GetObjectId());
+      _mediaObject = await _segment.GetObject();
 
       // Change texture to loading texture and reset scale
       previewImage.texture = loadingTexture;
       _imageTransform.sizeDelta = new Vector2(1000, 1000);
 
       // Resolve media URL
-      var mediaUrl = await CineastWrapper.GetMediaUrlOfAsync(_mediaObject, _segment.Id);
+      var mediaUrl = await _segment.GetMediaUrl();
 
       var startFrame = await _segment.GetStart();
 
@@ -166,7 +164,7 @@ namespace VitrivrVR.Media.Display
 
       _metadataShown = true;
 
-      var metadata = await _mediaObject.Metadata.GetAll();
+      var metadata = await _mediaObject.GetMetadata();
       var rows = metadata.Values.Select(domain => domain.Count).Aggregate(0, (x, y) => x + y);
       var table = new string[rows, 3];
       var i = 0;
@@ -224,11 +222,9 @@ namespace VitrivrVR.Media.Display
 
       // TODO: Preload or cache for all results
       var segment = await GetCurrentSegment(_videoPlayerController.ClockTime);
-      var tagIds = await CineastWrapper.MetadataApi.FindTagInformationByIdAsync(segment.Id);
+      var tags = await segment.GetTags();
 
-      var tags = await CineastWrapper.TagApi.FindTagsByIdAsync(new IdList(tagIds.TagIDs));
-
-      foreach (var tagData in tags.Tags)
+      foreach (var tagData in tags)
       {
         var tagItem = Instantiate(listItemPrefab, listContent);
         tagItem.GetComponentInChildren<TextMeshProUGUI>().text = tagData.Name;
@@ -396,7 +392,7 @@ namespace VitrivrVR.Media.Display
       progressBar.gameObject.SetActive(true);
 
       // Instantiate segment indicators
-      var mediaObject = ObjectRegistry.GetObject(await _segment.GetObjectId());
+      var mediaObject = await _segment.GetObject();
       _segments = await mediaObject.GetSegments();
       var segmentStarts = (await Task.WhenAll(
           _segments.Where(segment => segment != _segment)

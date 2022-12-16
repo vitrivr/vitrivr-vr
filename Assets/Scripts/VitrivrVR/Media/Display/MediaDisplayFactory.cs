@@ -1,9 +1,9 @@
 using System;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
-using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 
 namespace VitrivrVR.Media.Display
 {
@@ -24,8 +24,8 @@ namespace VitrivrVR.Media.Display
       {
       }
 
-      protected UnknownMediaTypeException(System.Runtime.Serialization.SerializationInfo info,
-        System.Runtime.Serialization.StreamingContext context) : base(info, context)
+      protected UnknownMediaTypeException(SerializationInfo info,
+        StreamingContext context) : base(info, context)
       {
       }
     }
@@ -45,8 +45,8 @@ namespace VitrivrVR.Media.Display
       {
       }
 
-      protected UnsupportedMediaTypeException(System.Runtime.Serialization.SerializationInfo info,
-        System.Runtime.Serialization.StreamingContext context) : base(info, context)
+      protected UnsupportedMediaTypeException(SerializationInfo info,
+        StreamingContext context) : base(info, context)
       {
       }
     }
@@ -82,7 +82,7 @@ namespace VitrivrVR.Media.Display
       Quaternion rotation)
     {
       var segment = scoredSegment.segment;
-      var mediaObject = await ObjectRegistry.GetObjectOf(segment.Id);
+      var mediaObject = await segment.GetObject();
       var mediaType = await mediaObject.GetMediaType();
 
       switch (mediaType)
