@@ -156,11 +156,11 @@
       "hash": "a9573d03cf5ca51310fe3894dcd12a511663998e"
     },
     "org.vitrivr.unityinterface.cineastapi": {
-      "version": "https://github.com/vitrivr/CineastUnityInterface.git#feature/instancing",
+      "version": "https://github.com/vitrivr/CineastUnityInterface.git#v0.1.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "517fd4de0cb8c029d8a0d0ab89db557053f58c2f"
+      "hash": "58b4b536fff785daa1de8245161ca04ece35e4cb"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
