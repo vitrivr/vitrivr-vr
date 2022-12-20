@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Config;
 using VitrivrVR.Submission;
@@ -49,7 +48,7 @@ namespace VitrivrVR.Media.Display
     {
       try
       {
-        var thumbnailUrl = await CineastWrapper.GetThumbnailUrlOfAsync(_segment);
+        var thumbnailUrl = await _segment.GetThumbnailUrl();
         StartCoroutine(DownloadHelper.DownloadTexture(thumbnailUrl, OnDownloadError, OnDownloadSuccess));
       }
       catch (Exception)
@@ -80,7 +79,7 @@ namespace VitrivrVR.Media.Display
       _scoredSegment = segment;
       _segment = segment.segment;
       var vrConfig = ConfigManager.Config;
-      var score = (float) _scoredSegment.score;
+      var score = (float)_scoredSegment.score;
       // Score frame
       scoreFrame.color = vrConfig.similarityColor.ToColor() * score +
                          vrConfig.dissimilarityColor.ToColor() * (1 - score);

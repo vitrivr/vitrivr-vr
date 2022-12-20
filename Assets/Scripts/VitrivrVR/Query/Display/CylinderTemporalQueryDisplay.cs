@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Config;
 using VitrivrVR.Logging;
 using VitrivrVR.Media.Display;
@@ -27,9 +27,9 @@ namespace VitrivrVR.Query.Display
 
     private readonly List<TemporalMediaItemDisplay> _mediaDisplays = new();
 
-    private readonly Queue<TemporalObject> _instantiationQueue = new();
+    private readonly Queue<TemporalResult> _instantiationQueue = new();
 
-    private List<TemporalObject> _results;
+    private List<TemporalResult> _results;
 
     private int _nResults;
     private float _columnAngle;
@@ -74,7 +74,7 @@ namespace VitrivrVR.Query.Display
 
     protected override void Initialize()
     {
-      _results = temporalQueryData.Results.Content;
+      _results = temporalQueryData.Results;
 
       if (_results.Count == 0)
       {
@@ -82,9 +82,9 @@ namespace VitrivrVR.Query.Display
       }
 
       _nResults = _results.Count;
-      foreach (var temporalObject in _results.Take(_maxColumns * 3 / 4 * rows))
+      foreach (var temporalResult in _results.Take(_maxColumns * 3 / 4 * rows))
       {
-        _instantiationQueue.Enqueue(temporalObject);
+        _instantiationQueue.Enqueue(temporalResult);
       }
 
       LoggingController.LogQueryResults("temporal", _results, temporalQueryData);
@@ -131,7 +131,7 @@ namespace VitrivrVR.Query.Display
       }
     }
 
-    private void CreateResultObject(TemporalObject temporalObject)
+    private void CreateResultObject(TemporalResult temporalResult)
     {
       // Determine position
       var index = _mediaDisplays.Count;
@@ -148,7 +148,7 @@ namespace VitrivrVR.Query.Display
       // Add to media displays list
       _mediaDisplays.Add(itemDisplay);
 
-      itemDisplay.Initialize(temporalObject);
+      itemDisplay.Initialize(temporalResult);
 
       itemDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
     }

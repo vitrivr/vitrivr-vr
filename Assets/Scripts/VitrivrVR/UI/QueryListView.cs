@@ -34,7 +34,7 @@ namespace VitrivrVR.UI
 
     private void OnQueryAdded(int index)
     {
-      var display = QueryController.Instance.queries[index];
+      var display = QueryController.Instance.Queries[index];
       AddQuery(display);
     }
 
@@ -65,14 +65,14 @@ namespace VitrivrVR.UI
 
     private void Initialize()
     {
-      var queries = QueryController.Instance.queries;
+      var queries = QueryController.Instance.Queries;
       if (queries.Count == 0)
       {
         AddQueriesEmptyText();
       }
       else
       {
-        foreach (var display in QueryController.Instance.queries)
+        foreach (var display in QueryController.Instance.Queries)
         {
           AddQuery(display);
         }

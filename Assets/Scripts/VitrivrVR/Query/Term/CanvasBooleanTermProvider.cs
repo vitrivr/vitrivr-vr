@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Org.Vitrivr.CineastApi.Model;
 using UnityEngine;
-using Vitrivr.UnityInterface.CineastApi;
-using Vitrivr.UnityInterface.CineastApi.Model.Query;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Config;
 using VitrivrVR.Query.Term.Boolean;
@@ -69,26 +67,28 @@ namespace VitrivrVR.Query.Term
               break;
             case BooleanTermTypes.DayOptions:
               var dayOptions = Instantiate(daySelection, transform);
-              var availableDays = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
+              var availableDays =
+                await QueryController.Instance.GetDistinctTableValues(category.table, category.column);
               dayOptions.Initialize(category.name, entity, availableDays);
               _termProviders.Add(dayOptions);
               break;
             case BooleanTermTypes.MonthOptions:
               var monthOptions = Instantiate(monthSelection, transform);
-              var availableMonths = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
+              var availableMonths =
+                await QueryController.Instance.GetDistinctTableValues(category.table, category.column);
               monthOptions.Initialize(category.name, entity, category.options, availableMonths);
               _termProviders.Add(monthOptions);
               break;
             case BooleanTermTypes.YearOptions:
               var yearOptions = Instantiate(yearSelection, transform);
-              var years = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
+              var years = await QueryController.Instance.GetDistinctTableValues(category.table, category.column);
               years = SortOptions(years, SortOrder.Numeric);
               yearOptions.Initialize(category.name, entity, years);
               _termProviders.Add(yearOptions);
               break;
             case BooleanTermTypes.DynamicOptions:
               var dynamicOptions = Instantiate(optionSelection, transform);
-              var dynOpt = await CineastWrapper.GetDistinctTableValues(category.table, category.column);
+              var dynOpt = await QueryController.Instance.GetDistinctTableValues(category.table, category.column);
               var numeric = false;
               if (category.options != null)
               {

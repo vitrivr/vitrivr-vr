@@ -1,12 +1,9 @@
 using System;
 using System.Linq;
-using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
-using Vitrivr.UnityInterface.CineastApi.Model.Registries;
 using VitrivrVR.Config;
 using VitrivrVR.Logging;
 using VitrivrVR.Notification;
@@ -51,7 +48,7 @@ namespace VitrivrVR.Media.Display
     {
       _scoredSegment = scoredSegment;
       _onClose = onClose;
-      _mediaObject = ObjectRegistry.GetObject(await Segment.GetObjectId());
+      _mediaObject = await Segment.GetObject();
 
       var sn = await Segment.GetSequenceNumber();
       segmentDataText.text = $"{Segment.Id}:\nNumber: {sn}\nScore: {_scoredSegment.score:F}";
@@ -59,7 +56,7 @@ namespace VitrivrVR.Media.Display
       segmentDataText.rectTransform.sizeDelta = segmentDataText.GetPreferredValues();
 
       // Resolve media URL
-      var mediaUrl = await CineastWrapper.GetMediaUrlOfAsync(_mediaObject, Segment.Id);
+      var mediaUrl = await Segment.GetMediaUrl();
 
       StartCoroutine(DownloadHelper.DownloadTexture(mediaUrl,
         () => { previewImage.texture = errorTexture; },
@@ -112,7 +109,7 @@ namespace VitrivrVR.Media.Display
 
       _metadataShown = true;
 
-      var metadata = await Segment.Metadata.GetAll();
+      var metadata = await Segment.GetMetadata();
       var rows = metadata.Values.Select(domain => domain.Count).Aggregate(0, (x, y) => x + y);
       var table = new string[rows, 3];
       var i = 0;
@@ -164,12 +161,9 @@ namespace VitrivrVR.Media.Display
 
       var listContent = _tagList.content;
 
-      // TODO: Preload or cache for all results
-      var tagIds = await CineastWrapper.MetadataApi.FindTagInformationByIdAsync(Segment.Id);
+      var tags = await Segment.GetTags();
 
-      var tags = await CineastWrapper.TagApi.FindTagsByIdAsync(new IdList(tagIds.TagIDs));
-
-      foreach (var tagData in tags.Tags)
+      foreach (var tagData in tags)
       {
         var tagItem = Instantiate(listItemPrefab, listContent);
         tagItem.GetComponentInChildren<TextMeshProUGUI>().text = tagData.Name;
@@ -215,8 +209,7 @@ namespace VitrivrVR.Media.Display
     private async void OpenSegment(int segmentIndex, Vector3 position)
     {
       // TODO: Refactor to avoid having to fetch and initialize all segments of given object
-      var segments = await SegmentRegistry.GetSegmentsOf(_mediaObject.Id);
-      await SegmentRegistry.BatchFetchSegmentData(segments);
+      var segments = await _mediaObject.GetSegments();
       segments = segments.Where(segment => segment.GetSequenceNumber().Result == segmentIndex).ToList();
 
       if (segments.Count != 1)

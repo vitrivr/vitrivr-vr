@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Interaction.System;
 using VitrivrVR.Interaction.System.Grab;
@@ -26,7 +25,7 @@ namespace VitrivrVR.Media.Display
 
     private int _minIndex;
 
-    private readonly Dictionary<Interactor, int> _enteredInteractors = new Dictionary<Interactor, int>();
+    private readonly Dictionary<Interactor, int> _enteredInteractors = new();
 
     /// <summary>
     /// Number of segment thumbnails to instantiate each frame in Coroutine.
@@ -138,7 +137,7 @@ namespace VitrivrVR.Media.Display
       var i = 0;
       foreach (var (segment, seqNum) in segmentInfo)
       {
-        var thumbnailUrl = CineastWrapper.GetThumbnailUrlOf(segment);
+        var thumbnailUrl = segment.GetThumbnailUrl().Result;
 
         var thumbnail = Instantiate(thumbnailPrefab, transform);
         thumbnail.url = thumbnailUrl;

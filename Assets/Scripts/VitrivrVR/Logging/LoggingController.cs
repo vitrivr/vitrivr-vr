@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Newtonsoft.Json;
-using Org.Vitrivr.CineastApi.Model;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Config;
 using VitrivrVR.Notification;
@@ -70,7 +69,7 @@ namespace VitrivrVR.Logging
     /// <summary>
     /// Logs ranked results lists for temporal similarity queries.
     /// </summary>
-    public static void LogQueryResults(string sortOrder, List<TemporalObject> results,
+    public static void LogQueryResults(string sortOrder, List<TemporalResult> results,
       TemporalQueryResponse queryResponse)
     {
       var timestamp = CurrentTimestamp;
@@ -154,7 +153,7 @@ namespace VitrivrVR.Logging
       }
     }
 
-    private static async void LogQueryResultsToFile(long timestamp, string sortOrder, List<TemporalObject> results,
+    private static async void LogQueryResultsToFile(long timestamp, string sortOrder, List<TemporalResult> results,
       TemporalQueryResponse queryResponse)
     {
       EnsureDirectoryExists();
