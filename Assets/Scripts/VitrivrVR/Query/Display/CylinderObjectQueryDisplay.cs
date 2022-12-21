@@ -33,19 +33,13 @@ namespace VitrivrVR.Query.Display
 
     public override int NumberOfResults => _nResults;
 
-    private readonly List<MediaItemDisplay> _mediaDisplays = new();
-
-    private readonly Queue<ScoredSegment> _instantiationQueue = new();
+    private readonly Queue<List<ScoredSegment>> _instantiationQueue = new();
 
     private List<List<ScoredSegment>> _results;
 
     private int _enqueued;
 
-    /// <summary>
-    /// Dictionary containing for each media object in the results the index of the list of corresponding media item
-    /// displays in _mediaObjectSegmentDisplays.
-    /// </summary>
-    private readonly Dictionary<string, int> _objectMap = new();
+    private int _instantiated;
 
     private readonly List<List<MediaItemDisplay>> _mediaObjectSegmentDisplays = new();
 
@@ -80,19 +74,19 @@ namespace VitrivrVR.Query.Display
       rotationAction.Disable();
     }
 
-    private async void Update()
+    private void Update()
     {
       Rotate(Time.deltaTime * rotationSpeed * rotationAction.ReadValue<Vector2>().x);
 
       if (_instantiationQueue.Count > 0)
       {
-        await CreateResultObject(_instantiationQueue.Dequeue());
+        CreateResultObject(_instantiationQueue.Dequeue());
       }
     }
 
     protected override async void Initialize()
     {
-      var fusionResults = queryData.GetMeanFusionResults();
+      var fusionResults = QueryData.GetMeanFusionResults();
       if (fusionResults == null)
       {
         NotificationController.Notify("No results returned from query!");
@@ -113,12 +107,12 @@ namespace VitrivrVR.Query.Display
       _nResults = _results.Count;
       foreach (var objectSegments in _results.Take(_maxColumns * 3 / 4 * rows))
       {
-        foreach (var objectSegment in objectSegments) _instantiationQueue.Enqueue(objectSegment);
-
+        _instantiationQueue.Enqueue(objectSegments);
         _enqueued++;
       }
 
-      LoggingController.LogQueryResults("object", fusionResults, queryData);
+      LoggingController.LogQueryResults("object", fusionResults, QueryData);
+      Debug.Log(_nResults);
     }
 
     /// <summary>
@@ -134,12 +128,12 @@ namespace VitrivrVR.Query.Display
 
       // Check instantiations
       var enabledEnd = Mathf.Min((rawColumnIndex + _maxColumns) * rows, _nResults);
-      if (enabledEnd > _mediaObjectSegmentDisplays.Count && _enqueued == _mediaDisplays.Count)
+      if (enabledEnd > _mediaObjectSegmentDisplays.Count && _enqueued == _instantiated)
       {
-        var index = _mediaDisplays.Count;
+        var index = _instantiated;
         if (index < _results.Count)
         {
-          foreach (var scoredSegment in _results[index]) _instantiationQueue.Enqueue(scoredSegment);
+          _instantiationQueue.Enqueue(_results[index]);
           _enqueued++;
         }
       }
@@ -163,45 +157,31 @@ namespace VitrivrVR.Query.Display
       }
     }
 
-    private async Task CreateResultObject(ScoredSegment result)
+    private void CreateResultObject(IEnumerable<ScoredSegment> objectResult)
     {
-      var objectId = await result.segment.GetObjectId();
+      var index = _mediaObjectSegmentDisplays.Count;
 
-      // Only instantiate if max segments for this object have not been reached already
-      if (_objectMap.ContainsKey(objectId) &&
-          _mediaObjectSegmentDisplays[_objectMap[objectId]].Count >= maxSegmentsPerObject)
-      {
-        _mediaDisplays.Add(null);
-        return;
-      }
+      _mediaObjectSegmentDisplays.Add(objectResult
+        .Take(maxSegmentsPerObject)
+        .Select((scoredSegment, i) =>
+        {
+          var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, Quaternion.identity, transform);
+          var (position, rotation) = GetResultLocalPosRot(index, i * segmentDistance);
 
-      var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, Quaternion.identity, transform);
+          var t = itemDisplay.transform;
+          t.localPosition = position;
+          t.localRotation = rotation;
+          // Adjust size
+          t.localScale *= resultSize;
 
-      // Add to media object list
-      if (_objectMap.ContainsKey(objectId))
-      {
-        _mediaObjectSegmentDisplays[_objectMap[objectId]].Add(itemDisplay);
-      }
-      else
-      {
-        _objectMap[objectId] = _mediaObjectSegmentDisplays.Count;
-        _mediaObjectSegmentDisplays.Add(new List<MediaItemDisplay> { itemDisplay });
-      }
+          itemDisplay.Initialize(scoredSegment);
 
-      var index = _objectMap[objectId];
-      var (position, rotation) =
-        GetResultLocalPosRot(index, (_mediaObjectSegmentDisplays[index].Count - 1) * segmentDistance);
+          itemDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
 
-      var transform2 = itemDisplay.transform;
-      transform2.localPosition = position;
-      transform2.localRotation = rotation;
-      // Adjust size
-      transform2.localScale *= resultSize;
+          return itemDisplay;
+        }).ToList());
 
-      _mediaDisplays.Add(itemDisplay);
-      itemDisplay.Initialize(result);
-
-      itemDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
+      _instantiated++;
     }
 
     /// <summary>

@@ -64,7 +64,7 @@ namespace VitrivrVR.Query.Display
 
     protected override void Initialize()
     {
-      var fusionResults = queryData.GetMeanFusionResults();
+      var fusionResults = QueryData.GetMeanFusionResults();
       _results = fusionResults;
       if (_results == null)
       {
