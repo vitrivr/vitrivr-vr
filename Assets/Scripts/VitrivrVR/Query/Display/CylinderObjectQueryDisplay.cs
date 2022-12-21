@@ -141,60 +141,65 @@ namespace VitrivrVR.Query.Display
 
       // Check enabled
       var enabledStart = Math.Max(rawColumnIndex * rows, 0);
-      if (enabledStart != _currentStart || enabledEnd != _currentEnd)
+      if (enabledStart == _currentStart && enabledEnd == _currentEnd) return;
+
+      var start = Mathf.Min(enabledStart, _currentStart);
+      var end = Mathf.Min(Mathf.Max(enabledEnd, _currentEnd), _mediaObjectSegmentDisplays.Count);
+      for (var i = start; i < end; i++)
       {
-        var start = Mathf.Min(enabledStart, _currentStart);
-        var end = Mathf.Min(Mathf.Max(enabledEnd, _currentEnd), _mediaObjectSegmentDisplays.Count);
-        for (var i = start; i < end; i++)
-        {
-          var active = enabledStart <= i && i < enabledEnd;
-          _mediaObjectSegmentDisplays[i].gameObject.SetActive(active);
-        }
-
-        _currentStart = enabledStart;
-        _currentEnd = enabledEnd;
-
-        LoggingController.LogInteraction("rankedList", $"browse {Mathf.Sign(degrees)}", Browsing);
+        var active = enabledStart <= i && i < enabledEnd;
+        _mediaObjectSegmentDisplays[i].gameObject.SetActive(active);
       }
+
+      _currentStart = enabledStart;
+      _currentEnd = enabledEnd;
+
+      LoggingController.LogInteraction("rankedList", $"browse {Mathf.Sign(degrees)}", Browsing);
     }
 
     private void CreateResultObject(IEnumerable<ScoredSegment> objectResult)
     {
       var index = _mediaObjectSegmentDisplays.Count;
 
+      // Instantiate drawer like display holder
       var mediaObjectDisplay = Instantiate(mediaObjectItemDisplay, Vector3.zero, Quaternion.identity, transform);
       var (position, rotation) = GetResultLocalPosRot(index);
 
+      // Set position and rotation
       mediaObjectDisplay.localPosition = position;
       mediaObjectDisplay.localRotation = rotation;
       // Adjust size
       mediaObjectDisplay.localScale *= resultSize;
 
+      // Get the grab enabled display parent to instantiate segment displays into
       var displayParent = mediaObjectDisplay.GetChild(0);
 
       _mediaObjectSegmentDisplays.Add(mediaObjectDisplay);
 
 
+      // Ensure only the set maximum of segments is displayed
       var enumeratedSegments = objectResult
         .Take(maxSegmentsPerObject)
         .Select((scoredSegment, i) => (scoredSegment, i))
         .ToList();
 
+      // Create segment displays
       enumeratedSegments.ForEach(pair =>
       {
         var (scoredSegment, i) = pair;
-        var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, Quaternion.identity, displayParent);
+        var itemDisplay = Instantiate(mediaItemDisplay, displayParent);
 
+        // Adjust local position based on index and set local rotation to identity
         var t = itemDisplay.transform;
         t.localPosition = Vector3.forward * (i * SegmentDistance);
         t.localRotation = Quaternion.identity;
 
         itemDisplay.Initialize(scoredSegment);
-
-        itemDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
       });
 
-      if (!displayParent.TryGetComponent<BoxCollider>(out var boxCollider)) return;
+      // Set grab enabled bounding box size
+      if (!displayParent.TryGetComponent<BoxCollider>(out var boxCollider))
+        throw new Exception("Could not get BoxCollider!");
       var size = boxCollider.size;
       var center = boxCollider.center;
 
@@ -204,19 +209,21 @@ namespace VitrivrVR.Query.Display
       boxCollider.size = size;
       boxCollider.center = center;
 
+      // Set disabled if outside of active range
+      mediaObjectDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
+
       _instantiated++;
     }
 
     /// <summary>
     /// Calculates and returns the local position and rotation of a result display based on its index.
-    /// The distanceDelta parameter can be used to specify additional distance from the display cylinder.
     /// </summary>
-    private (Vector3 position, Quaternion rotation) GetResultLocalPosRot(int index, float distanceDelta = 0)
+    private (Vector3 position, Quaternion rotation) GetResultLocalPosRot(int index)
     {
       var row = index % rows;
       var column = index / rows;
       var multiplier = resultSize + padding;
-      var position = new Vector3(0, multiplier * row, distance + distanceDelta);
+      var position = new Vector3(0, multiplier * row, distance);
       var rotation = Quaternion.Euler(0, column * _columnAngle, 0);
       position = rotation * position;
 
