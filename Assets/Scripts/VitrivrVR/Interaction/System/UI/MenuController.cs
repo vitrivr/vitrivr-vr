@@ -33,6 +33,15 @@ namespace VitrivrVR.Interaction.System.UI
     private void ToggleMenu(InputAction.CallbackContext context)
     {
       _showing = !_showing;
+      if (_showing)
+      {
+        var t = transform;
+        var ct = Camera.main!.transform;
+        
+        t.rotation = Quaternion.Euler(0, ct.rotation.eulerAngles.y, 0);
+        t.position = ct.position;
+      }
+
       foreach (var menuItem in menuItems)
       {
         menuItem.gameObject.SetActive(_showing);
