@@ -37,7 +37,7 @@ namespace VitrivrVR.Query.Display
 
     private readonly Queue<ScoredSegment> _instantiationQueue = new();
 
-    private List<ScoredSegment> _results;
+    private List<List<ScoredSegment>> _results;
 
     private int _enqueued;
 
@@ -90,24 +90,35 @@ namespace VitrivrVR.Query.Display
       }
     }
 
-    protected override void Initialize()
+    protected override async void Initialize()
     {
       var fusionResults = queryData.GetMeanFusionResults();
-      _results = fusionResults;
-      if (_results == null)
+      if (fusionResults == null)
       {
         NotificationController.Notify("No results returned from query!");
-        _results = new List<ScoredSegment>();
+        fusionResults = new List<ScoredSegment>();
       }
 
+      var resultsWithObjectIds =
+        await Task.WhenAll(fusionResults.Select(async segment => (segment, await segment.segment.GetObjectId())));
+
+      _results = (
+        from tuple in resultsWithObjectIds
+        group tuple.segment by tuple.Item2
+        into resultGroup
+        orderby resultGroup.First().score descending
+        select resultGroup.ToList()
+      ).ToList();
+
       _nResults = _results.Count;
-      foreach (var segment in _results.Take(_maxColumns * 3 / 4 * rows))
+      foreach (var objectSegments in _results.Take(_maxColumns * 3 / 4 * rows))
       {
-        _instantiationQueue.Enqueue(segment);
+        foreach (var objectSegment in objectSegments) _instantiationQueue.Enqueue(objectSegment);
+
         _enqueued++;
       }
 
-      LoggingController.LogQueryResults("object", _results, queryData);
+      LoggingController.LogQueryResults("object", fusionResults, queryData);
     }
 
     /// <summary>
@@ -128,7 +139,7 @@ namespace VitrivrVR.Query.Display
         var index = _mediaDisplays.Count;
         if (index < _results.Count)
         {
-          _instantiationQueue.Enqueue(_results[index]);
+          foreach (var scoredSegment in _results[index]) _instantiationQueue.Enqueue(scoredSegment);
           _enqueued++;
         }
       }

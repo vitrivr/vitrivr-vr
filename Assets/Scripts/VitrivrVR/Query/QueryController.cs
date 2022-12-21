@@ -142,7 +142,6 @@ namespace VitrivrVR.Query
 
       var config = ConfigManager.Config;
       var maxResults = config.maxResults;
-      var prefetch = config.maxPrefetch;
 
       var query = QueryBuilder.BuildSimilarityQuery(queryTerms.ToArray());
       // TODO: Move to QueryBuilder
@@ -153,7 +152,7 @@ namespace VitrivrVR.Query
         timer.SetActive(true);
       }
 
-      var queryData = await CurrentClient.ExecuteQuery(query, prefetch);
+      var queryData = await CurrentClient.ExecuteQuery(query, maxResults);
 
       if (_localQueryGuid != localGuid)
       {
@@ -177,7 +176,6 @@ namespace VitrivrVR.Query
 
       var config = ConfigManager.Config;
       var maxResults = config.maxResults;
-      var prefetch = config.maxPrefetch;
 
       var query = QueryBuilder.BuildStagedQuery(stages);
       // TODO: Move to QueryBuilder
@@ -188,7 +186,7 @@ namespace VitrivrVR.Query
         timer.SetActive(true);
       }
 
-      var queryData = await CurrentClient.ExecuteQuery(query, prefetch);
+      var queryData = await CurrentClient.ExecuteQuery(query, maxResults);
 
       if (_localQueryGuid != localGuid)
       {
@@ -212,7 +210,6 @@ namespace VitrivrVR.Query
 
       var config = ConfigManager.Config;
       var maxResults = config.maxResults;
-      var prefetch = config.maxPrefetch;
 
       var query = QueryBuilder.BuildTemporalQuery(temporalTerms);
       // TODO: Move to QueryBuilder
@@ -223,7 +220,7 @@ namespace VitrivrVR.Query
         timer.SetActive(true);
       }
 
-      var queryData = await CurrentClient.ExecuteQuery(query, prefetch);
+      var queryData = await CurrentClient.ExecuteQuery(query, maxResults);
 
       if (_localQueryGuid != localGuid)
       {
