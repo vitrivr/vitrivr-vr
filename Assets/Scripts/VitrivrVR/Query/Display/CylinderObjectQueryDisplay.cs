@@ -20,6 +20,7 @@ namespace VitrivrVR.Query.Display
   public class CylinderObjectQueryDisplay : QueryDisplay
   {
     public MediaItemDisplay mediaItemDisplay;
+    public Transform mediaObjectItemDisplay;
     public int rows = 4;
     public float rotationSpeed = 90;
     public float distance = 1;
@@ -29,9 +30,10 @@ namespace VitrivrVR.Query.Display
     public InputAction rotationAction;
 
     public int maxSegmentsPerObject = 3;
-    public float segmentDistance = 0.2f;
 
     public override int NumberOfResults => _nResults;
+
+    private const float SegmentDistance = .3f;
 
     private readonly Queue<List<ScoredSegment>> _instantiationQueue = new();
 
@@ -41,7 +43,7 @@ namespace VitrivrVR.Query.Display
 
     private int _instantiated;
 
-    private readonly List<List<MediaItemDisplay>> _mediaObjectSegmentDisplays = new();
+    private readonly List<Transform> _mediaObjectSegmentDisplays = new();
 
     private int _nResults;
     private float _columnAngle;
@@ -146,7 +148,7 @@ namespace VitrivrVR.Query.Display
         for (var i = start; i < end; i++)
         {
           var active = enabledStart <= i && i < enabledEnd;
-          _mediaObjectSegmentDisplays[i].ForEach(display => display.gameObject.SetActive(active));
+          _mediaObjectSegmentDisplays[i].gameObject.SetActive(active);
         }
 
         _currentStart = enabledStart;
@@ -160,25 +162,47 @@ namespace VitrivrVR.Query.Display
     {
       var index = _mediaObjectSegmentDisplays.Count;
 
-      _mediaObjectSegmentDisplays.Add(objectResult
+      var mediaObjectDisplay = Instantiate(mediaObjectItemDisplay, Vector3.zero, Quaternion.identity, transform);
+      var (position, rotation) = GetResultLocalPosRot(index);
+
+      mediaObjectDisplay.localPosition = position;
+      mediaObjectDisplay.localRotation = rotation;
+      // Adjust size
+      mediaObjectDisplay.localScale *= resultSize;
+
+      var displayParent = mediaObjectDisplay.GetChild(0);
+
+      _mediaObjectSegmentDisplays.Add(mediaObjectDisplay);
+
+
+      var enumeratedSegments = objectResult
         .Take(maxSegmentsPerObject)
-        .Select((scoredSegment, i) =>
-        {
-          var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, Quaternion.identity, transform);
-          var (position, rotation) = GetResultLocalPosRot(index, i * segmentDistance);
+        .Select((scoredSegment, i) => (scoredSegment, i))
+        .ToList();
 
-          var t = itemDisplay.transform;
-          t.localPosition = position;
-          t.localRotation = rotation;
-          // Adjust size
-          t.localScale *= resultSize;
+      enumeratedSegments.ForEach(pair =>
+      {
+        var (scoredSegment, i) = pair;
+        var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, Quaternion.identity, displayParent);
 
-          itemDisplay.Initialize(scoredSegment);
+        var t = itemDisplay.transform;
+        t.localPosition = Vector3.forward * (i * SegmentDistance);
+        t.localRotation = Quaternion.identity;
 
-          itemDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
+        itemDisplay.Initialize(scoredSegment);
 
-          return itemDisplay;
-        }).ToList());
+        itemDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
+      });
+
+      if (!displayParent.TryGetComponent<BoxCollider>(out var boxCollider)) return;
+      var size = boxCollider.size;
+      var center = boxCollider.center;
+
+      size.z = enumeratedSegments.Count * SegmentDistance;
+      center.z = (size.z - SegmentDistance) / 2;
+
+      boxCollider.size = size;
+      boxCollider.center = center;
 
       _instantiated++;
     }
