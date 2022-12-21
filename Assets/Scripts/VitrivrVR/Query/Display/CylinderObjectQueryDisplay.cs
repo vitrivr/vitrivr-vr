@@ -112,7 +112,6 @@ namespace VitrivrVR.Query.Display
       }
 
       LoggingController.LogQueryResults("object", fusionResults, QueryData);
-      Debug.Log(_nResults);
     }
 
     /// <summary>
