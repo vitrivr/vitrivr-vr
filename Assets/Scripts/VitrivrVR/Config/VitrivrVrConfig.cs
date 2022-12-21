@@ -53,11 +53,6 @@ namespace VitrivrVR.Config
     public int maxResults;
 
     /// <summary>
-    /// The maximum number of query results to prefetch.
-    /// </summary>
-    public int maxPrefetch;
-
-    /// <summary>
     /// The maximum number of items to display at once.
     /// </summary>
     public int maxDisplay;
@@ -131,7 +126,6 @@ namespace VitrivrVR.Config
     {
       cineastConfigs = new List<string> { "cineastapi.json" };
       maxResults = 10000;
-      maxPrefetch = 1000;
       maxDisplay = 100;
       dissimilarityColor = new ConfigColor(1, 0, 0);
       similarityColor = new ConfigColor(0, 1, 0);

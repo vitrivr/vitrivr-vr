@@ -77,7 +77,7 @@ namespace VitrivrVR.Query.Display
 
     protected override void Initialize()
     {
-      var fusionResults = queryData.GetMeanFusionResults();
+      var fusionResults = QueryData.GetMeanFusionResults();
       _results = fusionResults;
       if (_results == null)
       {
@@ -91,7 +91,7 @@ namespace VitrivrVR.Query.Display
         _instantiationQueue.Enqueue(segment);
       }
 
-      LoggingController.LogQueryResults("segment", _results, queryData);
+      LoggingController.LogQueryResults("segment", _results, QueryData);
     }
 
     /// <summary>

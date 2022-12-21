@@ -13,14 +13,12 @@ namespace VitrivrVR.Query.Display
   public abstract class QueryDisplay : MonoBehaviour
   {
     public virtual int NumberOfResults => -1;
-    public QueryResponse QueryData => queryData;
 
-
-    protected QueryResponse queryData;
+    public QueryResponse QueryData { get; private set; }
 
     public void Initialize(QueryResponse queryResult)
     {
-      queryData = queryResult;
+      QueryData = queryResult;
       Initialize();
     }
 
@@ -32,15 +30,15 @@ namespace VitrivrVR.Query.Display
     {
       var stringBuilder = new StringBuilder();
       stringBuilder.Append("{");
-      if (queryData.Query != null)
+      if (QueryData.Query != null)
       {
-        stringBuilder.Append(string.Join(", ", queryData.Query.Terms.Select(TermToString)));
+        stringBuilder.Append(string.Join(", ", QueryData.Query.Terms.Select(TermToString)));
       }
-      else if (queryData.StagedQuery != null)
+      else if (QueryData.StagedQuery != null)
       {
         stringBuilder.Append("{");
         stringBuilder.Append(string.Join("}, {",
-          queryData.StagedQuery.Stages.Select(stage => string.Join(", ", stage.Terms.Select(TermToString)))));
+          QueryData.StagedQuery.Stages.Select(stage => string.Join(", ", stage.Terms.Select(TermToString)))));
         stringBuilder.Append("}");
       }
 

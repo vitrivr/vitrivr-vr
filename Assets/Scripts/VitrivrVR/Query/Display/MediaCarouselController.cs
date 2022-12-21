@@ -75,7 +75,7 @@ namespace VitrivrVR.Query.Display
 
     protected override void Initialize()
     {
-      var fusionResults = queryData.GetMeanFusionResults();
+      var fusionResults = QueryData.GetMeanFusionResults();
       foreach (var segment in fusionResults.Take(ConfigManager.Config.maxDisplay))
       {
         _instantiationQueue.Enqueue(segment);

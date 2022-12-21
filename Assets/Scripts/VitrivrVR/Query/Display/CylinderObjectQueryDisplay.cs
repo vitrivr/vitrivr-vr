@@ -20,6 +20,7 @@ namespace VitrivrVR.Query.Display
   public class CylinderObjectQueryDisplay : QueryDisplay
   {
     public MediaItemDisplay mediaItemDisplay;
+    public Transform mediaObjectItemDisplay;
     public int rows = 4;
     public float rotationSpeed = 90;
     public float distance = 1;
@@ -29,25 +30,20 @@ namespace VitrivrVR.Query.Display
     public InputAction rotationAction;
 
     public int maxSegmentsPerObject = 3;
-    public float segmentDistance = 0.2f;
 
     public override int NumberOfResults => _nResults;
 
-    private readonly List<MediaItemDisplay> _mediaDisplays = new();
+    private const float SegmentDistance = .3f;
 
-    private readonly Queue<ScoredSegment> _instantiationQueue = new();
+    private readonly Queue<List<ScoredSegment>> _instantiationQueue = new();
 
-    private List<ScoredSegment> _results;
+    private List<List<ScoredSegment>> _results;
 
     private int _enqueued;
 
-    /// <summary>
-    /// Dictionary containing for each media object in the results the index of the list of corresponding media item
-    /// displays in _mediaObjectSegmentDisplays.
-    /// </summary>
-    private readonly Dictionary<string, int> _objectMap = new();
+    private int _instantiated;
 
-    private readonly List<List<MediaItemDisplay>> _mediaObjectSegmentDisplays = new();
+    private readonly List<Transform> _mediaObjectSegmentDisplays = new();
 
     private int _nResults;
     private float _columnAngle;
@@ -80,34 +76,44 @@ namespace VitrivrVR.Query.Display
       rotationAction.Disable();
     }
 
-    private async void Update()
+    private void Update()
     {
       Rotate(Time.deltaTime * rotationSpeed * rotationAction.ReadValue<Vector2>().x);
 
       if (_instantiationQueue.Count > 0)
       {
-        await CreateResultObject(_instantiationQueue.Dequeue());
+        CreateResultObject(_instantiationQueue.Dequeue());
       }
     }
 
-    protected override void Initialize()
+    protected override async void Initialize()
     {
-      var fusionResults = queryData.GetMeanFusionResults();
-      _results = fusionResults;
-      if (_results == null)
+      var fusionResults = QueryData.GetMeanFusionResults();
+      if (fusionResults == null)
       {
         NotificationController.Notify("No results returned from query!");
-        _results = new List<ScoredSegment>();
+        fusionResults = new List<ScoredSegment>();
       }
 
+      var resultsWithObjectIds =
+        await Task.WhenAll(fusionResults.Select(async segment => (segment, await segment.segment.GetObjectId())));
+
+      _results = (
+        from tuple in resultsWithObjectIds
+        group tuple.segment by tuple.Item2
+        into resultGroup
+        orderby resultGroup.First().score descending
+        select resultGroup.ToList()
+      ).ToList();
+
       _nResults = _results.Count;
-      foreach (var segment in _results.Take(_maxColumns * 3 / 4 * rows))
+      foreach (var objectSegments in _results.Take(_maxColumns * 3 / 4 * rows))
       {
-        _instantiationQueue.Enqueue(segment);
+        _instantiationQueue.Enqueue(objectSegments);
         _enqueued++;
       }
 
-      LoggingController.LogQueryResults("object", _results, queryData);
+      LoggingController.LogQueryResults("object", fusionResults, QueryData);
     }
 
     /// <summary>
@@ -123,9 +129,9 @@ namespace VitrivrVR.Query.Display
 
       // Check instantiations
       var enabledEnd = Mathf.Min((rawColumnIndex + _maxColumns) * rows, _nResults);
-      if (enabledEnd > _mediaObjectSegmentDisplays.Count && _enqueued == _mediaDisplays.Count)
+      if (enabledEnd > _mediaObjectSegmentDisplays.Count && _enqueued == _instantiated)
       {
-        var index = _mediaDisplays.Count;
+        var index = _instantiated;
         if (index < _results.Count)
         {
           _instantiationQueue.Enqueue(_results[index]);
@@ -135,74 +141,89 @@ namespace VitrivrVR.Query.Display
 
       // Check enabled
       var enabledStart = Math.Max(rawColumnIndex * rows, 0);
-      if (enabledStart != _currentStart || enabledEnd != _currentEnd)
+      if (enabledStart == _currentStart && enabledEnd == _currentEnd) return;
+
+      var start = Mathf.Min(enabledStart, _currentStart);
+      var end = Mathf.Min(Mathf.Max(enabledEnd, _currentEnd), _mediaObjectSegmentDisplays.Count);
+      for (var i = start; i < end; i++)
       {
-        var start = Mathf.Min(enabledStart, _currentStart);
-        var end = Mathf.Min(Mathf.Max(enabledEnd, _currentEnd), _mediaObjectSegmentDisplays.Count);
-        for (var i = start; i < end; i++)
-        {
-          var active = enabledStart <= i && i < enabledEnd;
-          _mediaObjectSegmentDisplays[i].ForEach(display => display.gameObject.SetActive(active));
-        }
-
-        _currentStart = enabledStart;
-        _currentEnd = enabledEnd;
-
-        LoggingController.LogInteraction("rankedList", $"browse {Mathf.Sign(degrees)}", Browsing);
+        var active = enabledStart <= i && i < enabledEnd;
+        _mediaObjectSegmentDisplays[i].gameObject.SetActive(active);
       }
+
+      _currentStart = enabledStart;
+      _currentEnd = enabledEnd;
+
+      LoggingController.LogInteraction("rankedList", $"browse {Mathf.Sign(degrees)}", Browsing);
     }
 
-    private async Task CreateResultObject(ScoredSegment result)
+    private void CreateResultObject(IEnumerable<ScoredSegment> objectResult)
     {
-      var objectId = await result.segment.GetObjectId();
+      var index = _mediaObjectSegmentDisplays.Count;
 
-      // Only instantiate if max segments for this object have not been reached already
-      if (_objectMap.ContainsKey(objectId) &&
-          _mediaObjectSegmentDisplays[_objectMap[objectId]].Count >= maxSegmentsPerObject)
-      {
-        _mediaDisplays.Add(null);
-        return;
-      }
+      // Instantiate drawer like display holder
+      var mediaObjectDisplay = Instantiate(mediaObjectItemDisplay, Vector3.zero, Quaternion.identity, transform);
+      var (position, rotation) = GetResultLocalPosRot(index);
 
-      var itemDisplay = Instantiate(mediaItemDisplay, Vector3.zero, Quaternion.identity, transform);
-
-      // Add to media object list
-      if (_objectMap.ContainsKey(objectId))
-      {
-        _mediaObjectSegmentDisplays[_objectMap[objectId]].Add(itemDisplay);
-      }
-      else
-      {
-        _objectMap[objectId] = _mediaObjectSegmentDisplays.Count;
-        _mediaObjectSegmentDisplays.Add(new List<MediaItemDisplay> { itemDisplay });
-      }
-
-      var index = _objectMap[objectId];
-      var (position, rotation) =
-        GetResultLocalPosRot(index, (_mediaObjectSegmentDisplays[index].Count - 1) * segmentDistance);
-
-      var transform2 = itemDisplay.transform;
-      transform2.localPosition = position;
-      transform2.localRotation = rotation;
+      // Set position and rotation
+      mediaObjectDisplay.localPosition = position;
+      mediaObjectDisplay.localRotation = rotation;
       // Adjust size
-      transform2.localScale *= resultSize;
+      mediaObjectDisplay.localScale *= resultSize;
 
-      _mediaDisplays.Add(itemDisplay);
-      itemDisplay.Initialize(result);
+      // Get the grab enabled display parent to instantiate segment displays into
+      var displayParent = mediaObjectDisplay.GetChild(0);
 
-      itemDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
+      _mediaObjectSegmentDisplays.Add(mediaObjectDisplay);
+
+
+      // Ensure only the set maximum of segments is displayed
+      var enumeratedSegments = objectResult
+        .Take(maxSegmentsPerObject)
+        .Select((scoredSegment, i) => (scoredSegment, i))
+        .ToList();
+
+      // Create segment displays
+      enumeratedSegments.ForEach(pair =>
+      {
+        var (scoredSegment, i) = pair;
+        var itemDisplay = Instantiate(mediaItemDisplay, displayParent);
+
+        // Adjust local position based on index and set local rotation to identity
+        var t = itemDisplay.transform;
+        t.localPosition = Vector3.forward * (i * SegmentDistance);
+        t.localRotation = Quaternion.identity;
+
+        itemDisplay.Initialize(scoredSegment);
+      });
+
+      // Set grab enabled bounding box size
+      if (!displayParent.TryGetComponent<BoxCollider>(out var boxCollider))
+        throw new Exception("Could not get BoxCollider!");
+      var size = boxCollider.size;
+      var center = boxCollider.center;
+
+      size.z = enumeratedSegments.Count * SegmentDistance;
+      center.z = (size.z - SegmentDistance) / 2;
+
+      boxCollider.size = size;
+      boxCollider.center = center;
+
+      // Set disabled if outside of active range
+      mediaObjectDisplay.gameObject.SetActive(_currentStart <= index && index < _currentEnd);
+
+      _instantiated++;
     }
 
     /// <summary>
     /// Calculates and returns the local position and rotation of a result display based on its index.
-    /// The distanceDelta parameter can be used to specify additional distance from the display cylinder.
     /// </summary>
-    private (Vector3 position, Quaternion rotation) GetResultLocalPosRot(int index, float distanceDelta = 0)
+    private (Vector3 position, Quaternion rotation) GetResultLocalPosRot(int index)
     {
       var row = index % rows;
       var column = index / rows;
       var multiplier = resultSize + padding;
-      var position = new Vector3(0, multiplier * row, distance + distanceDelta);
+      var position = new Vector3(0, multiplier * row, distance);
       var rotation = Quaternion.Euler(0, column * _columnAngle, 0);
       position = rotation * position;
 
