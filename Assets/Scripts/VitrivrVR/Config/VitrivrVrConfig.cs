@@ -74,10 +74,21 @@ namespace VitrivrVR.Config
 
     /// <summary>
     /// The text categories to provide for text query terms.
+    /// Leave empty to disable.
     /// </summary>
     public List<TextCategory> textCategories;
 
+    /// <summary>
+    /// The categories for Boolean terms.
+    /// Leave empty to disable.
+    /// </summary>
     public List<BooleanCategory> booleanCategories;
+
+    public bool tagTerm;
+
+    public bool mapTerm;
+
+    public bool poseTerm;
 
     /// <summary>
     /// The default volume [0, 1] to use for audio and video.
@@ -142,6 +153,9 @@ namespace VitrivrVR.Config
         new("Co-Embed", "visualtextcoembedding")
       };
       booleanCategories = new List<BooleanCategory>();
+      tagTerm = false;
+      mapTerm = false;
+      poseTerm = false;
       defaultMediaVolume = .5f;
       skipLength = 2.5f;
       dresEnabled = false;
