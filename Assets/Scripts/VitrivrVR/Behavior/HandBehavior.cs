@@ -17,6 +17,7 @@ namespace VitrivrVR.Behavior
     {
       _initialScale = model.localScale;
       grip.performed += ScaleModel;
+      grip.canceled += ScaleModel;
     }
 
     private void OnEnable()
