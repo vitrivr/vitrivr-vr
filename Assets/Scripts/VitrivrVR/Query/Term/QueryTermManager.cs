@@ -146,6 +146,7 @@ namespace VitrivrVR.Query.Term
     {
       var representation = Instantiate(queryTermProviderRepresentationPrefab);
       var (providerName, n) = GetNewName(termProvider);
+      termProvider.SetInstanceName($"{providerName} {n}");
       representation.Initialize(this, termProvider, Vector3.up * 0.1f, providerName, n);
 
       // No temporal contexts yet

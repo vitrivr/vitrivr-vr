@@ -1526,6 +1526,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   map: {fileID: 9143556012033577987}
+  nameDisplayText: {fileID: 6175183724729387239}
 --- !u!1 &4628496103118665446
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Org.Vitrivr.CineastApi.Model;
+using TMPro;
 using UnityEngine;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Config;
@@ -17,6 +18,8 @@ namespace VitrivrVR.Query.Term
     public CanvasYearSelection yearSelection;
     public CanvasOptionSelection optionSelection;
     public CanvasIntegerRange integerRange;
+    
+    public TMP_Text nameDisplayText;
 
     private enum BooleanTermTypes
     {
@@ -130,6 +133,14 @@ namespace VitrivrVR.Query.Term
     public override string GetTypeName()
     {
       return "Boolean";
+    }
+    
+    public override void SetInstanceName(string displayName)
+    {
+      if (nameDisplayText != null)
+      {
+        nameDisplayText.text = displayName;
+      }
     }
 
     private static List<string> SortOptions(List<string> options, SortOrder sortOrder)

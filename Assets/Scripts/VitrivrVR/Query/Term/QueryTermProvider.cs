@@ -23,5 +23,11 @@ namespace VitrivrVR.Query.Term
     /// </summary>
     /// <returns>The type of provider for display purposes.</returns>
     public abstract string GetTypeName();
+
+    /// <summary>
+    /// Sets the displayed name of this instance of the query term provider to the provided name, if supported.
+    /// </summary>
+    /// <param name="displayName">Name assigned to this instance.</param>
+    public abstract void SetInstanceName(string displayName);
   }
 }

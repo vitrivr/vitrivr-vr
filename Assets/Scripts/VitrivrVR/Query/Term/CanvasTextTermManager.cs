@@ -14,6 +14,7 @@ namespace VitrivrVR.Query.Term
   {
     [Tooltip("The prefab from which to create text term providers.")]
     public CanvasTextTermProvider textTermProviderPrefab;
+    public TMP_Text nameDisplayText;
 
     private CanvasTextTermProvider _textTermProvider;
     private readonly List<CanvasTextTermProvider> _providers = new List<CanvasTextTermProvider>();
@@ -33,6 +34,14 @@ namespace VitrivrVR.Query.Term
     public override string GetTypeName()
     {
       return "Text (Multiple)";
+    }
+    
+    public override void SetInstanceName(string displayName)
+    {
+      if (nameDisplayText != null)
+      {
+        nameDisplayText.text = displayName;
+      }
     }
 
     public void AddTextTermProvider()

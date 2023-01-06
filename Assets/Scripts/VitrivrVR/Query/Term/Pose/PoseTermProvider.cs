@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Org.Vitrivr.CineastApi.Model;
+using TMPro;
 using UnityEngine;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 
@@ -10,6 +11,7 @@ namespace VitrivrVR.Query.Term.Pose
   public class PoseTermProvider : QueryTermProvider
   {
     public PoseProjectionController poseProjection;
+    public TMP_Text nameDisplayText;
 
     public override List<QueryTerm> GetTerms()
     {
@@ -37,6 +39,14 @@ namespace VitrivrVR.Query.Term.Pose
     public override string GetTypeName()
     {
       return "Pose";
+    }
+    
+    public override void SetInstanceName(string displayName)
+    {
+      if (nameDisplayText != null)
+      {
+        nameDisplayText.text = displayName;
+      }
     }
 
     [Serializable]
