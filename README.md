@@ -1,9 +1,9 @@
 # vitrivr-VR
 This repository contains the source code for vitrivr-VR, a Unity Engine based VR interface for multimedia retrieval using the Cineast retrieval engine.
 
-| Speech-to-text | Precision Keyboard | Immersive Results View | Intuitive Results Exploration |
+| Speech-to-text | Word-Gesture Keyboard | Immersive Results View | Intuitive Results Exploration |
 | --- | --- | --- | --- |
-| ![vitrivr-VR-speech-to-text](https://user-images.githubusercontent.com/9721543/154439403-07f6edab-33b7-41ea-8741-3fcb86ca77e4.gif) | ![vitrivr-VR-type](https://user-images.githubusercontent.com/9721543/154436198-0ed0a346-1cec-4e0b-b983-f9fc5639ff08.gif) | ![vitrivr-VR-view-results](https://user-images.githubusercontent.com/9721543/154439439-20fa8a17-4b6d-4110-bbb3-021ff4fee482.gif) | ![vitrivr-VR-drawer](https://user-images.githubusercontent.com/9721543/154434477-5397c3f5-5d2a-4874-84d8-1f1ea62b2d43.gif) |
+| ![vitrivr-VR-speech-to-text](https://user-images.githubusercontent.com/9721543/154439403-07f6edab-33b7-41ea-8741-3fcb86ca77e4.gif) | ![word-gesture-keyboard](https://user-images.githubusercontent.com/9721543/213174671-0c6ddb33-5bc4-4830-8eb2-9563372d199b.gif) | ![vitrivr-VR-view-results](https://user-images.githubusercontent.com/9721543/154439439-20fa8a17-4b6d-4110-bbb3-021ff4fee482.gif) | ![vitrivr-VR-drawer](https://user-images.githubusercontent.com/9721543/154434477-5397c3f5-5d2a-4874-84d8-1f1ea62b2d43.gif) |
 
 ## Setup
 Setup is very easy and should not involve much more than having a working OpenXR runtime and a compatible version of the Unity engine installed.
