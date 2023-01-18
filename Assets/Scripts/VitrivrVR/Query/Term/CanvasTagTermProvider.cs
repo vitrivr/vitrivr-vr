@@ -18,6 +18,7 @@ namespace VitrivrVR.Query.Term
     public RectTransform toolTipPanel;
     public TextMeshProUGUI toolTipText;
     public int maxResults = 100;
+    public TMP_Text nameDisplayText;
 
     private readonly List<TagData> _tagItems = new();
     private readonly HashSet<string> _tagIds = new();
@@ -137,6 +138,14 @@ namespace VitrivrVR.Query.Term
     public override string GetTypeName()
     {
       return "Tag";
+    }
+    
+    public override void SetInstanceName(string displayName)
+    {
+      if (nameDisplayText != null)
+      {
+        nameDisplayText.text = displayName;
+      }
     }
   }
 }

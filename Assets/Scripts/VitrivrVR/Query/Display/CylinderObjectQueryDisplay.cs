@@ -95,8 +95,10 @@ namespace VitrivrVR.Query.Display
         fusionResults = new List<ScoredSegment>();
       }
 
-      var resultsWithObjectIds =
-        await Task.WhenAll(fusionResults.Select(async segment => (segment, await segment.segment.GetObjectId())));
+      var resultsWithObjectIds = await Task.WhenAll(fusionResults
+        .Where(segment => segment.segment.Initialized) // Prevents erroneous segments from preventing initialization
+        .Select(async segment => (segment, await segment.segment.GetObjectId()))
+      );
 
       _results = (
         from tuple in resultsWithObjectIds

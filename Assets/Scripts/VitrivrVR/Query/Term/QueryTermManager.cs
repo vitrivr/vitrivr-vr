@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Org.Vitrivr.CineastApi.Model;
+using TMPro;
 using UnityEngine;
+using VitrivrVR.Config;
 
 namespace VitrivrVR.Query.Term
 {
@@ -11,6 +13,12 @@ namespace VitrivrVR.Query.Term
   /// </summary>
   public class QueryTermManager : MonoBehaviour
   {
+    public QueryTermProviderFactory textTermProviderSelection,
+      tagTermProviderSelection,
+      booleanTermProviderSelection,
+      mapTermProviderSelection,
+      poseTermProviderSelection;
+
     /// <summary>
     /// Space between representations within a stage.
     /// </summary>
@@ -38,6 +46,84 @@ namespace VitrivrVR.Query.Term
     /// </summary>
     private int _currentlyReordering;
 
+    private const float VerticalSelectionSpace = .1f;
+    private const float HorizontalSelectionSpace = .025f;
+    private const float HorizontalSelectionPadding = .01f;
+
+    private void Start()
+    {
+      // Instantiate and arrange term selections
+      var config = ConfigManager.Config;
+
+      var selections = new List<QueryTermProviderFactory>();
+
+      // Text
+      if (config.textCategories.Count > 0)
+      {
+        var textSelection = Instantiate(textTermProviderSelection);
+        textSelection.combinedQueryTermProvider = this;
+        selections.Add(textSelection);
+      }
+
+      // Tag
+      if (config.tagTerm)
+      {
+        var tagSelection = Instantiate(tagTermProviderSelection);
+        tagSelection.combinedQueryTermProvider = this;
+        selections.Add(tagSelection);
+      }
+
+      // Boolean
+      if (config.booleanCategories.Count > 0)
+      {
+        var booleanSelection = Instantiate(booleanTermProviderSelection);
+        booleanSelection.combinedQueryTermProvider = this;
+        selections.Add(booleanSelection);
+      }
+
+      // Map
+      if (config.mapTerm)
+      {
+        var mapSelection = Instantiate(mapTermProviderSelection);
+        mapSelection.combinedQueryTermProvider = this;
+        selections.Add(mapSelection);
+      }
+
+      // Pose
+      if (config.poseTerm)
+      {
+        var poseSelection = Instantiate(poseTermProviderSelection);
+        poseSelection.combinedQueryTermProvider = this;
+        selections.Add(poseSelection);
+      }
+
+      // Arrange selections
+      var selectionWidths = selections.Select(selection =>
+      {
+        var text = selection.GetComponentInChildren<TMP_Text>();
+        text.ForceMeshUpdate();
+        var width = text.bounds.size.x;
+        var boxTransform = selection.GetComponentInChildren<LineRenderer>(true).transform;
+        var boxScale = boxTransform.localScale;
+        boxScale.x = width + 2 * HorizontalSelectionPadding;
+        boxTransform.localScale = boxScale;
+
+        return (selection, width);
+      }).ToList();
+      // Calculate total width of term selections (including all padding and spaces)
+      var totalWidth = selectionWidths.Select(pair => pair.width).Sum() +
+                       (selections.Count - 1) * (2 * HorizontalSelectionPadding + HorizontalSelectionSpace);
+
+      var x = -totalWidth / 2;
+      var position = transform.position;
+      foreach (var (selection, width) in selectionWidths)
+      {
+        selection.transform.position =
+          new Vector3(position.x + x + width / 2, position.y - VerticalSelectionSpace, position.z);
+        x += width + (2 * HorizontalSelectionPadding + HorizontalSelectionSpace);
+      }
+    }
+
     /// <summary>
     /// Retrieves the <see cref="QueryTerm"/>s sorted into stages and temporal contexts.
     /// </summary>
@@ -60,13 +146,14 @@ namespace VitrivrVR.Query.Term
     {
       var representation = Instantiate(queryTermProviderRepresentationPrefab);
       var (providerName, n) = GetNewName(termProvider);
+      termProvider.SetInstanceName($"{providerName} {n}");
       representation.Initialize(this, termProvider, Vector3.up * 0.1f, providerName, n);
 
       // No temporal contexts yet
       if (_queryTermProviders.Count == 0)
       {
         _queryTermProviders.Add(new List<List<(QueryTermProvider, QueryTermProviderRepresentation)>>
-          {new() {(termProvider, representation)}});
+          { new() { (termProvider, representation) } });
         return;
       }
 
@@ -112,28 +199,28 @@ namespace VitrivrVR.Query.Term
         var termProvider = Remove(representation);
         _queryTermProviders.Insert(0,
           new List<List<(QueryTermProvider, QueryTermProviderRepresentation)>>
-            {new() {(termProvider, representation)}});
+            { new() { (termProvider, representation) } });
       }
       else if (position < newStageIndicator0.localPosition.x)
       {
         var termProvider = Remove(representation);
         _queryTermProviders.First().Insert(0,
           new List<(QueryTermProvider, QueryTermProviderRepresentation)>
-            {(termProvider, representation)});
+            { (termProvider, representation) });
       }
       else if (position > newTemporalIndicator1.localPosition.x)
       {
         var termProvider = Remove(representation);
         _queryTermProviders.Add(
           new List<List<(QueryTermProvider, QueryTermProviderRepresentation)>>
-            {new() {(termProvider, representation)}});
+            { new() { (termProvider, representation) } });
       }
       else if (position > newStageIndicator1.localPosition.x)
       {
         var termProvider = Remove(representation);
         _queryTermProviders.Last().Add(
           new List<(QueryTermProvider provider, QueryTermProviderRepresentation representation)>
-            {(termProvider, representation)});
+            { (termProvider, representation) });
       }
       else
       {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Org.Vitrivr.CineastApi.Model;
@@ -10,6 +11,7 @@ namespace VitrivrVR.Query.Term
   public class CanvasTextTermProvider : QueryTermProvider
   {
     public Toggle textTogglePrefab;
+    public TMP_Text nameDisplayText;
 
     // Text input data
     private string _textSearchText;
@@ -55,6 +57,14 @@ namespace VitrivrVR.Query.Term
     public override string GetTypeName()
     {
       return "Text";
+    }
+
+    public override void SetInstanceName(string displayName)
+    {
+      if (nameDisplayText != null)
+      {
+        nameDisplayText.text = displayName;
+      }
     }
   }
 }
