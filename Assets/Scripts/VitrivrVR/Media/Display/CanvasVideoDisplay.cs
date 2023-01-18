@@ -254,6 +254,7 @@ namespace VitrivrVR.Media.Display
     public void QueryByCurrentFrame()
     {
       var frame = _videoPlayerController.GetCurrentFrame();
+      frame = ImageUtils.ResampleTexture(frame, 600, 600);
       var term = QueryTermBuilder.BuildImageTermForCategories(frame, ConfigManager.Config.defaultImageCategories);
       QueryController.Instance.RunQuery(new List<QueryTerm> { term });
     }
