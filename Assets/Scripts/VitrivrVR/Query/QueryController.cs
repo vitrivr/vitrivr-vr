@@ -47,6 +47,8 @@ namespace VitrivrVR.Query
     public List<string> AvailableCineastClients =>
       _cineastClients.Select(client => client.CineastConfig.name).ToList();
 
+    public List<CineastClient> CineastClients => _cineastClients.ToList();
+
     /// <summary>
     /// Event is triggered when a new query is added to the query list. Argument is query index.
     /// </summary>
@@ -353,7 +355,7 @@ namespace VitrivrVR.Query
       Queries[index].gameObject.SetActive(active);
     }
 
-    private void InstantiateQueryDisplay(QueryResponse queryData)
+    public void InstantiateQueryDisplay(QueryResponse queryData)
     {
       if (CurrentQuery != -1)
       {
