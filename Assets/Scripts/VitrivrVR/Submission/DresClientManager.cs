@@ -74,6 +74,21 @@ namespace VitrivrVR.Submission
       LoggingController.LogSubmission(mediaObjectId, frame);
     }
 
+    public static async void SubmitTextResult(string textSubmission)
+    {
+      try
+      {
+        var result = await _instance.SubmitResult(textSubmission);
+        NotificationController.Notify($"Submission: {result.Submission}");
+      }
+      catch (Exception e)
+      {
+        NotificationController.Notify(e.Message);
+      }
+
+      LoggingController.LogSubmission(textSubmission, null);
+    }
+
     /// <summary>
     /// Submit segment without further submission specification.
     /// </summary>
