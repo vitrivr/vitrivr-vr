@@ -78,7 +78,7 @@ namespace VitrivrVR.Submission
     {
       try
       {
-        var result = await _instance.SubmitResult(textSubmission);
+        var result = await _instance.SubmitTextualResult(textSubmission);
         NotificationController.Notify($"Submission: {result.Submission}");
       }
       catch (Exception e)
