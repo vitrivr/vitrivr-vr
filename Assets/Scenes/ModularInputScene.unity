@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.009389741, g: 0.010874605, b: 0.014736945, a: 1}
+  m_IndirectSpecularColor: {r: 0.009389737, g: 0.0108745955, b: 0.014736922, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2465,21 +2465,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   whisper: {fileID: 1898715789}
   microphoneRecord: {fileID: 1898715787}
-  onDictationStateChange:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1393637347}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   dictateAction:
     m_Name: Dictate
     m_Type: 0
@@ -2505,6 +2490,42 @@ MonoBehaviour:
       m_Action: Dictate
       m_Flags: 0
     m_Flags: 0
+  onDictationStateChange:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1393637347}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onSegmentPrediction:
+    m_PersistentCalls:
+      m_Calls: []
+  onResultPrediction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1670780548}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onSegmentResult:
+    m_PersistentCalls:
+      m_Calls: []
   onResult:
     m_PersistentCalls:
       m_Calls:
@@ -2524,21 +2545,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: VitrivrVR.Input.Text.SceneTextInputController,
           Assembly-CSharp
         m_MethodName: ReceiveDictationResult
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onPrediction:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1670780548}
-        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
-        m_MethodName: set_text
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
