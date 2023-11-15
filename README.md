@@ -11,6 +11,7 @@ There are a few things to be aware of:
 - **Errors on first import:** During first import there may be errors because Unity incorrectly loads the different versions of certain libraries included in itself and different packages. Simply close the editor and reopen the project to fix this issue.
 - **MapBox:** To use the map query formulation method using MapBox, follow the MapBox popup instructions to acquire an API-key. If you do not intend to use the map this step is not required.
 - **DeepSpeech:** To use the DeepSpeech speech-to-text functionality, follow the instructions on the [DeepSpeech UPM](https://github.com/Spiess/deep-speech-upm) repository to download and correctly place the required model file.
+- **Whisper:** To use the Whisper speech-to-text functionality (better and supporting more languages than DeepSpeech, but slower) download the `ggml-tiny` model weights file from [Hugging Face](https://huggingface.co/ggerganov/whisper.cpp) ([download](https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin?download=true)) and place it in the directory `Assets/StreamingAssets/Whisper/`.
 
 ## Usage
 
