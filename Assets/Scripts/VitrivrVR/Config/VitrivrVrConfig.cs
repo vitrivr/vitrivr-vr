@@ -42,6 +42,13 @@ namespace VitrivrVR.Config
       }
     }
 
+    [Serializable]
+    public enum SpeechToText
+    {
+      DeepSpeech,
+      Whisper
+    }
+
     /// <summary>
     /// List of paths relative to persistent path pointing to all enabled Cineast instances.
     /// </summary>
@@ -101,6 +108,11 @@ namespace VitrivrVR.Config
     public float skipLength;
 
     /// <summary>
+    /// The default enabled speech-to-text method.
+    /// </summary>
+    public SpeechToText defaultSpeechToText;
+
+    /// <summary>
     /// Enables or disables DRES submission system integration and all associated functionality.
     /// </summary>
     public bool dresEnabled;
@@ -135,7 +147,7 @@ namespace VitrivrVR.Config
 
     private VitrivrVrConfig()
     {
-      cineastConfigs = new List<string> { "cineastapi.json" };
+      cineastConfigs = new List<string> {"cineastapi.json"};
       maxResults = 10000;
       maxDisplay = 100;
       dissimilarityColor = new ConfigColor(1, 0, 0);
@@ -158,6 +170,7 @@ namespace VitrivrVR.Config
       poseTerm = false;
       defaultMediaVolume = .5f;
       skipLength = 2.5f;
+      defaultSpeechToText = SpeechToText.Whisper;
       dresEnabled = false;
       allowInvalidCertificate = false;
       submissionIdPrefixLength = 0;
