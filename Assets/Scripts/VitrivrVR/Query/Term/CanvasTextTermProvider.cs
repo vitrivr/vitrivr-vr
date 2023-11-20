@@ -49,7 +49,7 @@ namespace VitrivrVR.Query.Term
       if (categories.Count == 0)
         return terms;
 
-      terms.Add(new QueryTerm(QueryTerm.TypeEnum.TEXT, _textSearchText, categories));
+      terms.Add(new QueryTerm(categories, QueryTerm.TypeEnum.TEXT, _textSearchText));
 
       return terms;
     }

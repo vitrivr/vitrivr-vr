@@ -172,11 +172,11 @@
       "hash": "a9573d03cf5ca51310fe3894dcd12a511663998e"
     },
     "org.vitrivr.unityinterface.cineastapi": {
-      "version": "https://github.com/vitrivr/CineastUnityInterface.git#v0.1.1",
+      "version": "https://github.com/vitrivr/CineastUnityInterface.git#feature/dimensionality-reduction",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "ed4a41d7f05e02700edf8ea02930a348084cc510"
+      "hash": "b50ebc41d0f4a0f97e69313aed580da29cda8d30"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
