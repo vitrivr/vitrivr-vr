@@ -26,12 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8661397611067853840}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8661397611067853843
 MonoBehaviour:
@@ -45,9 +46,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e6fee3701cd34a799ec5a464e08ddca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultQueryTermProvider: {fileID: 0}
+  defaultQueryTermManager: {fileID: 0}
   timer: {fileID: 0}
-  queryDisplay: {fileID: 0}
+  queryDisplay: {fileID: 5978004481995343909, guid: 33bd32de084a9446c8c490fa1c5bf8b1,
+    type: 3}
+  temporalQueryDisplay: {fileID: 4530341693124885058, guid: c20bd8391b36b5c45b1f3f2049b05ab7,
+    type: 3}
   queryAddedEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -72,6 +76,8 @@ MonoBehaviour:
   videoDisplayPrefab: {fileID: 2954403938280973320, guid: 04e47bd7a0ab0475b9b355456cc6f4bf,
     type: 3}
   imageSequenceDisplayPrefab: {fileID: 4952956502963791116, guid: 7658a4f1a1cbd41b1b0b737de490e2cc,
+    type: 3}
+  imageDisplayPrefab: {fileID: 2529607500185689710, guid: 037d5a30e112a2340ad1834e1543b912,
     type: 3}
 --- !u!114 &2730910231105014784
 MonoBehaviour:

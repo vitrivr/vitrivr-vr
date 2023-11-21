@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.009389741, g: 0.010874605, b: 0.014736945, a: 1}
+  m_IndirectSpecularColor: {r: 0.009389737, g: 0.0108745955, b: 0.014736922, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -171,36 +171,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Modular Canvas Query Term Provider
       objectReference: {fileID: 0}
-    - target: {fileID: 4398201079036992528, guid: 9d9dd3a1966954f6b8c8f6a335003aca,
-        type: 3}
-      propertyPath: mapTermProviderSelection
-      value: 
-      objectReference: {fileID: 1124154672167200936, guid: 46bafca4ed5dfa84f8cea27bbaf01f12,
-        type: 3}
-    - target: {fileID: 4398201079036992528, guid: 9d9dd3a1966954f6b8c8f6a335003aca,
-        type: 3}
-      propertyPath: tagTermProviderSelection
-      value: 
-      objectReference: {fileID: 4966802847637547522, guid: a12d4f3654e25174ea623a13993ed9a6,
-        type: 3}
-    - target: {fileID: 4398201079036992528, guid: 9d9dd3a1966954f6b8c8f6a335003aca,
-        type: 3}
-      propertyPath: poseTermProviderSelection
-      value: 
-      objectReference: {fileID: 3920134374037079714, guid: 77e6183fcedb8044e80a063a1ba9abfe,
-        type: 3}
-    - target: {fileID: 4398201079036992528, guid: 9d9dd3a1966954f6b8c8f6a335003aca,
-        type: 3}
-      propertyPath: textTermProviderSelection
-      value: 
-      objectReference: {fileID: 6310090573974258106, guid: 50bca41c9b8dfa745882e9c74565ba98,
-        type: 3}
-    - target: {fileID: 4398201079036992528, guid: 9d9dd3a1966954f6b8c8f6a335003aca,
-        type: 3}
-      propertyPath: booleanTermProviderSelection
-      value: 
-      objectReference: {fileID: 1862774836151956274, guid: 0b3d9dda998e60b40a2da8947b3e0a55,
-        type: 3}
     - target: {fileID: 5562196535703572270, guid: 9d9dd3a1966954f6b8c8f6a335003aca,
         type: 3}
       propertyPath: queryTermProviders.Array.size
@@ -1600,12 +1570,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7681770014933336791, guid: ef63ab4df42c54592be7590645832b7e,
-        type: 3}
-      propertyPath: imageDisplayPrefab
-      value: 
-      objectReference: {fileID: 2529607500185689710, guid: 037d5a30e112a2340ad1834e1543b912,
-        type: 3}
     - target: {fileID: 8661397611067853840, guid: ef63ab4df42c54592be7590645832b7e,
         type: 3}
       propertyPath: m_Name
@@ -1673,21 +1637,9 @@ PrefabInstance:
       objectReference: {fileID: 1083301797}
     - target: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
         type: 3}
-      propertyPath: queryDisplay
-      value: 
-      objectReference: {fileID: 5978004481995343909, guid: 33bd32de084a9446c8c490fa1c5bf8b1,
-        type: 3}
-    - target: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
-        type: 3}
       propertyPath: queryTermProvider
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
-        type: 3}
-      propertyPath: temporalQueryDisplay
-      value: 
-      objectReference: {fileID: 4530341693124885058, guid: c20bd8391b36b5c45b1f3f2049b05ab7,
-        type: 3}
     - target: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
         type: 3}
       propertyPath: defaultQueryTermManager
@@ -3175,6 +3127,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6317846110910224843, guid: 9e86f8938bf545645ac69df2d86083ec,
+        type: 3}
+      propertyPath: m_TrackingStateInput.m_Action.m_Name
+      value: Tracking State Input
+      objectReference: {fileID: 0}
     - target: {fileID: 6317846112504510528, guid: 9e86f8938bf545645ac69df2d86083ec,
         type: 3}
       propertyPath: m_RootOrder
