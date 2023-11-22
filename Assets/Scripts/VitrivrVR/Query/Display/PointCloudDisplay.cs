@@ -105,6 +105,10 @@ namespace VitrivrVR.Query.Display
     {
       system.Clear();
 
+      // Scale particles by size to allow scaling of point cloud for easier selection and viewing, but do not scale up
+      // beyond a limit to prevent small displays becoming crowded
+      var size = .01f / Mathf.Max(transform.localScale.x, 1);
+
       switch (coloration)
       {
         case Coloration.White:
@@ -113,7 +117,7 @@ namespace VitrivrVR.Query.Display
                      position = item.position,
                      velocity = Vector3.zero,
                      startLifetime = float.PositiveInfinity,
-                     startSize = .01f,
+                     startSize = size,
                      startColor = Color.white
                    }))
           {
@@ -127,7 +131,7 @@ namespace VitrivrVR.Query.Display
                      position = item.position,
                      velocity = Vector3.zero,
                      startLifetime = float.PositiveInfinity,
-                     startSize = .01f,
+                     startSize = size,
                      startColor = new Color(item.position.x + 0.5f, item.position.y + 0.5f, item.position.z + 0.5f)
                    }))
           {
@@ -150,7 +154,7 @@ namespace VitrivrVR.Query.Display
                      position = item.position,
                      velocity = Vector3.zero,
                      startLifetime = float.PositiveInfinity,
-                     startSize = .01f,
+                     startSize = size,
                      startColor = (item.score - minScore) / range * similarityColor +
                                   (1 - (item.score - minScore) / range) * dissimilarityColor
                    }))
@@ -188,6 +192,8 @@ namespace VitrivrVR.Query.Display
       {
         _activeInteractors[key] = key.position;
       }
+      
+      EmitParticles(startColor);
     }
 
     /// <summary>
@@ -210,12 +216,17 @@ namespace VitrivrVR.Query.Display
 
         var preview = _enteredPreviews[interactor];
 
-        preview.enabled = sqrDistance < maximumDistanceSquared;
+        var interactorClose = sqrDistance < maximumDistanceSquared / transform.localScale.x;
+
+        preview.enabled = interactorClose;
+
+        if (!interactorClose)
+          continue;
 
         UpdatePreviewPosRot(itemPosition, preview.transform);
 
         if (segment == _enteredLastSegment[interactor])
-          return;
+          continue;
 
         var thumbnailURL = await segment.GetThumbnailUrl();
 
@@ -273,7 +284,7 @@ namespace VitrivrVR.Query.Display
       }
       else
       {
-        var loadedTexture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+        var loadedTexture = ((DownloadHandlerTexture) www.downloadHandler).texture;
         onSuccess(loadedTexture, id, itemPosition, interactor);
       }
     }
