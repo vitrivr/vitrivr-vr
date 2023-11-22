@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
+using VitrivrVR.Config;
 using VitrivrVR.Interaction.System;
 
 namespace VitrivrVR.Query.Display
@@ -141,14 +142,17 @@ namespace VitrivrVR.Query.Display
           var maxScore = scores.Max();
           var range = maxScore - minScore;
 
+          var similarityColor = ConfigManager.Config.similarityColor.ToColor();
+          var dissimilarityColor = ConfigManager.Config.dissimilarityColor.ToColor();
+
           foreach (var emitParams in _points.Select(item => new ParticleSystem.EmitParams
                    {
                      position = item.position,
                      velocity = Vector3.zero,
                      startLifetime = float.PositiveInfinity,
                      startSize = .01f,
-                     startColor = new Color((item.score - minScore) / range, (item.score - minScore) / range,
-                       (item.score - minScore) / range)
+                     startColor = (item.score - minScore) / range * similarityColor +
+                                  (1 - (item.score - minScore) / range) * dissimilarityColor
                    }))
           {
             system.Emit(emitParams, 1);
