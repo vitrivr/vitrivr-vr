@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Config;
 using VitrivrVR.Interaction.System;
+using VitrivrVR.Media.Display;
 
 namespace VitrivrVR.Query.Display
 {
@@ -42,6 +43,7 @@ namespace VitrivrVR.Query.Display
     // Interaction variables
     // For tracking scaling events.
     private readonly Dictionary<Transform, Vector3> _activeInteractors = new();
+    private bool _scalePerformed;
 
     // For tracking the interactors currently inside the bounding box and the last segment data they hovered.
     private readonly Dictionary<Interactor, SegmentData> _enteredLastSegment = new();
@@ -89,7 +91,36 @@ namespace VitrivrVR.Query.Display
       else
       {
         _activeInteractors.Remove(interactor);
+
+        if (_activeInteractors.Count > 0)
+          return;
+
+        // Check if scaling event occurred
+        if (!_scalePerformed)
+          SelectPoint(interactor);
+
+        // Reset scale performed
+        _scalePerformed = false;
       }
+    }
+
+    private async void SelectPoint(Transform interactor)
+    {
+      var position = transform.InverseTransformPoint(interactor.position);
+
+      var (segment, sqrDistance, itemPosition, score) = _points
+        .Select(item => (item.segment, (item.position - position).sqrMagnitude, item.position, item.score))
+        .Aggregate((a, b) => a.sqrMagnitude > b.sqrMagnitude ? b : a);
+
+      var interactorClose = sqrDistance < maximumDistanceSquared / transform.localScale.x;
+
+      if (!interactorClose)
+        return;
+
+      var worldPosition = transform.TransformPoint(itemPosition);
+
+      await MediaDisplayFactory.CreateDisplay(new ScoredSegment(segment, score), () => { }, worldPosition,
+        Quaternion.LookRotation(worldPosition - _camera.transform.position));
     }
 
     private void OnTriggerEnter(Collider other)
@@ -238,6 +269,8 @@ namespace VitrivrVR.Query.Display
     {
       if (_activeInteractors.Count != 2) return;
 
+      _scalePerformed = true;
+
       var positions = _activeInteractors.Keys.Select(key => (_activeInteractors[key], key.position)).ToArray();
 
       var (old0, new0) = positions.First();
@@ -275,6 +308,7 @@ namespace VitrivrVR.Query.Display
       // Enable all randomized previews
       _randomizedPreviews.Values.ToList().ForEach(preview => preview.enabled = true);
 
+      // Update interactor previews
       foreach (var interactor in _enteredLastSegment.Keys.ToList())
       {
         var position = transform.InverseTransformPoint(interactor.transform.position);
@@ -364,7 +398,7 @@ namespace VitrivrVR.Query.Display
       }
       else
       {
-        var loadedTexture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+        var loadedTexture = ((DownloadHandlerTexture) www.downloadHandler).texture;
         onSuccess(loadedTexture, id, itemPosition, interactor);
       }
     }
