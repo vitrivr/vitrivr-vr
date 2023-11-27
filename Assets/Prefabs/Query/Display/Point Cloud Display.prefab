@@ -56,6 +56,10 @@ MonoBehaviour:
   previewScale: 0.2
   startColor: 2
   maximumDistanceSquared: 0.01
+  enableRandomizedPreviews: 1
+  minimumPreviewDistance: 0.18
+  randomizedPreviewScale: 0.1
+  hideRandomizedPreviewDistanceSquared: 0.02
 --- !u!198 &5007458900436087998
 ParticleSystem:
   m_ObjectHideFlags: 0

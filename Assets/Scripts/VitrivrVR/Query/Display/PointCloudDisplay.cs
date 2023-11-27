@@ -27,6 +27,16 @@ namespace VitrivrVR.Query.Display
     [Tooltip("Maximum distance (squared) to point such that thumbnail is still displayed")]
     public float maximumDistanceSquared = 0.01f;
 
+    [Header("Randomized Previews")] public bool enableRandomizedPreviews = true;
+
+    [Tooltip("Minimum distance between previews to control sparsity")]
+    public float minimumPreviewDistance = .18f;
+
+    public float randomizedPreviewScale = .1f;
+    public float hideRandomizedPreviewDistanceSquared = 0.02f;
+
+    private Dictionary<Vector3, Renderer> _randomizedPreviews = new();
+
     private List<(SegmentData segment, Vector3 position, float score)> _points = new();
 
     // Interaction variables
@@ -52,7 +62,7 @@ namespace VitrivrVR.Query.Display
 
     private void FixedUpdate()
     {
-      UpdatePreview();
+      UpdatePreviews();
     }
 
     public void Initialize(List<(SegmentData segment, Vector3 position, float score)> items)
@@ -65,6 +75,9 @@ namespace VitrivrVR.Query.Display
       _points = items;
 
       EmitParticles(startColor);
+
+      if (enableRandomizedPreviews)
+        GeneratePreviews();
     }
 
     public void OnInteraction(Transform interactor, bool start)
@@ -168,6 +181,59 @@ namespace VitrivrVR.Query.Display
       }
     }
 
+    private async void GeneratePreviews()
+    {
+      // Destroy existing previews
+      foreach (var (_, preview) in _randomizedPreviews)
+      {
+        Destroy(preview.gameObject);
+      }
+
+      _randomizedPreviews.Clear();
+
+      // Try to favor points with higher scores as previews
+      var orderedPoints = _points.OrderByDescending(point => point.score);
+
+      var previewPoints = new List<(SegmentData segment, Vector3 position)>();
+
+      var sqrMinimumPreviewDistance = minimumPreviewDistance * minimumPreviewDistance;
+
+      foreach (var (segment, position, _) in orderedPoints)
+      {
+        if (previewPoints.Count == 0)
+        {
+          previewPoints.Add((segment, position));
+          continue;
+        }
+
+        var minSqrDistance = previewPoints.Select(pair => (pair.position - position).sqrMagnitude).Min();
+
+        // Ignore points too close to existing previews
+        if (minSqrDistance < sqrMinimumPreviewDistance)
+          continue;
+
+        previewPoints.Add((segment, position));
+      }
+
+      // Create previews
+      _randomizedPreviews = previewPoints.Select(pair =>
+      {
+        var preview = Instantiate(previewPrefab);
+        preview.transform.localScale = previewScale * Vector3.one;
+
+        return (preview, pair.position);
+      }).ToDictionary(pair => pair.position, pair => pair.preview);
+
+      // Start texture download (must occur after previews are created)
+      foreach (var (segment, position) in previewPoints)
+      {
+        var thumbnailURL = await segment.GetThumbnailUrl();
+
+        StartCoroutine(DownloadTexture(thumbnailURL, segment.Id, position, null,
+          OnDownloadSuccessRandomizedPreview));
+      }
+    }
+
     private void UpdateInteraction()
     {
       if (_activeInteractors.Count != 2) return;
@@ -192,7 +258,7 @@ namespace VitrivrVR.Query.Display
       {
         _activeInteractors[key] = key.position;
       }
-      
+
       EmitParticles(startColor);
     }
 
@@ -201,10 +267,13 @@ namespace VitrivrVR.Query.Display
     /// appropriate texture.
     /// Also updates preview location and rotation.
     /// </summary>
-    private async void UpdatePreview()
+    private async void UpdatePreviews()
     {
       if (_points.Count == 0)
         return;
+
+      // Enable all randomized previews
+      _randomizedPreviews.Values.ToList().ForEach(preview => preview.enabled = true);
 
       foreach (var interactor in _enteredLastSegment.Keys.ToList())
       {
@@ -223,6 +292,11 @@ namespace VitrivrVR.Query.Display
         if (!interactorClose)
           continue;
 
+        // Disable all randomized previews closer to the interactor than the minimum distance
+        _randomizedPreviews.Where(pair =>
+            (pair.Key - position).sqrMagnitude < hideRandomizedPreviewDistanceSquared / transform.localScale.x)
+          .ToList().ForEach(pair => pair.Value.enabled = false);
+
         UpdatePreviewPosRot(itemPosition, preview.transform);
 
         if (segment == _enteredLastSegment[interactor])
@@ -233,6 +307,12 @@ namespace VitrivrVR.Query.Display
         StartCoroutine(DownloadTexture(thumbnailURL, segment.Id, itemPosition, interactor, OnDownloadSuccess));
 
         _enteredLastSegment[interactor] = segment;
+      }
+
+      // Update randomized preview positions and rotations
+      foreach (var (position, preview) in _randomizedPreviews)
+      {
+        UpdatePreviewPosRot(position, preview.transform);
       }
     }
 
@@ -284,7 +364,7 @@ namespace VitrivrVR.Query.Display
       }
       else
       {
-        var loadedTexture = ((DownloadHandlerTexture) www.downloadHandler).texture;
+        var loadedTexture = ((DownloadHandlerTexture)www.downloadHandler).texture;
         onSuccess(loadedTexture, id, itemPosition, interactor);
       }
     }
@@ -302,6 +382,20 @@ namespace VitrivrVR.Query.Display
       var scale = new Vector3(loadedTexture.width / factor, loadedTexture.height / factor, 1);
       var t = preview.transform;
       t.localScale = scale * previewScale;
+      UpdatePreviewPosRot(itemPosition, t);
+    }
+
+    private void OnDownloadSuccessRandomizedPreview(Texture2D loadedTexture, string id, Vector3 itemPosition,
+      Interactor _)
+    {
+      var preview = _randomizedPreviews[itemPosition];
+      // Set texture
+      preview.material.mainTexture = loadedTexture;
+      // Adjust aspect ratio
+      float factor = Mathf.Max(loadedTexture.width, loadedTexture.height);
+      var scale = new Vector3(loadedTexture.width / factor, loadedTexture.height / factor, 1);
+      var t = preview.transform;
+      t.localScale = scale * randomizedPreviewScale;
       UpdatePreviewPosRot(itemPosition, t);
     }
 
