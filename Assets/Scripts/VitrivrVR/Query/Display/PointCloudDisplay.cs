@@ -67,6 +67,38 @@ namespace VitrivrVR.Query.Display
       UpdatePreviews();
     }
 
+    private void OnDisable()
+    {
+      foreach (var preview in _randomizedPreviews.Values.Where(preview => preview != null))
+      {
+        preview.gameObject.SetActive(false);
+      }
+
+      foreach (var preview in _enteredPreviews.Values)
+      {
+        preview.enabled = false;
+      }
+    }
+
+    private void OnEnable()
+    {
+      foreach (var preview in _randomizedPreviews.Values)
+      {
+        preview.gameObject.SetActive(true);
+      }
+
+      if (_points.Count > 0)
+        EmitParticles(startColor);
+    }
+
+    private void OnDestroy()
+    {
+      foreach (var preview in _randomizedPreviews.Values)
+      {
+        Destroy(preview.gameObject);
+      }
+    }
+
     public void Initialize(List<(SegmentData segment, Vector3 position, float score)> items)
     {
       items = NormalizeToBoundingBox(items);
@@ -126,6 +158,13 @@ namespace VitrivrVR.Query.Display
     private void OnTriggerEnter(Collider other)
     {
       if (!other.TryGetComponent<Interactor>(out var interactor)) return;
+
+      // Check if interactor had previously entered but not been removed
+      if (_enteredLastSegment.ContainsKey(interactor))
+      {
+        _enteredLastSegment[interactor] = null;
+        return;
+      }
 
       _enteredLastSegment.Add(interactor, null);
 

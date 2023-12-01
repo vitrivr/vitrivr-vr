@@ -190,7 +190,7 @@ namespace VitrivrVR.Config
       skipLength = 2.5f;
       defaultSpeechToText = SpeechToText.Whisper;
       createPointCloud = true;
-      pointCloudPointLimit = 4000;
+      pointCloudPointLimit = 2000;
       pointCloudFeature = "openclip";
       dresEnabled = false;
       allowInvalidCertificate = false;
