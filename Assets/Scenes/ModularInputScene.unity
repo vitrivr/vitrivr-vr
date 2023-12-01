@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.009389737, g: 0.0108745955, b: 0.014736922, a: 1}
+  m_IndirectSpecularColor: {r: 0.009389741, g: 0.010874605, b: 0.014736945, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1635,6 +1635,12 @@ PrefabInstance:
       propertyPath: timer
       value: 
       objectReference: {fileID: 1083301797}
+    - target: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
+        type: 3}
+      propertyPath: pointCloudDisplay
+      value: 
+      objectReference: {fileID: 5110621466039519194, guid: 38921989b623a43c982371eba213c605,
+        type: 3}
     - target: {fileID: 8661397611067853843, guid: ef63ab4df42c54592be7590645832b7e,
         type: 3}
       propertyPath: queryTermProvider
