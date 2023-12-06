@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Dev.Dres.ClientApi.Model;
 using Dres.Unityclient;
@@ -59,7 +60,7 @@ namespace VitrivrVR.Submission
 
     public static async void SubmitResult(string mediaObjectId, int? frame = null)
     {
-      mediaObjectId = RemovePrefix(mediaObjectId);
+      mediaObjectId = RemovePattern(mediaObjectId);
 
       try
       {
@@ -115,7 +116,7 @@ namespace VitrivrVR.Submission
       {
         var segment = pair.scoredSegment.segment;
         var objectId = await segment.GetObjectId();
-        objectId = RemovePrefix(objectId);
+        objectId = RemovePattern(objectId);
         var sequenceNumber = await segment.GetSequenceNumber();
         var frame = await segment.GetStart();
 
@@ -296,12 +297,13 @@ namespace VitrivrVR.Submission
     }
 
     /// <summary>
-    /// Removes the configured prefix length from the given segment or object ID.
+    /// Removes the configured regex from the given ID.
     /// </summary>
-    private static string RemovePrefix(string id)
+    private static string RemovePattern(string id)
     {
-      var prefixLength = ConfigManager.Config.submissionIdPrefixLength;
-      return prefixLength > 0 ? id[prefixLength..] : id;
+      var replacementRegex = ConfigManager.Config.submissionIdReplacementRegex;
+      // Return id if no regex is configured
+      return string.IsNullOrEmpty(replacementRegex) ? id : Regex.Replace(id, replacementRegex, "");
     }
   }
 }

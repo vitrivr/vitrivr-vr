@@ -142,11 +142,11 @@ namespace VitrivrVR.Config
     public bool allowInvalidCertificate;
 
     /// <summary>
-    /// The length of the media object ID prefix to be removed before submission.
-    /// If e.g. internal IDs start with "v_" while competition IDs do not, this parameter may be set to 2 to remove this
-    /// for submission to the competition system only.
+    /// A regex matching any part of the media object ID to be removed before submission.
+    /// If e.g. internal IDs start with "v_" while competition IDs do not, this parameter may be set to "^v_" to remove
+    /// this for submission to the competition system only.
     /// </summary>
-    public int submissionIdPrefixLength;
+    public string submissionIdReplacementRegex;
 
     /// <summary>
     /// The time interval between sending interaction logs to DRES.
@@ -194,7 +194,7 @@ namespace VitrivrVR.Config
       pointCloudFeature = "openclip";
       dresEnabled = false;
       allowInvalidCertificate = false;
-      submissionIdPrefixLength = 0;
+      submissionIdReplacementRegex = "";
       interactionLogSubmissionInterval = 10f;
       writeLogsToFile = false;
       logFileLocation = "session_logs/";

@@ -36,7 +36,7 @@ namespace VitrivrVR.UI
         { "vitrivr-VR", "Max Results", ConfigManager.Config.maxResults.ToString() },
         { "", "Max Display", ConfigManager.Config.maxDisplay.ToString() },
         { "", "Dres enabled", ConfigManager.Config.dresEnabled.ToString() },
-        { "", "Submission Prefix Length", ConfigManager.Config.submissionIdPrefixLength.ToString() },
+        { "", "Submission Replacement Regex", ConfigManager.Config.submissionIdReplacementRegex },
         { "", "Default Volume", ConfigManager.Config.defaultMediaVolume.ToString("F") },
         { "", "Skip Length", ConfigManager.Config.skipLength.ToString("F") }
       };
