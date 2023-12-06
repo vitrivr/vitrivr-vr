@@ -24,7 +24,7 @@ namespace VitrivrVR.Query.Term.Pose
       var poseData = skeletonValues.Select(values =>
       {
         // Flip y coordinates because feature internally origin is top left and these coordinates are bottom left
-        var coordinates = values.SelectMany(pair => new List<float> {pair.point.x, -pair.point.y}).ToList();
+        var coordinates = values.SelectMany(pair => new List<float> { pair.point.x, -pair.point.y }).ToList();
         var weights = values.Select(pair => pair.weight).ToList();
 
         return new PoseSkeleton(coordinates, weights);
@@ -33,14 +33,14 @@ namespace VitrivrVR.Query.Term.Pose
       var jsonData = "[" + string.Join(",", poseData.Select(JsonUtility.ToJson)) + "]";
       var base64data = Base64Converter.JsonToBase64(jsonData);
 
-      return new List<QueryTerm> {new(QueryTerm.TypeEnum.SKELETON, base64data, new List<string> {"skeletonpose"})};
+      return new List<QueryTerm> { new(new List<string> { "skeletonpose" }, QueryTerm.TypeEnum.SKELETON, base64data) };
     }
 
     public override string GetTypeName()
     {
       return "Pose";
     }
-    
+
     public override void SetInstanceName(string displayName)
     {
       if (nameDisplayText != null)

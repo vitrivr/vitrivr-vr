@@ -3,6 +3,7 @@ using System.Text;
 using Org.Vitrivr.CineastApi.Model;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using UnityEngine;
+using Vitrivr.UnityInterface.CineastApi;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 
 namespace VitrivrVR.Query.Display
@@ -15,10 +16,12 @@ namespace VitrivrVR.Query.Display
     public virtual int NumberOfResults => -1;
 
     public QueryResponse QueryData { get; private set; }
+    public CineastClient QueryClient { get; private set; }
 
-    public void Initialize(QueryResponse queryResult)
+    public void Initialize(QueryResponse queryResult, CineastClient queryClient)
     {
       QueryData = queryResult;
+      QueryClient = queryClient;
       Initialize();
     }
 

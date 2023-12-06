@@ -39,8 +39,10 @@ namespace VitrivrVR.Query
     public GameObject timer;
     public QueryDisplay queryDisplay;
     public TemporalQueryDisplay temporalQueryDisplay;
+    public PointCloudDisplay pointCloudDisplay;
 
-    public readonly List<QueryDisplay> Queries = new();
+    public readonly List<QueryDisplay> queries = new();
+    private readonly Dictionary<QueryDisplay, PointCloudDisplay> _pointCloudDisplays = new();
 
     public int CurrentQuery { get; private set; } = -1;
 
@@ -152,7 +154,9 @@ namespace VitrivrVR.Query
         timer.SetActive(true);
       }
 
-      var queryData = await CurrentClient.ExecuteQuery(query, maxResults);
+      var queryClient = CurrentClient;
+
+      var queryData = await queryClient.ExecuteQuery(query, maxResults);
 
       if (_localQueryGuid != localGuid)
       {
@@ -160,7 +164,7 @@ namespace VitrivrVR.Query
         return;
       }
 
-      InstantiateQueryDisplay(queryData);
+      InstantiateQueryDisplay(queryData, queryClient);
 
       // Query display already created and initialized, but if this is no longer the newest query, do not disable query
       // indicator
@@ -186,7 +190,9 @@ namespace VitrivrVR.Query
         timer.SetActive(true);
       }
 
-      var queryData = await CurrentClient.ExecuteQuery(query, maxResults);
+      var queryClient = CurrentClient;
+
+      var queryData = await queryClient.ExecuteQuery(query, maxResults);
 
       if (_localQueryGuid != localGuid)
       {
@@ -194,7 +200,7 @@ namespace VitrivrVR.Query
         return;
       }
 
-      InstantiateQueryDisplay(queryData);
+      InstantiateQueryDisplay(queryData, queryClient);
 
       // Query display already created and initialized, but if this is no longer the newest query, do not disable query
       // indicator
@@ -239,15 +245,15 @@ namespace VitrivrVR.Query
 
     public void SelectQuery(QueryDisplay display)
     {
-      var index = Queries.IndexOf(display);
+      var index = queries.IndexOf(display);
       SelectQuery(index);
     }
 
     public void SelectQuery(int index)
     {
-      if (0 > index || index >= Queries.Count)
+      if (0 > index || index >= queries.Count)
       {
-        throw new ArgumentException($"Query selection index out of range: {index} (queries: {Queries.Count})");
+        throw new ArgumentException($"Query selection index out of range: {index} (queries: {queries.Count})");
       }
 
       if (CurrentQuery != -1)
@@ -279,7 +285,7 @@ namespace VitrivrVR.Query
     /// </summary>
     public void RemoveQuery(QueryDisplay display)
     {
-      var index = Queries.IndexOf(display);
+      var index = queries.IndexOf(display);
       RemoveQuery(index);
     }
 
@@ -289,9 +295,9 @@ namespace VitrivrVR.Query
     /// </summary>
     public void RemoveQuery(int index)
     {
-      if (0 > index || index >= Queries.Count)
+      if (0 > index || index >= queries.Count)
       {
-        throw new ArgumentException($"Query selection index out of range: {index} (queries: {Queries.Count})");
+        throw new ArgumentException($"Query selection index out of range: {index} (queries: {queries.Count})");
       }
 
       if (index == CurrentQuery)
@@ -305,14 +311,18 @@ namespace VitrivrVR.Query
       }
 
       queryRemovedEvent.Invoke(index);
-      Destroy(Queries[index].gameObject);
-      Queries.RemoveAt(index);
+      // Destroy associated point cloud display
+      if (_pointCloudDisplays.ContainsKey(queries[index]))
+        Destroy(_pointCloudDisplays[queries[index]].gameObject);
+      // Destroy query display
+      Destroy(queries[index].gameObject);
+      queries.RemoveAt(index);
       LoggingController.LogInteraction("queryManagement", $"delete {index}", QueryManagement);
     }
 
     public void RemoveAllQueries()
     {
-      for (var queryIndex = Queries.Count - 1; queryIndex >= 0; queryIndex--)
+      for (var queryIndex = queries.Count - 1; queryIndex >= 0; queryIndex--)
       {
         RemoveQuery(queryIndex);
       }
@@ -338,22 +348,24 @@ namespace VitrivrVR.Query
         return;
       }
 
-      var display = Queries[CurrentQuery];
+      var display = queries[CurrentQuery];
       if (display.GetType() == queryDisplay.GetType())
       {
         NotificationController.Notify($"Current query display already of type {display.GetType().Name}!");
         return;
       }
 
-      InstantiateQueryDisplay(display.QueryData);
+      InstantiateQueryDisplay(display.QueryData, display.QueryClient);
     }
 
     private void SetQueryActive(int index, bool active)
     {
-      Queries[index].gameObject.SetActive(active);
+      queries[index].gameObject.SetActive(active);
+      if (_pointCloudDisplays.TryGetValue(queries[index], out var pointCloud))
+        pointCloud.gameObject.SetActive(active);
     }
 
-    private void InstantiateQueryDisplay(QueryResponse queryData)
+    private async void InstantiateQueryDisplay(QueryResponse queryData, CineastClient queryClient)
     {
       if (CurrentQuery != -1)
       {
@@ -362,13 +374,54 @@ namespace VitrivrVR.Query
 
       var display = Instantiate(queryDisplay);
 
-      display.Initialize(queryData);
+      display.Initialize(queryData, queryClient);
 
-      Queries.Add(display);
-      var queryIndex = Queries.Count - 1;
+      queries.Add(display);
+      var queryIndex = queries.Count - 1;
       queryAddedEvent.Invoke(queryIndex);
       queryFocusEvent.Invoke(CurrentQuery, queryIndex);
       CurrentQuery = queryIndex;
+
+      if (!ConfigManager.Config.createPointCloud)
+        return;
+
+      // Create point cloud
+      var meanFusionResults = queryData.GetMeanFusionResults();
+      await CreatePointCloudDisplay(queryClient, meanFusionResults, display);
+    }
+
+    private void InstantiateQueryDisplay(TemporalQueryResponse queryData)
+    {
+      if (CurrentQuery != -1)
+      {
+        ClearQuery();
+      }
+
+      var display = Instantiate(temporalQueryDisplay);
+
+      display.Initialize(queryData);
+
+      queries.Add(display);
+      var queryIndex = queries.Count - 1;
+      queryAddedEvent.Invoke(queryIndex);
+      queryFocusEvent.Invoke(CurrentQuery, queryIndex);
+      CurrentQuery = queryIndex;
+    }
+
+    private async Task CreatePointCloudDisplay(CineastClient queryClient, IEnumerable<ScoredSegment> results,
+      QueryDisplay display)
+    {
+      var pointLimit = ConfigManager.Config.pointCloudPointLimit;
+      var orderedSegments = results.OrderByDescending(segment => segment.score).Take(pointLimit).ToList();
+      var reduceFeatures =
+        await queryClient.DimensionalityReduceFeature(orderedSegments.Select(ss => ss.segment.Id).ToList(),
+          ConfigManager.Config.pointCloudFeature);
+
+      var scoreDict = orderedSegments.ToDictionary(ss => ss.segment, ss => (float) ss.score);
+
+      var pointCloud = Instantiate(pointCloudDisplay, Vector3.up, Quaternion.identity);
+      _pointCloudDisplays[display] = pointCloud;
+      pointCloud.Initialize(reduceFeatures.Select(res => (res.segment, res.position, scoreDict[res.segment])).ToList());
     }
 
     public SegmentData GetSegment(string segmentId)
@@ -389,24 +442,6 @@ namespace VitrivrVR.Query
     public async Task<List<Tag>> GetMatchingTags(string tagName)
     {
       return await CurrentClient.GetMatchingTags(tagName);
-    }
-
-    private void InstantiateQueryDisplay(TemporalQueryResponse queryData)
-    {
-      if (CurrentQuery != -1)
-      {
-        ClearQuery();
-      }
-
-      var display = Instantiate(temporalQueryDisplay);
-
-      display.Initialize(queryData);
-
-      Queries.Add(display);
-      var queryIndex = Queries.Count - 1;
-      queryAddedEvent.Invoke(queryIndex);
-      queryFocusEvent.Invoke(CurrentQuery, queryIndex);
-      CurrentQuery = queryIndex;
     }
   }
 }

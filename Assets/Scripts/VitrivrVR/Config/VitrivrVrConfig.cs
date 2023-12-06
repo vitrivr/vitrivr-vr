@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Vitrivr.UnityInterface.CineastApi.Model.Config;
 
 namespace VitrivrVR.Config
@@ -113,6 +114,23 @@ namespace VitrivrVR.Config
     public SpeechToText defaultSpeechToText;
 
     /// <summary>
+    /// The default setting of whether to create a point cloud display for a query result.
+    /// </summary>
+    public bool createPointCloud;
+
+    /// <summary>
+    /// The maximum number of points to display in the point cloud.
+    /// </summary>
+    public int pointCloudPointLimit;
+
+    /// <summary>
+    /// The feature (more specifically feature table name) to use for dimensionality reduction.
+    /// </summary>
+    public string pointCloudFeature;
+
+    // TODO: Include configuration of point cloud dimensionality reduction
+
+    /// <summary>
     /// Enables or disables DRES submission system integration and all associated functionality.
     /// </summary>
     public bool dresEnabled;
@@ -171,6 +189,9 @@ namespace VitrivrVR.Config
       defaultMediaVolume = .5f;
       skipLength = 2.5f;
       defaultSpeechToText = SpeechToText.Whisper;
+      createPointCloud = true;
+      pointCloudPointLimit = 2000;
+      pointCloudFeature = "openclip";
       dresEnabled = false;
       allowInvalidCertificate = false;
       submissionIdPrefixLength = 0;
