@@ -136,6 +136,11 @@ namespace VitrivrVR.Config
     public bool dresEnabled;
 
     /// <summary>
+    /// Enables or disables text submission window (only enables if DRES is enabled as well).
+    /// </summary>
+    public bool textSubmissionEnabled;
+
+    /// <summary>
     /// Enables connecting to a DRES instance with an invalid SSL certificate.
     /// WARNING: This bypasses certificate validation, use at your own risk!
     /// </summary>
@@ -193,6 +198,7 @@ namespace VitrivrVR.Config
       pointCloudPointLimit = 2000;
       pointCloudFeature = "openclip";
       dresEnabled = false;
+      textSubmissionEnabled = true;
       allowInvalidCertificate = false;
       submissionIdReplacementRegex = "";
       interactionLogSubmissionInterval = 10f;
