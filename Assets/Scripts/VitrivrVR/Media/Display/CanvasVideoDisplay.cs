@@ -241,9 +241,9 @@ namespace VitrivrVR.Media.Display
         return;
       }
 
-      var frame = _videoPlayerController.Frame;
+      var seconds = _videoPlayerController.Time;
 
-      DresClientManager.SubmitResult(_mediaObject.Id, (int)frame);
+      DresClientManager.SubmitResult(_mediaObject.Id, (long)(seconds * 1000));
     }
 
     public void SetVolume(float volume)

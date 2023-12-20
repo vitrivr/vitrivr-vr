@@ -13,7 +13,6 @@ using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Config;
 using VitrivrVR.Logging;
 using VitrivrVR.Notification;
-using static Dev.Dres.ClientApi.Model.QueryEvent;
 
 namespace VitrivrVR.Submission
 {
@@ -38,6 +37,7 @@ namespace VitrivrVR.Submission
       await _instance.Login();
       var username = _instance.UserDetails.Username;
       NotificationController.Notify($"DRES connected: {username}");
+      await _instance.UpdateEvaluations();
     }
 
     private void Update()
@@ -58,13 +58,13 @@ namespace VitrivrVR.Submission
       LogInteraction();
     }
 
-    public static async void SubmitResult(string mediaObjectId, int? frame = null)
+    public static async void SubmitResult(string mediaObjectId, long? milliseconds = null)
     {
       mediaObjectId = RemovePattern(mediaObjectId);
 
       try
       {
-        var result = await _instance.SubmitResult(mediaObjectId, frame);
+        var result = await _instance.SubmitResultV2(mediaObjectId, milliseconds, milliseconds);
         NotificationController.Notify($"Submission: {result.Submission}");
       }
       catch (Exception e)
@@ -72,14 +72,14 @@ namespace VitrivrVR.Submission
         NotificationController.Notify(e.Message);
       }
 
-      LoggingController.LogSubmission(mediaObjectId, frame);
+      LoggingController.LogSubmission(mediaObjectId, milliseconds);
     }
 
     public static async void SubmitTextResult(string textSubmission)
     {
       try
       {
-        var result = await _instance.SubmitTextualResult(textSubmission);
+        var result = await _instance.SubmitTextualResultV2(textSubmission);
         NotificationController.Notify($"Submission: {result.Submission}");
       }
       catch (Exception e)
@@ -277,36 +277,36 @@ namespace VitrivrVR.Submission
       };
     }
 
-    private static CategoryEnum TermTypeToDresCategory(QueryTerm.TypeEnum? type)
+    private static QueryEventCategory TermTypeToDresCategory(QueryTerm.TypeEnum? type)
     {
       return type switch
       {
-        QueryTerm.TypeEnum.IMAGE => CategoryEnum.IMAGE,
-        QueryTerm.TypeEnum.AUDIO => CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.MODEL3D => CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.LOCATION => CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.TIME => CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.TEXT => CategoryEnum.TEXT,
-        QueryTerm.TypeEnum.TAG => CategoryEnum.TEXT,
-        QueryTerm.TypeEnum.SEMANTIC => CategoryEnum.SKETCH,
-        QueryTerm.TypeEnum.ID => CategoryEnum.OTHER,
-        QueryTerm.TypeEnum.BOOLEAN => CategoryEnum.FILTER,
-        _ => CategoryEnum.OTHER
+        QueryTerm.TypeEnum.IMAGE => QueryEventCategory.IMAGE,
+        QueryTerm.TypeEnum.AUDIO => QueryEventCategory.OTHER,
+        QueryTerm.TypeEnum.MODEL3D => QueryEventCategory.OTHER,
+        QueryTerm.TypeEnum.LOCATION => QueryEventCategory.OTHER,
+        QueryTerm.TypeEnum.TIME => QueryEventCategory.OTHER,
+        QueryTerm.TypeEnum.TEXT => QueryEventCategory.TEXT,
+        QueryTerm.TypeEnum.TAG => QueryEventCategory.TEXT,
+        QueryTerm.TypeEnum.SEMANTIC => QueryEventCategory.SKETCH,
+        QueryTerm.TypeEnum.ID => QueryEventCategory.OTHER,
+        QueryTerm.TypeEnum.BOOLEAN => QueryEventCategory.FILTER,
+        _ => QueryEventCategory.OTHER
       };
     }
 
-    private static CategoryEnum InteractionToDresCategory(Logging.Interaction category)
+    private static QueryEventCategory InteractionToDresCategory(Logging.Interaction category)
     {
       return category switch
       {
-        Logging.Interaction.TextInput => CategoryEnum.TEXT,
-        Logging.Interaction.Browsing => CategoryEnum.BROWSING,
-        Logging.Interaction.ResultExpansion => CategoryEnum.BROWSING,
-        Logging.Interaction.QueryFormulation => CategoryEnum.OTHER,
-        Logging.Interaction.Query => CategoryEnum.OTHER,
-        Logging.Interaction.Filter => CategoryEnum.FILTER,
-        Logging.Interaction.Other => CategoryEnum.OTHER,
-        Logging.Interaction.QueryManagement => CategoryEnum.BROWSING,
+        Logging.Interaction.TextInput => QueryEventCategory.TEXT,
+        Logging.Interaction.Browsing => QueryEventCategory.BROWSING,
+        Logging.Interaction.ResultExpansion => QueryEventCategory.BROWSING,
+        Logging.Interaction.QueryFormulation => QueryEventCategory.OTHER,
+        Logging.Interaction.Query => QueryEventCategory.OTHER,
+        Logging.Interaction.Filter => QueryEventCategory.FILTER,
+        Logging.Interaction.Other => QueryEventCategory.OTHER,
+        Logging.Interaction.QueryManagement => QueryEventCategory.BROWSING,
         _ => throw new ArgumentOutOfRangeException(nameof(category), category, null)
       };
     }

@@ -15,7 +15,7 @@
     "com.unity.xr.openxr": "1.9.1",
     "com.whisper.unity": "https://github.com/Macoron/whisper.unity.git?path=/Packages/com.whisper.unity",
     "deepspeech": "https://github.com/Spiess/deep-speech-upm.git",
-    "dev.dres.unityclient": "https://github.com/dres-dev/UnityClient.git#v1.1.0",
+    "dev.dres.unityclient": "https://github.com/dres-dev/UnityClient.git#upgrade/2.0.0-RC1",
     "org.vitrivr.unityinterface.cineastapi": "https://github.com/vitrivr/CineastUnityInterface.git#feature/dimensionality-reduction",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
