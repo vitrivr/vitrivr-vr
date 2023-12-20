@@ -37,7 +37,9 @@ namespace VitrivrVR.Submission
       await _instance.Login();
       var username = _instance.UserDetails.Username;
       NotificationController.Notify($"DRES connected: {username}");
-      await _instance.UpdateEvaluations();
+      var evaluations = await _instance.UpdateEvaluations();
+      // Select the first evaluation in list by default
+      _instance.SetCurrentEvaluation(evaluations.First().Id);
     }
 
     private void Update()
@@ -70,6 +72,7 @@ namespace VitrivrVR.Submission
       catch (Exception e)
       {
         NotificationController.Notify(e.Message);
+        throw;
       }
 
       LoggingController.LogSubmission(mediaObjectId, milliseconds);
@@ -85,6 +88,7 @@ namespace VitrivrVR.Submission
       catch (Exception e)
       {
         NotificationController.Notify(e.Message);
+        throw;
       }
 
       LoggingController.LogSubmission(textSubmission, null);
@@ -152,6 +156,7 @@ namespace VitrivrVR.Submission
       catch (Exception e)
       {
         NotificationController.Notify(e.Message);
+        throw;
       }
     }
 
@@ -243,6 +248,7 @@ namespace VitrivrVR.Submission
       catch (Exception e)
       {
         NotificationController.NotifyError($"Error logging interaction: {e.Message}", e);
+        throw;
       }
 
       InteractionEvents.Clear();
