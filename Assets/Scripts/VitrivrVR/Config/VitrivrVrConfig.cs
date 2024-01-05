@@ -167,6 +167,12 @@ namespace VitrivrVR.Config
     /// Path to location where log files are to be written.
     /// </summary>
     public string logFileLocation;
+    
+    /// <summary>
+    /// Enables a fix for the Vive streaming bug by periodically disabling and re-enabling UI interactions when no
+    /// interactions are detected.
+    /// </summary>
+    public bool viveStreamingFixEnabled;
 
     private VitrivrVrConfig()
     {
@@ -204,6 +210,7 @@ namespace VitrivrVR.Config
       interactionLogSubmissionInterval = 10f;
       writeLogsToFile = false;
       logFileLocation = "session_logs/";
+      viveStreamingFixEnabled = false;
     }
 
     public static VitrivrVrConfig GetDefault()
