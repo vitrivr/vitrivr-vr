@@ -107,10 +107,10 @@ namespace VitrivrVR.Submission
       switch (mediaType)
       {
         case MediaObjectDescriptor.MediatypeEnum.VIDEO:
-          var startFrame = await segment.GetStart();
-          var endFrame = await segment.GetEnd();
-          var frame = (startFrame + endFrame) / 2;
-          SubmitResult(mediaObjectId, frame);
+          var startSeconds = await segment.GetAbsoluteStart();
+          var endSeconds = await segment.GetAbsoluteEnd();
+          var milliseconds = (long)((startSeconds + endSeconds) * 1000  / 2);
+          SubmitResult(mediaObjectId, milliseconds);
           break;
         case MediaObjectDescriptor.MediatypeEnum.IMAGESEQUENCE:
           SubmitResult(segment.Id);
