@@ -419,7 +419,7 @@ namespace VitrivrVR.Query
 
       var scoreDict = orderedSegments.ToDictionary(ss => ss.segment, ss => (float) ss.score);
 
-      var pointCloud = Instantiate(pointCloudDisplay, Vector3.up, Quaternion.identity);
+      var pointCloud = Instantiate(pointCloudDisplay, Vector3.up * 0.5f, Quaternion.identity);
       _pointCloudDisplays[display] = pointCloud;
       pointCloud.Initialize(reduceFeatures.Select(res => (res.segment, res.position, scoreDict[res.segment])).ToList());
     }
