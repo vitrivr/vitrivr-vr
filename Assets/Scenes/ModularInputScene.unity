@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.009389741, g: 0.010874605, b: 0.014736945, a: 1}
+  m_IndirectSpecularColor: {r: 0.009389737, g: 0.0108745955, b: 0.014736922, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4672,7 +4672,42 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 6317846110913897978, guid: 9e86f8938bf545645ac69df2d86083ec,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6317846112967465990}
   m_SourcePrefab: {fileID: 100100000, guid: 9e86f8938bf545645ac69df2d86083ec, type: 3}
+--- !u!1 &6317846112967465988 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6317846110913897978, guid: 9e86f8938bf545645ac69df2d86083ec,
+    type: 3}
+  m_PrefabInstance: {fileID: 6317846112967465987}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6317846112967465989 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6317846110913897976, guid: 9e86f8938bf545645ac69df2d86083ec,
+    type: 3}
+  m_PrefabInstance: {fileID: 6317846112967465987}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6317846112967465988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6317846112967465990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6317846112967465988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7908bddc6dc44f86ad92b95c64d33d04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiInputModule: {fileID: 6317846112967465989}
 --- !u!224 &7101856252187588039 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5350470879762543667, guid: a064c784b84570846be74dc3380b0743,
