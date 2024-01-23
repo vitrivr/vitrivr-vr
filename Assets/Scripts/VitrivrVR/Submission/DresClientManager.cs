@@ -60,6 +60,22 @@ namespace VitrivrVR.Submission
       LogInteraction();
     }
 
+    public static IEnumerable<ApiClientEvaluationInfo> GetEvaluations()
+    {
+      return !ConfigManager.Config.dresEnabled ? null : _instance.EvaluationInfo;
+    }
+    
+    public static async Task<IEnumerable<ApiClientEvaluationInfo>> UpdateEvaluations()
+    {
+      return !ConfigManager.Config.dresEnabled ? null : await _instance.UpdateEvaluations();
+    }
+    
+    public static void SetCurrentEvaluation(string evaluationId)
+    {
+      if (!ConfigManager.Config.dresEnabled) return;
+      _instance.SetCurrentEvaluation(evaluationId);
+    }
+
     public static async void SubmitResult(string mediaObjectId, long? milliseconds = null)
     {
       mediaObjectId = RemovePattern(mediaObjectId);
