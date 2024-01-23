@@ -109,7 +109,7 @@ namespace VitrivrVR.Submission
         case MediaObjectDescriptor.MediatypeEnum.VIDEO:
           var startSeconds = await segment.GetAbsoluteStart();
           var endSeconds = await segment.GetAbsoluteEnd();
-          var milliseconds = (long)((startSeconds + endSeconds) * 1000  / 2);
+          var milliseconds = (long)((startSeconds + endSeconds) * 1000 / 2);
           SubmitResult(mediaObjectId, milliseconds);
           break;
         case MediaObjectDescriptor.MediatypeEnum.IMAGESEQUENCE:
@@ -136,10 +136,13 @@ namespace VitrivrVR.Submission
         var segment = pair.scoredSegment.segment;
         var objectId = await segment.GetObjectId();
         objectId = RemovePattern(objectId);
-        var sequenceNumber = await segment.GetSequenceNumber();
-        var frame = await segment.GetStart();
+        var startSeconds = await segment.GetAbsoluteStart();
+        var startMilliseconds = (long)(startSeconds * 1000);
+        var endSeconds = await segment.GetAbsoluteEnd();
+        var endMilliseconds = (long)(endSeconds * 1000);
 
-        return new QueryResult(objectId, sequenceNumber, frame, pair.scoredSegment.score, pair.rank);
+        return new RankedAnswer(
+          new ApiClientAnswer(mediaItemName: objectId, start: startMilliseconds, end: endMilliseconds), pair.rank);
       }));
 
       var queryResultsList = queryResults.ToList();
