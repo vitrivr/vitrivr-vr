@@ -87,13 +87,13 @@ namespace VitrivrVR.Logging
       }
     }
 
-    public static void LogSubmission(string mediaObjectId, int? frame)
+    public static void LogSubmission(string mediaObjectId, long? milliseconds)
     {
       var timestamp = CurrentTimestamp;
       // Log to file
       if (ConfigManager.Config.writeLogsToFile)
       {
-        LogSubmissionToFile(timestamp, mediaObjectId, frame);
+        LogSubmissionToFile(timestamp, mediaObjectId, milliseconds);
       }
     }
 
@@ -193,7 +193,7 @@ namespace VitrivrVR.Logging
       throw new Exception("Query response contains neither similarity nor staged similarity query.");
     }
 
-    private static async void LogSubmissionToFile(long timestamp, string mediaObjectId, int? frame)
+    private static async void LogSubmissionToFile(long timestamp, string mediaObjectId, long? milliseconds)
     {
       EnsureDirectoryExists();
       await SubmissionLogLock.WaitAsync();
@@ -205,8 +205,8 @@ namespace VitrivrVR.Logging
           { "timestamp", timestamp.ToString() },
           { "mediaObjectId", mediaObjectId }
         };
-        if (frame.HasValue)
-          dict["frame"] = frame.ToString();
+        if (milliseconds.HasValue)
+          dict["milliseconds"] = milliseconds.ToString();
 
         var json = JsonConvert.SerializeObject(dict, Formatting.None);
 
