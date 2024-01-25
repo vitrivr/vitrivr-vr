@@ -23,7 +23,20 @@ namespace VitrivrVR.Media.Display
     private Action<int, Vector3> _onSegmentSelection;
     private ObjectData _mediaObject;
 
+    /// <summary>
+    /// The minimum segment index to display as thumbnail.
+    /// </summary>
     private int _minIndex;
+
+    /// <summary>
+    /// Only every index-factor-th segment thumbnail should be displayed to improve loading and visibility.
+    /// </summary>
+    private int _indexFactor;
+
+    /// <summary>
+    /// The maximum number of thumbnails to display, otherwise skips thumbnails through index factor.
+    /// </summary>
+    private const int MaxThumbnails = 400;
 
     private readonly Dictionary<Interactor, int> _enteredInteractors = new();
 
@@ -114,8 +127,16 @@ namespace VitrivrVR.Media.Display
       segmentInfo = segmentInfo.Distinct().ToArray();
       _minIndex = segmentInfo.Select(item => item.index).Min();
 
+      // Check if there are too many segments
+      _indexFactor = Mathf.CeilToInt((float) segmentInfo.Length / MaxThumbnails);
+      if (_indexFactor > 1)
+      {
+        segmentInfo = segmentInfo.Where((x, i) => i % _indexFactor == 0).ToArray();
+      }
+
       _thumbnails = new ThumbnailController[segmentInfo.Length];
       StartCoroutine(InstantiateSegmentIndicators(segmentInfo, segmentInfo.Length));
+
 
       // TODO: Translate type in DresClientManager to support other media object types
       LoggingController.LogInteraction("videoSummary", $"initialized {_mediaObject.Id}", ResultExpansion);
@@ -125,6 +146,8 @@ namespace VitrivrVR.Media.Display
     {
       if (start) return;
       var rawIndex = GetSegmentIndex(interactor);
+      // Adjust for index factor
+      rawIndex *= _indexFactor;
       var segmentIndex = rawIndex + _minIndex - 1;
       _onSegmentSelection(segmentIndex, interactor.position);
       LoggingController.LogInteraction("videoSummary", $"selected {_mediaObject.Id} {segmentIndex} {interactor.name}",
@@ -142,9 +165,9 @@ namespace VitrivrVR.Media.Display
         var thumbnail = Instantiate(thumbnailPrefab, transform);
         thumbnail.url = thumbnailUrl;
 
-        thumbnail.transform.localPosition = Vector3.forward * ((float)(seqNum - _minIndex) / numSegments - 0.5f);
+        thumbnail.transform.localPosition = Vector3.forward * ((float) (seqNum - _minIndex) / _indexFactor / numSegments - 0.5f);
 
-        _thumbnails[seqNum - _minIndex] = thumbnail;
+        _thumbnails[(seqNum - _minIndex) / _indexFactor] = thumbnail;
 
         i++;
         if (i == InstantiationBatch)
@@ -170,7 +193,7 @@ namespace VitrivrVR.Media.Display
         var thumbnail = _thumbnails[i];
         if (thumbnail == null)
         {
-          missing.Add(i + _minIndex + 1);
+          missing.Add(i * _indexFactor + _minIndex + 1);
         }
       }
 
@@ -195,7 +218,7 @@ namespace VitrivrVR.Media.Display
     private int GetSegmentIndex(Transform other)
     {
       var otherTransform = transform.InverseTransformPoint(other.position);
-      return (int)Mathf.Min(Mathf.Max((otherTransform.z + 0.5f) * _thumbnails.Length, 0), _thumbnails.Length - 1);
+      return (int) Mathf.Min(Mathf.Max((otherTransform.z + 0.5f) * _thumbnails.Length, 0), _thumbnails.Length - 1);
     }
   }
 }

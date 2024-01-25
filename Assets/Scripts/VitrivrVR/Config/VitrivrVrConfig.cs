@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Vitrivr.UnityInterface.CineastApi.Model.Config;
 
 namespace VitrivrVR.Config
