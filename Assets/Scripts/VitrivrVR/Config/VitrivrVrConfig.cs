@@ -173,6 +173,16 @@ namespace VitrivrVR.Config
     /// </summary>
     public bool viveStreamingFixEnabled;
 
+    /// <summary>
+    /// Enables reduced motion mode where result displays can be rotated by several degrees in discreet steps.
+    /// </summary>
+    public bool reduceMotion;
+
+    /// <summary>
+    /// Angle (in degrees) by which rotating displays should rotate at once in reduced motion mode.
+    /// </summary>
+    public float reduceMotionAngle;
+
     private VitrivrVrConfig()
     {
       cineastConfigs = new List<string> {"cineastapi.json"};
@@ -210,6 +220,8 @@ namespace VitrivrVR.Config
       writeLogsToFile = false;
       logFileLocation = "session_logs/";
       viveStreamingFixEnabled = false;
+      reduceMotion = false;
+      reduceMotionAngle = 30;
     }
 
     public static VitrivrVrConfig GetDefault()
