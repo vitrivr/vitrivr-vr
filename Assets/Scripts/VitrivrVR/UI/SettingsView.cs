@@ -5,6 +5,7 @@ using UnityEngine;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Config;
 using VitrivrVR.Media.Display;
+using VitrivrVR.Notification;
 using VitrivrVR.Query;
 using VitrivrVR.Submission;
 
@@ -53,11 +54,13 @@ namespace VitrivrVR.UI
     public void SelectCineast(int cineastIndex)
     {
       QueryController.Instance.SelectCineastClient(cineastIndex);
+      NotificationController.Notify($"Switched to \"{cineastDropdown.options[cineastIndex].text}\"");
     }
 
     public void SelectEvaluationId(int evaluationIdIndex)
     {
       DresClientManager.SetCurrentEvaluation(_evaluationIds[evaluationIdIndex]);
+      NotificationController.Notify($"Set evaluation to \"{evaluationIdDropdown.options[evaluationIdIndex].text}\"");
     }
 
     public async void UpdateEvaluationIds()
