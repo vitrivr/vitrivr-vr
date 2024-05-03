@@ -7,7 +7,9 @@ using UnityEngine.Networking;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
 using VitrivrVR.Config;
 using VitrivrVR.Interaction.System;
+using VitrivrVR.Logging;
 using VitrivrVR.Media.Display;
+using static VitrivrVR.Logging.Interaction;
 
 namespace VitrivrVR.Query.Display
 {
@@ -55,6 +57,7 @@ namespace VitrivrVR.Query.Display
     private void Start()
     {
       _camera = Camera.main;
+      LoggingController.LogInteraction("exploration", $"opened point cloud display", QueryManagement);
     }
 
     private void Update()
@@ -97,6 +100,7 @@ namespace VitrivrVR.Query.Display
       {
         Destroy(preview.gameObject);
       }
+      LoggingController.LogInteraction("exploration", $"closed point cloud display", QueryManagement);
     }
 
     public void Initialize(List<(SegmentData segment, Vector3 position, float score)> items)
@@ -153,6 +157,8 @@ namespace VitrivrVR.Query.Display
 
       await MediaDisplayFactory.CreateDisplay(new ScoredSegment(segment, score), () => { }, worldPosition,
         Quaternion.LookRotation(worldPosition - _camera.transform.position));
+      LoggingController.LogInteraction("exploration", $"selected {segment.Id} {interactor.name}",
+        ResultExpansion);
     }
 
     private void OnTriggerEnter(Collider other)

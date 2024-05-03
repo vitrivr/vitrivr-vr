@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Dev.Dres.ClientApi.Client;
 using Dev.Dres.ClientApi.Model;
 using Dres.Unityclient;
 using Org.Vitrivr.CineastApi.Model;
@@ -60,6 +61,22 @@ namespace VitrivrVR.Submission
       LogInteraction();
     }
 
+    public static IEnumerable<ApiClientEvaluationInfo> GetEvaluations()
+    {
+      return !ConfigManager.Config.dresEnabled ? null : _instance.EvaluationInfo;
+    }
+
+    public static async Task<IEnumerable<ApiClientEvaluationInfo>> UpdateEvaluations()
+    {
+      return !ConfigManager.Config.dresEnabled ? null : await _instance.UpdateEvaluations();
+    }
+
+    public static void SetCurrentEvaluation(string evaluationId)
+    {
+      if (!ConfigManager.Config.dresEnabled) return;
+      _instance.SetCurrentEvaluation(evaluationId);
+    }
+
     public static async void SubmitResult(string mediaObjectId, long? milliseconds = null)
     {
       mediaObjectId = RemovePattern(mediaObjectId);
@@ -68,6 +85,16 @@ namespace VitrivrVR.Submission
       {
         var result = await _instance.SubmitResultV2(mediaObjectId, milliseconds, milliseconds);
         NotificationController.Notify($"Submission: {result.Submission}");
+      }
+      catch (ApiException e)
+      {
+        if (e.Message.Contains("Duplicate submission received."))
+        {
+          NotificationController.Notify($"Already submitted \"{mediaObjectId}\" near {milliseconds} ms");
+          return;
+        }
+        NotificationController.NotifyError(e.Message);
+        throw;
       }
       catch (Exception e)
       {
@@ -85,9 +112,19 @@ namespace VitrivrVR.Submission
         var result = await _instance.SubmitTextualResultV2(textSubmission);
         NotificationController.Notify($"Submission: {result.Submission}");
       }
+      catch (ApiException e)
+      {
+        if (e.Message.Contains("Duplicate submission received."))
+        {
+          NotificationController.Notify($"Already submitted \"{textSubmission}\"");
+          return;
+        }
+        NotificationController.NotifyError(e.Message);
+        throw;
+      }
       catch (Exception e)
       {
-        NotificationController.Notify(e.Message);
+        NotificationController.NotifyError(e.Message);
         throw;
       }
 

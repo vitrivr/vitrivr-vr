@@ -50,6 +50,18 @@ namespace VitrivrVR.Query.Display
       }
 
       _columnAngle = Mathf.Rad2Deg * (2 * Mathf.PI / _maxColumns);
+
+      if (ConfigManager.Config.reduceMotion)
+      {
+        rotationAction.started += context =>
+        {
+          var value = context.ReadValue<Vector2>().x;
+          if (value != 0)
+          {
+            Rotate(ConfigManager.Config.reduceMotionAngle * Mathf.Sign(value));
+          }
+        };
+      }
     }
 
     private void OnEnable()
@@ -64,7 +76,14 @@ namespace VitrivrVR.Query.Display
 
     private void Update()
     {
-      Rotate(Time.deltaTime * rotationSpeed * rotationAction.ReadValue<Vector2>().x);
+      if (ConfigManager.Config.reduceMotion)
+      {
+        Rotate(0); // To ensure update
+      }
+      else
+      {
+        Rotate(Time.deltaTime * rotationSpeed * rotationAction.ReadValue<Vector2>().x);
+      }
 
       if (_instantiationQueue.Count > 0)
       {
