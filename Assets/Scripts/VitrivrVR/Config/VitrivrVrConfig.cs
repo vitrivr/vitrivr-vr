@@ -209,7 +209,7 @@ namespace VitrivrVR.Config
       defaultMediaVolume = .5f;
       skipLength = 2.5f;
       defaultSpeechToText = SpeechToText.Whisper;
-      createPointCloud = true;
+      createPointCloud = false;
       pointCloudPointLimit = 2000;
       pointCloudFeature = "openclip";
       dresEnabled = false;
@@ -219,7 +219,7 @@ namespace VitrivrVR.Config
       interactionLogSubmissionInterval = 10f;
       writeLogsToFile = false;
       logFileLocation = "session_logs/";
-      viveStreamingFixEnabled = false;
+      viveStreamingFixEnabled = true;
       reduceMotion = false;
       reduceMotionAngle = 30;
     }
