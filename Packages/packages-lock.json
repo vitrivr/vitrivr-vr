@@ -40,7 +40,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.27",
+      "version": "3.0.28",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -78,7 +78,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.6",
+      "version": "3.0.8",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -127,7 +127,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.management": {
-      "version": "4.4.0",
+      "version": "4.4.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -172,11 +172,11 @@
       "hash": "33c908f596feee6b468a3b393c3ceaed517658b6"
     },
     "org.vitrivr.unityinterface.cineastapi": {
-      "version": "https://github.com/vitrivr/CineastUnityInterface.git#feature/dimensionality-reduction",
+      "version": "https://github.com/vitrivr/CineastUnityInterface.git#feature/get-by-id",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "076fe1eb3260ee299520ce234711d0a1f87ab757"
+      "hash": "9be68f60dc06313779983db2c1694f8ac7d35a5c"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
