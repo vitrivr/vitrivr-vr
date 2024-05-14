@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Org.Vitrivr.CineastApi.Model;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Vitrivr.UnityInterface.CineastApi.Model.Data;
@@ -23,6 +24,7 @@ namespace VitrivrVR.Query.Display
   {
     public MediaItemDisplay mediaItemDisplay;
     public Transform mediaObjectItemDisplay;
+    public TextMeshPro textPrefab;
     public int rows = 4;
     public float rotationSpeed = 90;
     public float distance = 1;
@@ -263,6 +265,13 @@ namespace VitrivrVR.Query.Display
       boxCollider.size = size;
       boxCollider.center = center;
 
+      // Instantiate text display for the date
+      var dateText = Instantiate(textPrefab, mediaObjectDisplay);
+      var textTransform = dateText.transform;
+      textTransform.localPosition = new Vector3(-.5f, .5f, 0);
+      textTransform.localScale = new Vector3(.02f, .02f, .02f);
+      dateText.text = date.Day.ToString();
+
       // Set disabled if outside of active range
       mediaObjectDisplay.gameObject.SetActive(true);
 
@@ -271,10 +280,30 @@ namespace VitrivrVR.Query.Display
 
     private void CreateMonth(DateTime month)
     {
+      // Get month index
+      var monthIndex = _months.IndexOf(month);
+      // Create a new object for the month
       var calendarDisplay = new GameObject(month.ToString("MMMM yyyy")).transform;
       // Set this object as the parent of the month
       calendarDisplay.SetParent(transform);
-      calendarDisplay.localRotation = Quaternion.identity;
+      calendarDisplay.localPosition = Vector3.zero;
+      // Set rotation to the rotation faced by the results (+ 3 columns to center the month)
+      calendarDisplay.localRotation = Quaternion.Euler(0, (monthIndex * 8 + 3) * _columnAngle, 0);
+      // Create month text label
+      var monthText = Instantiate(textPrefab, calendarDisplay);
+      monthText.text = month.ToString("MMMM yyyy");
+      // Set position of month text
+      monthText.transform.localPosition = new Vector3(0, (resultSize + padding) * 7, distance);
+      // Create labels for the days of the week (starting Monday)
+      for (var i = 0; i < 7; i++)
+      {
+        var dayText = Instantiate(textPrefab, calendarDisplay);
+        dayText.text = ((DayOfWeek)((i + 1) % 7)).ToString()[..3];
+        dayText.transform.localPosition = new Vector3(0, (resultSize + padding) * 6, distance);
+        dayText.transform.RotateAround(calendarDisplay.position, Vector3.up, (i - 3) * _columnAngle);
+      }
+
+      // Create day objects for each result
       foreach (var objectSegments in _results.Where(result =>
                  _idToDate.ContainsKey(result.First().segment.Id) &&
                  _idToDate[result.First().segment.Id].Year == month.Year &&

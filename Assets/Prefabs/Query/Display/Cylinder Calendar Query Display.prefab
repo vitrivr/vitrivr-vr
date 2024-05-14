@@ -48,7 +48,8 @@ MonoBehaviour:
     type: 3}
   mediaObjectItemDisplay: {fileID: 2985840642620191907, guid: 5c5aaef129774cebaabf041081eb8390,
     type: 3}
-  rows: 4
+  textPrefab: {fileID: 9117171368649587292, guid: dede04a345f76483a9da2ed6aa43cb1f,
+    type: 3}
   rotationSpeed: 90
   distance: 1
   resultSize: 0.2
