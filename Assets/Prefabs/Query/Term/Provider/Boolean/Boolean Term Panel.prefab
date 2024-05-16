@@ -33,7 +33,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -98,10 +97,13 @@ MonoBehaviour:
     type: 3}
   yearSelection: {fileID: 4611024176390252789, guid: 31f9887cefb8dc846ab1a604d25bf929,
     type: 3}
+  calendarSelection: {fileID: 1102579680559540125, guid: 71490e19a1e3046cd8293c7276c4fef9,
+    type: 3}
   optionSelection: {fileID: 1131156460057547074, guid: a821ed34b320845b9b69938400dd2175,
     type: 3}
   integerRange: {fileID: 2845567907889249240, guid: 98ca52dc0ff42451599497a8ebd175f6,
     type: 3}
+  nameDisplayText: {fileID: 0}
 --- !u!114 &5324621484645471700
 MonoBehaviour:
   m_ObjectHideFlags: 0

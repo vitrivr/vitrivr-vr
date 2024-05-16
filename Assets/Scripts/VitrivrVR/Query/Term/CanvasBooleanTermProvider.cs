@@ -4,6 +4,7 @@ using System.Linq;
 using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Config;
 using VitrivrVR.Query.Term.Boolean;
@@ -16,9 +17,10 @@ namespace VitrivrVR.Query.Term
     public CanvasDaySelection daySelection;
     public CanvasMonthSelection monthSelection;
     public CanvasYearSelection yearSelection;
+    public CanvasCalendarSelection calendarSelection;
     public CanvasOptionSelection optionSelection;
     public CanvasIntegerRange integerRange;
-    
+
     public TMP_Text nameDisplayText;
 
     private enum BooleanTermTypes
@@ -28,6 +30,7 @@ namespace VitrivrVR.Query.Term
       DayOptions,
       MonthOptions,
       YearOptions,
+      CalendarOptions,
       DynamicOptions
     }
 
@@ -89,6 +92,17 @@ namespace VitrivrVR.Query.Term
               yearOptions.Initialize(category.name, entity, years);
               _termProviders.Add(yearOptions);
               break;
+            case BooleanTermTypes.CalendarOptions:
+              Assert.AreEqual(category.options.Length, 3,
+                "Expected exactly 3 options (year, month, day) for CalendarOptions");
+              var calendarOptions = Instantiate(calendarSelection, transform);
+              var dates = await QueryController.Instance.GetDistinctTableValues(category.table,
+                category.options.ToList());
+              calendarOptions.Initialize(category.name,
+                dates.Select(row =>
+                  new DateTime(Convert.ToInt32(row[0]), Convert.ToInt32(row[1]), Convert.ToInt32(row[2]))).ToList());
+              _termProviders.Add(calendarOptions);
+              break;
             case BooleanTermTypes.DynamicOptions:
               var dynamicOptions = Instantiate(optionSelection, transform);
               var dynOpt = await QueryController.Instance.GetDistinctTableValues(category.table, category.column);
@@ -134,7 +148,7 @@ namespace VitrivrVR.Query.Term
     {
       return "Boolean";
     }
-    
+
     public override void SetInstanceName(string displayName)
     {
       if (nameDisplayText != null)

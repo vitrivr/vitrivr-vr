@@ -417,7 +417,7 @@ namespace VitrivrVR.Query
         await queryClient.DimensionalityReduceFeature(orderedSegments.Select(ss => ss.segment.Id).ToList(),
           ConfigManager.Config.pointCloudFeature);
 
-      var scoreDict = orderedSegments.ToDictionary(ss => ss.segment, ss => (float) ss.score);
+      var scoreDict = orderedSegments.ToDictionary(ss => ss.segment, ss => (float)ss.score);
 
       var pointCloud = Instantiate(pointCloudDisplay, Vector3.up * 0.5f, Quaternion.identity);
       _pointCloudDisplays[display] = pointCloud;
@@ -437,6 +437,11 @@ namespace VitrivrVR.Query
     public async Task<List<string>> GetDistinctTableValues(string table, string column)
     {
       return await CurrentClient.GetDistinctTableValues(table, column);
+    }
+
+    public async Task<List<List<string>>> GetDistinctTableValues(string table, List<string> columns)
+    {
+      return await CurrentClient.GetDistinctTableValues(table, columns);
     }
 
     public async Task<List<Tag>> GetMatchingTags(string tagName)
