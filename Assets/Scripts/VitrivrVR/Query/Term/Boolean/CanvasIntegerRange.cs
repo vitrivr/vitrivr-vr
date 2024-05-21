@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,12 +31,15 @@ namespace VitrivrVR.Query.Term.Boolean
       slider1.maxValue = max;
     }
 
-    public override (string attribute, RelationalOperator op, string[] values) GetTerm()
+    public override List<(string attribute, RelationalOperator op, string[] values)> GetTerms()
     {
-      return _value0 == _value1
-        ? (_entity, RelationalOperator.Eq, new[] { _value0.ToString() })
-        : (_entity, RelationalOperator.Between,
-          new[] { Math.Min(_value0, _value1).ToString(), Math.Max(_value0, _value1).ToString() });
+      return new List<(string attribute, RelationalOperator op, string[] values)>
+      {
+        _value0 == _value1
+          ? (_entity, RelationalOperator.Eq, new[] { _value0.ToString() })
+          : (_entity, RelationalOperator.Between,
+            new[] { Math.Min(_value0, _value1).ToString(), Math.Max(_value0, _value1).ToString() })
+      };
     }
 
     public override bool IsEnabled()

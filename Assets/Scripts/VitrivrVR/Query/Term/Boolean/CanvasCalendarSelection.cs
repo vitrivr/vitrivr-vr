@@ -19,10 +19,13 @@ namespace VitrivrVR.Query.Term.Boolean
 
     private List<DateTime> _days;
     private DateTime _currentMonth;
+    private HashSet<DateTime> _selectedDays = new();
+    private string _category;
 
-    public void Initialize(string optionTitle, List<DateTime> days)
+    public void Initialize(string optionTitle, List<DateTime> days, string category)
     {
       optionName.text = optionTitle;
+      _category = category;
       _days = days;
       _days.Sort();
 
@@ -77,8 +80,10 @@ namespace VitrivrVR.Query.Term.Boolean
     {
       ClearToggles();
 
+      var day = new DateTime(days.First().Year, days.First().Month, 1, 0, 0, 0, DateTimeKind.Utc);
+
       // Determine the starting weekday of the month (shift by 1 for Monday = 0)
-      var startingWeekday = ((int)days.First().DayOfWeek + 6) % 7;
+      var startingWeekday = ((int)day.DayOfWeek + 6) % 7;
 
       // Insert empty toggles for the days before the first day of the month
       for (var i = 0; i < startingWeekday; i++)
@@ -88,10 +93,36 @@ namespace VitrivrVR.Query.Term.Boolean
         rectTransform.SetParent(togglesParent);
       }
 
-      foreach (var day in days)
+      while (day.Month == days.First().Month)
       {
         var toggle = Instantiate(togglePrefab, togglesParent);
         toggle.GetComponentInChildren<TMP_Text>().text = day.Day.ToString();
+        if (days.Contains(day))
+        {
+          var d = day;
+          toggle.onValueChanged.AddListener(isOn =>
+          {
+            if (isOn)
+            {
+              _selectedDays.Add(d);
+            }
+            else
+            {
+              _selectedDays.Remove(d);
+            }
+          });
+        }
+        else
+        {
+          toggle.interactable = false;
+        }
+
+        if (_selectedDays.Contains(day))
+        {
+          toggle.isOn = true;
+        }
+
+        day = day.AddDays(1);
       }
 
       monthText.text = $"{days.First():MMMM yyyy}";
@@ -99,14 +130,24 @@ namespace VitrivrVR.Query.Term.Boolean
       nextButton.interactable = _days.Last() > days.Last();
     }
 
-    public override (string attribute, RelationalOperator op, string[] values) GetTerm()
+    public override List<(string attribute, RelationalOperator op, string[] values)> GetTerms()
     {
-      throw new NotImplementedException();
+      if (_selectedDays.Count == 0)
+      {
+        Debug.LogError("Requested term from CanvasCalendarSelection despite no selection!");
+        return new List<(string attribute, RelationalOperator op, string[] values)>
+          { (null, RelationalOperator.Eq, null) };
+      }
+
+      var dates = _selectedDays.Select(date => ((DateTimeOffset)date).ToUnixTimeSeconds()).ToList();
+
+      return new List<(string attribute, RelationalOperator op, string[] values)>
+        { (_category, RelationalOperator.In, dates.Select(date => date.ToString()).ToArray()) };
     }
 
     public override bool IsEnabled()
     {
-      return false;
+      return _selectedDays.Count > 0;
     }
   }
 }

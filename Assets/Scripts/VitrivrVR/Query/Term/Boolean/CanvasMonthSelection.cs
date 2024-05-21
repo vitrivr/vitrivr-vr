@@ -39,13 +39,14 @@ namespace VitrivrVR.Query.Term.Boolean
       }
     }
 
-    public override (string attribute, RelationalOperator op, string[] values) GetTerm()
+    public override List<(string attribute, RelationalOperator op, string[] values)> GetTerms()
     {
       var selection = toggles.Select(toggle => toggle.isOn).ToArray();
       if (!selection.Any(x => x))
       {
         Debug.LogError("Requested term from CanvasMonthSelection despite no selection!");
-        return (null, RelationalOperator.Eq, null);
+        return new List<(string attribute, RelationalOperator op, string[] values)>
+          { (null, RelationalOperator.Eq, null) };
       }
 
       var options = selection
@@ -54,9 +55,12 @@ namespace VitrivrVR.Query.Term.Boolean
         .Select(value => int.TryParse(value.option, out _) ? value.option : "\"" + value.option + "\"")
         .ToArray();
 
-      return options.Length == 1
-        ? (_attribute, RelationalOperator.Eq, options)
-        : (_attribute, RelationalOperator.In, options);
+      return new List<(string attribute, RelationalOperator op, string[] values)>
+      {
+        options.Length == 1
+          ? (_attribute, RelationalOperator.Eq, options)
+          : (_attribute, RelationalOperator.In, options)
+      };
     }
 
     public override bool IsEnabled()

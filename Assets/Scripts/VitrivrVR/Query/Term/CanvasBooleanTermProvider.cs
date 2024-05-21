@@ -93,14 +93,11 @@ namespace VitrivrVR.Query.Term
               _termProviders.Add(yearOptions);
               break;
             case BooleanTermTypes.CalendarOptions:
-              Assert.AreEqual(category.options.Length, 3,
-                "Expected exactly 3 options (year, month, day) for CalendarOptions");
               var calendarOptions = Instantiate(calendarSelection, transform);
-              var dates = await QueryController.Instance.GetDistinctTableValues(category.table,
-                category.options.ToList());
+              var dates = await QueryController.Instance.GetDistinctTableValues(category.table, category.column);
               calendarOptions.Initialize(category.name,
-                dates.Select(row =>
-                  new DateTime(Convert.ToInt32(row[0]), Convert.ToInt32(row[1]), Convert.ToInt32(row[2]))).ToList());
+                dates.Select(unixTime => DateTimeOffset.FromUnixTimeSeconds(long.Parse(unixTime)).Date).ToList(),
+                category.table + "." + category.column);
               _termProviders.Add(calendarOptions);
               break;
             case BooleanTermTypes.DynamicOptions:
@@ -133,7 +130,7 @@ namespace VitrivrVR.Query.Term
     {
       var termParts = _termProviders
         .Where(t => t.IsEnabled())
-        .Select(provider => provider.GetTerm())
+        .SelectMany(provider => provider.GetTerms())
         .ToArray();
 
       return termParts.Length == 0
