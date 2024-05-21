@@ -58,7 +58,7 @@ namespace VitrivrVR.Query.Term.Boolean
       }
     }
 
-    public override List<(string attribute, RelationalOperator op, string[] values)> GetTerms()
+    public override (string attribute, RelationalOperator op, string[] values) GetTerm()
     {
       var selections = selectedButtons.GetComponentsInChildren<TMP_Text>().Select(text => text.text).ToArray();
       if (!_numeric)
@@ -66,12 +66,9 @@ namespace VitrivrVR.Query.Term.Boolean
         selections = selections.Select(value => "\"" + value + "\"").ToArray();
       }
 
-      return new List<(string attribute, RelationalOperator op, string[] values)>
-      {
-        selections.Length == 1
-          ? (_entity, RelationalOperator.Eq, selections)
-          : (_entity, RelationalOperator.In, selections)
-      };
+      return selections.Length == 1
+        ? (_entity, RelationalOperator.Eq, selections)
+        : (_entity, RelationalOperator.In, selections);
     }
 
     public override bool IsEnabled()

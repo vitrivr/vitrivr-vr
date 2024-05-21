@@ -4,7 +4,6 @@ using System.Linq;
 using Org.Vitrivr.CineastApi.Model;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Vitrivr.UnityInterface.CineastApi.Utils;
 using VitrivrVR.Config;
 using VitrivrVR.Query.Term.Boolean;
@@ -130,7 +129,7 @@ namespace VitrivrVR.Query.Term
     {
       var termParts = _termProviders
         .Where(t => t.IsEnabled())
-        .SelectMany(provider => provider.GetTerms())
+        .Select(provider => provider.GetTerm())
         .ToArray();
 
       return termParts.Length == 0

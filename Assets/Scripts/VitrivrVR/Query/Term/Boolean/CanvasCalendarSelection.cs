@@ -130,19 +130,17 @@ namespace VitrivrVR.Query.Term.Boolean
       nextButton.interactable = _days.Last() > days.Last();
     }
 
-    public override List<(string attribute, RelationalOperator op, string[] values)> GetTerms()
+    public override (string attribute, RelationalOperator op, string[] values) GetTerm()
     {
       if (_selectedDays.Count == 0)
       {
         Debug.LogError("Requested term from CanvasCalendarSelection despite no selection!");
-        return new List<(string attribute, RelationalOperator op, string[] values)>
-          { (null, RelationalOperator.Eq, null) };
+        return (null, RelationalOperator.Eq, null);
       }
 
       var dates = _selectedDays.Select(date => ((DateTimeOffset)date).ToUnixTimeSeconds()).ToList();
 
-      return new List<(string attribute, RelationalOperator op, string[] values)>
-        { (_category, RelationalOperator.In, dates.Select(date => date.ToString()).ToArray()) };
+      return (_category, RelationalOperator.In, dates.Select(date => date.ToString()).ToArray());
     }
 
     public override bool IsEnabled()
