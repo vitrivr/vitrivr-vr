@@ -16,7 +16,7 @@ namespace VitrivrVR.Query.Term
     public string TypeName { get; private set; }
     public int N { get; private set; }
 
-    private QueryTermManager _termManager;
+    private ModularQueryTermManager _termManager;
 
     /// <summary>
     /// Initializes this representation with a offset and name information.
@@ -26,7 +26,7 @@ namespace VitrivrVR.Query.Term
     /// <param name="offset">The position offset to the term manager in term manager coordinates.</param>
     /// <param name="typeName">The name of the type of term provider.</param>
     /// <param name="n">A number to differentiate this representation from others of the same term type.</param>
-    public void Initialize(QueryTermManager termManager, QueryTermProvider provider, Vector3 offset, string typeName,
+    public void Initialize(ModularQueryTermManager termManager, QueryTermProvider provider, Vector3 offset, string typeName,
       int n)
     {
       TypeName = typeName;

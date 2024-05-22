@@ -386,7 +386,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6923602722764280332}
+        m_TargetAssemblyTypeName: VitrivrVR.Query.Term.SimpleQueryTermManager, Assembly-CSharp
+        m_MethodName: SetSearchText
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnTouchScreenKeyboardStatusChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -417,6 +429,7 @@ GameObject:
   - component: {fileID: 2175713606291327477}
   - component: {fileID: 3414589668295319418}
   - component: {fileID: 6569361922575143021}
+  - component: {fileID: 6923602722764280332}
   m_Layer: 0
   m_Name: Simple Query Interface
   m_TagString: Untagged
@@ -527,6 +540,22 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   grabTransform: {fileID: 0}
+--- !u!114 &6923602722764280332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4203035339026170871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 959fa48eef01484ba9b7af7bd94199ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  booleanTermProviderPrefab: {fileID: 467071047052162229, guid: fc51cee4b22de4e6d98975af75dd8e61,
+    type: 3}
+  mapTermProviderPrefab: {fileID: 195768224599748772, guid: c179e236172375847bedd75a0b663132,
+    type: 3}
 --- !u!1 &5059766388336303181
 GameObject:
   m_ObjectHideFlags: 0

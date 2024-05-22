@@ -7,7 +7,7 @@ namespace VitrivrVR.Query.Term
   /// </summary>
   public class QueryTermProviderFactory : MonoBehaviour
   {
-    public QueryTermManager combinedQueryTermProvider;
+    public ModularQueryTermManager combinedQueryTermProvider;
     public QueryTermProviderController queryTermProviderPrefab;
 
     private bool _grabbed;
