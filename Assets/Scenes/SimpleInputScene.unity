@@ -3233,6 +3233,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: VitrivrVR.Query.QueryController, Assembly-CSharp
       objectReference: {fileID: 0}
+    - target: {fileID: 4796598701718301740, guid: 979b9c1923a2b4e5195aa3b46ec3d16b,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1606703275}
     - target: {fileID: 5841124078026728390, guid: 979b9c1923a2b4e5195aa3b46ec3d16b,
         type: 3}
       propertyPath: m_AnchorMax.y
