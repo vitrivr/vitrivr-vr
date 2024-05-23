@@ -52,7 +52,6 @@ namespace VitrivrVR.Query.Term
     /// 3. Text term (most important score wise)
     /// 4. Map term (spatial filtering)
     /// </summary>
-    /// <returns></returns>
     public override List<List<List<QueryTerm>>> GetTerms()
     {
       var stages = new List<List<QueryTerm>>();
