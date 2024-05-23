@@ -35,7 +35,7 @@ namespace VitrivrVR.Query.Term
 
       // Destroy or disable unnecessary canvases and clear buttons
       Destroy(booleanTermProvider.transform.Find("Canvas/Clear Button").gameObject);
-      _mapTermProvider.transform.Find("").gameObject.SetActive(false);
+      mapTermProvider.transform.Find("Map Term Canvas").gameObject.SetActive(false);
     }
 
     public void SetSearchText(string text)
