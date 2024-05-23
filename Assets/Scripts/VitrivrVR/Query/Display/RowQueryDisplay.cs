@@ -22,10 +22,9 @@ namespace VitrivrVR.Query.Display
     /// </summary>
     public int loadBuffer = 10;
 
-    private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays =
-      new List<(MediaItemDisplay, float)>();
+    private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays = new();
 
-    private readonly Queue<ScoredSegment> _instantiationQueue = new Queue<ScoredSegment>();
+    private readonly Queue<ScoredSegment> _instantiationQueue = new();
 
     private List<ScoredSegment> _results;
     private int _nResults;
@@ -64,7 +63,7 @@ namespace VitrivrVR.Query.Display
 
     protected override void Initialize()
     {
-      var fusionResults = QueryData.GetMeanFusionResults();
+      var fusionResults = ScoreFusionUtil.FuseScores(QueryData);
       _results = fusionResults;
       if (_results == null)
       {

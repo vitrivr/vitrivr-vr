@@ -386,7 +386,7 @@ namespace VitrivrVR.Query
         return;
 
       // Create point cloud
-      var meanFusionResults = queryData.GetMeanFusionResults();
+      var meanFusionResults = ScoreFusionUtil.FuseScores(queryData);
       await CreatePointCloudDisplay(queryClient, meanFusionResults, display);
     }
 
