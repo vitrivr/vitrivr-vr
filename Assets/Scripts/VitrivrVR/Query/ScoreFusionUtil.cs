@@ -32,7 +32,7 @@ namespace VitrivrVR.Query
       }
 
       // If the spatial results exist, we only use the IDs from the spatial results that have a similarity greater than 0.5
-      var ids = response.Results.TryGetValue("spatial", out var result)
+      var ids = response.Results.TryGetValue("spatialdistance", out var result)
         ? result.Where(segment => segment.score > 0.5).Select(segment => segment.segment.Id).ToHashSet()
         : null;
 
@@ -42,7 +42,8 @@ namespace VitrivrVR.Query
       {
         (null, null) => response.GetMeanFusionResults(),
         (null, _) => scores,
-        (_, null) => response.Results["spatial"].Select(segment => new ScoredSegment(segment.segment, 1)).ToList(),
+        (_, null) => response.Results["spatialdistance"].Where(segment => ids.Contains(segment.segment.Id))
+          .Select(segment => new ScoredSegment(segment.segment, 1)).ToList(),
         _ => scores.Where(segment => ids.Contains(segment.segment.Id)).ToList()
       };
     }

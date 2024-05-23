@@ -58,7 +58,7 @@ namespace VitrivrVR.Query.Term
       if (_ocrSearchActive && !string.IsNullOrEmpty(_ocrSearchText))
       {
         stages.Add(new List<QueryTerm>
-          { new(new List<string> { _ocrSearchCategory }, QueryTerm.TypeEnum.TEXT, _ocrSearchText) });
+          {new(new List<string> {_ocrSearchCategory}, QueryTerm.TypeEnum.TEXT, _ocrSearchText)});
       }
 
       var booleanTerms = _booleanTermProvider.GetTerms();
@@ -70,16 +70,51 @@ namespace VitrivrVR.Query.Term
       if (_textSearchText != null)
       {
         stages.Add(new List<QueryTerm>
-          { new(new List<string> { _textSearchCategory }, QueryTerm.TypeEnum.TEXT, _textSearchText) });
+          {new(new List<string> {_textSearchCategory}, QueryTerm.TypeEnum.TEXT, _textSearchText)});
       }
 
+
+      SetMapHalfSimilarityDistance();
       var mapTerms = _mapTermProvider.GetTerms();
       if (mapTerms.Count > 0)
       {
         stages.Add(mapTerms);
       }
 
-      return stages.Count > 0 ? new List<List<List<QueryTerm>>> { stages } : new List<List<List<QueryTerm>>>();
+      return stages.Count > 0 ? new List<List<List<QueryTerm>>> {stages} : new List<List<List<QueryTerm>>>();
+    }
+
+    private void SetMapHalfSimilarityDistance()
+    {
+      var map = _mapTermProvider.map;
+      var center = map.transform.position;
+      var edge = center + map.transform.right * map.maxDistance;
+      var start = map.PositionToCoordinates(center);
+      var end = map.PositionToCoordinates(edge);
+
+      var distance = DistanceBetweenCoordinates(start, end);
+
+      _mapTermProvider.halfSimilarityDistance = distance;
+    }
+
+    private static float DistanceBetweenCoordinates(Vector2 point1, Vector2 point2)
+    {
+      const int earthRadius = 6371000;
+
+      var diff = point2 - point1;
+
+      var diffRadians = diff * Mathf.Deg2Rad;
+
+      var sinLat = Mathf.Sin(diffRadians.x / 2);
+      var sinLon = Mathf.Sin(diffRadians.y / 2);
+
+      var radLat1 = point1.x * Mathf.Deg2Rad;
+      var radLat2 = point2.x * Mathf.Deg2Rad;
+
+      var a = sinLat * sinLat + sinLon * sinLon * Mathf.Cos(radLat1) * Mathf.Cos(radLat2);
+      var c = 2 * Mathf.Atan2(Mathf.Sqrt(a), Mathf.Sqrt(1 - a));
+      
+      return earthRadius * c;
     }
   }
 }
