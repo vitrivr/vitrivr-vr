@@ -15,7 +15,6 @@ namespace VitrivrVR.Query.Term
 
     private string _textSearchText;
     private string _ocrSearchText;
-    private bool _ocrSearchActive;
     private string _ocrSearchCategory;
     private string _textSearchCategory;
 
@@ -42,6 +41,11 @@ namespace VitrivrVR.Query.Term
     {
       _textSearchText = text;
     }
+    
+    public void SetOcrText(string text)
+    {
+      _ocrSearchText = text;
+    }
 
     /// <summary>
     /// Generates the term list for the simple query term manager query.
@@ -55,7 +59,7 @@ namespace VitrivrVR.Query.Term
     public override List<List<List<QueryTerm>>> GetTerms()
     {
       var stages = new List<List<QueryTerm>>();
-      if (_ocrSearchActive && !string.IsNullOrEmpty(_ocrSearchText))
+      if (!string.IsNullOrEmpty(_ocrSearchText))
       {
         stages.Add(new List<QueryTerm>
           {new(new List<string> {_ocrSearchCategory}, QueryTerm.TypeEnum.TEXT, _ocrSearchText)});
