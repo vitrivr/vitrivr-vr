@@ -165,11 +165,11 @@
       "hash": "b5c2335720146358ae35a3ca25807140da33713d"
     },
     "dev.dres.unityclient": {
-      "version": "https://github.com/dres-dev/UnityClient.git#v1.3.0",
+      "version": "https://github.com/dres-dev/UnityClient.git#v1.4.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "33c908f596feee6b468a3b393c3ceaed517658b6"
+      "hash": "691e831f5972e8d7f7c24f4f9de1e8f5809170ee"
     },
     "org.vitrivr.unityinterface.cineastapi": {
       "version": "https://github.com/vitrivr/CineastUnityInterface.git#feature/get-by-id",
