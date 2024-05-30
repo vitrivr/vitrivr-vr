@@ -71,7 +71,7 @@ namespace VitrivrVR.Query.Term
         stages.Add(booleanTerms);
       }
 
-      if (_textSearchText != null)
+      if (!string.IsNullOrEmpty(_textSearchText))
       {
         stages.Add(new List<QueryTerm>
           {new(new List<string> {_textSearchCategory}, QueryTerm.TypeEnum.TEXT, _textSearchText)});
