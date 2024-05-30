@@ -4123,6 +4123,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -5
       objectReference: {fileID: 0}
+    - target: {fileID: 4313398043121315595, guid: a064c784b84570846be74dc3380b0743,
+        type: 3}
+      propertyPath: m_Options.m_Options.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4313398043121315595, guid: a064c784b84570846be74dc3380b0743,
+        type: 3}
+      propertyPath: m_Options.m_Options.Array.data[2].m_Text
+      value: Calendar View
+      objectReference: {fileID: 0}
     - target: {fileID: 4861571820509022753, guid: a064c784b84570846be74dc3380b0743,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -4148,6 +4158,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Query Settings View
       objectReference: {fileID: 0}
+    - target: {fileID: 5350470879762543665, guid: a064c784b84570846be74dc3380b0743,
+        type: 3}
+      propertyPath: queryDisplayPrefabs.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5350470879762543665, guid: a064c784b84570846be74dc3380b0743,
+        type: 3}
+      propertyPath: queryDisplayPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 3742737981317088773, guid: e31f935b7adfa45efb3f5f91c4097124,
+        type: 3}
     - target: {fileID: 5350470879762543667, guid: a064c784b84570846be74dc3380b0743,
         type: 3}
       propertyPath: m_Pivot.x
