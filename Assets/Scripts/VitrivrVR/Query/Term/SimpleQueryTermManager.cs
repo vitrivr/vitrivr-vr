@@ -27,7 +27,7 @@ namespace VitrivrVR.Query.Term
       Debug.Log($"Using text category {_textSearchCategory} and OCR category {_ocrSearchCategory}");
 
       var booleanTermProvider =
-        Instantiate(booleanTermProviderPrefab, new Vector3(0, 0.9f, 0.75f), Quaternion.identity);
+        Instantiate(booleanTermProviderPrefab, new Vector3(0, 0.8f, 0.75f), Quaternion.identity);
       _booleanTermProvider = booleanTermProvider.GetComponentInChildren<CanvasBooleanTermProvider>();
       var mapTermProvider = Instantiate(mapTermProviderPrefab, new Vector3(0, 1.2f, 0.6f), Quaternion.identity);
       _mapTermProvider = mapTermProvider.GetComponentInChildren<MapTermProvider>();
