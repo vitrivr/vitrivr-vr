@@ -9,5 +9,7 @@ namespace VitrivrVR.Query.Term.Boolean
     
     /// <returns>Whether the term is enabled and should be used in queries.</returns>
     public abstract bool IsEnabled();
+    
+    public abstract void Clear();
   }
 }

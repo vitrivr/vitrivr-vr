@@ -39,7 +39,7 @@ namespace VitrivrVR.Query.Term
       Numeric
     }
 
-    private List<CanvasBooleanTerm> _termProviders = new List<CanvasBooleanTerm>();
+    private readonly List<CanvasBooleanTerm> _termProviders = new();
 
     private async void Start()
     {
@@ -122,6 +122,14 @@ namespace VitrivrVR.Query.Term
         {
           Debug.LogError($"Unknown Boolean term type: {category.selectionType}");
         }
+      }
+    }
+    
+    public void Clear()
+    {
+      foreach (var termProvider in _termProviders)
+      {
+        termProvider.Clear();
       }
     }
 

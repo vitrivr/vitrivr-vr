@@ -43,6 +43,11 @@ namespace VitrivrVR.Query.Term.Boolean
       return _enabled;
     }
 
+    public override void Clear()
+    {
+      SetEnabled(false);
+    }
+
     public void SetEnabled(bool enable)
     {
       _enabled = enable;

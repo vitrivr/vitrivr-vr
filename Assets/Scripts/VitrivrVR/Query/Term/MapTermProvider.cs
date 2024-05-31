@@ -43,5 +43,16 @@ namespace VitrivrVR.Query.Term
         nameDisplayText.text = displayName;
       }
     }
+
+    public static void Clear()
+    {
+      // Get all UniversalPin objects at root level of the scene
+      var pins = FindObjectsOfType<Map.UniversalPin>();
+      foreach (var pin in pins)
+      {
+        pin.OnGrab();
+        Destroy(pin.gameObject);
+      }
+    }
   }
 }

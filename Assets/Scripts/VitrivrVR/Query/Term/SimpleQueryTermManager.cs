@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Org.Vitrivr.CineastApi.Model;
+using TMPro;
 using UnityEngine;
 
 namespace VitrivrVR.Query.Term
@@ -9,6 +10,9 @@ namespace VitrivrVR.Query.Term
   {
     public GameObject booleanTermProviderPrefab;
     public GameObject mapTermProviderPrefab;
+
+    public TMP_InputField searchText;
+    public TMP_InputField ocrText;
 
     private CanvasBooleanTermProvider _booleanTermProvider;
     private MapTermProvider _mapTermProvider;
@@ -41,10 +45,18 @@ namespace VitrivrVR.Query.Term
     {
       _textSearchText = text;
     }
-    
+
     public void SetOcrText(string text)
     {
       _ocrSearchText = text;
+    }
+
+    public void Clear()
+    {
+      searchText.text = "";
+      ocrText.text = "";
+      _booleanTermProvider.Clear();
+      MapTermProvider.Clear();
     }
 
     /// <summary>
@@ -62,7 +74,7 @@ namespace VitrivrVR.Query.Term
       if (!string.IsNullOrEmpty(_ocrSearchText))
       {
         stages.Add(new List<QueryTerm>
-          {new(new List<string> {_ocrSearchCategory}, QueryTerm.TypeEnum.TEXT, _ocrSearchText)});
+          { new(new List<string> { _ocrSearchCategory }, QueryTerm.TypeEnum.TEXT, _ocrSearchText) });
       }
 
       var booleanTerms = _booleanTermProvider.GetTerms();
@@ -74,7 +86,7 @@ namespace VitrivrVR.Query.Term
       if (!string.IsNullOrEmpty(_textSearchText))
       {
         stages.Add(new List<QueryTerm>
-          {new(new List<string> {_textSearchCategory}, QueryTerm.TypeEnum.TEXT, _textSearchText)});
+          { new(new List<string> { _textSearchCategory }, QueryTerm.TypeEnum.TEXT, _textSearchText) });
       }
 
 
@@ -85,7 +97,7 @@ namespace VitrivrVR.Query.Term
         stages.Add(mapTerms);
       }
 
-      return stages.Count > 0 ? new List<List<List<QueryTerm>>> {stages} : new List<List<List<QueryTerm>>>();
+      return stages.Count > 0 ? new List<List<List<QueryTerm>>> { stages } : new List<List<List<QueryTerm>>>();
     }
 
     private void SetMapHalfSimilarityDistance()
@@ -117,7 +129,7 @@ namespace VitrivrVR.Query.Term
 
       var a = sinLat * sinLat + sinLon * sinLon * Mathf.Cos(radLat1) * Mathf.Cos(radLat2);
       var c = 2 * Mathf.Atan2(Mathf.Sqrt(a), Mathf.Sqrt(1 - a));
-      
+
       return earthRadius * c;
     }
   }

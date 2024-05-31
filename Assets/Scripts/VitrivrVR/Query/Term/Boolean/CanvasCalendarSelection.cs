@@ -147,5 +147,11 @@ namespace VitrivrVR.Query.Term.Boolean
     {
       return _selectedDays.Count > 0;
     }
+
+    public override void Clear()
+    {
+      _selectedDays.Clear();
+      CreateMonth(GetMonth(_currentMonth));
+    }
   }
 }
