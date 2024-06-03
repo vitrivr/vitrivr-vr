@@ -2168,6 +2168,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 195768224908268602}
+    - targetCorrespondingSourceObject: {fileID: 8958765314381148899, guid: e4ff785600d3f564d881f23a587d1148,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8483977300448195036}
   m_SourcePrefab: {fileID: 100100000, guid: e4ff785600d3f564d881f23a587d1148, type: 3}
 --- !u!4 &9143556012033577986 stripped
 Transform:
@@ -2231,6 +2235,21 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   grabTransform: {fileID: 0}
+--- !u!114 &8483977300448195036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9143556012033577989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c0990fd96ad41d4b7ec835629d58fe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayLocations: 100
+  locationPrefab: {fileID: 2550728198607861108, guid: df9e32658f9354bfb88abf111839f9cd,
+    type: 3}
 --- !u!1001 &195768225507824106
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2396,6 +2415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   system: {fileID: 8536682640037190415}
+  mapLocationDisplay: {fileID: 8483977300448195036}
 --- !u!199 &5246312239817954528
 ParticleSystemRenderer:
   serializedVersion: 6

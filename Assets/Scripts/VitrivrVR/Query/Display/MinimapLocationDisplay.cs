@@ -1,11 +1,14 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Vitrivr.UnityInterface.CineastApi.Model.Data;
 
 namespace VitrivrVR.Query.Display
 {
   public class MinimapLocationDisplay : MonoBehaviour
   {
     public ParticleSystem system;
+    public MapLocationDisplay mapLocationDisplay;
 
     private void Start()
     {
@@ -17,6 +20,7 @@ namespace VitrivrVR.Query.Display
       system.Clear();
       if (newIndex == -1)
       {
+        mapLocationDisplay.SetLocations(new List<(ScoredSegment, Vector2)>());
         return;
       }
 
@@ -53,6 +57,12 @@ namespace VitrivrVR.Query.Display
       {
         system.Emit(emitParams, 1);
       }
+
+      var scoredVectorMap = results.ToDictionary(result => result.segment.Id);
+
+      mapLocationDisplay.SetLocations(locationsResult.Points
+        .Select(point => (scoredVectorMap[point.Id], new Vector2(point.Vector[0], point.Vector[1])))
+        .ToList());
     }
   }
 }
