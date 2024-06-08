@@ -617,7 +617,7 @@ GameObject:
   - component: {fileID: 1319126732243636815}
   - component: {fileID: 8943571809015675093}
   - component: {fileID: 4245330031730431187}
-  - component: {fileID: 4398201079036992528}
+  - component: {fileID: 7683910168445433321}
   m_Layer: 0
   m_Name: Modular Canvas Query Term Provider
   m_TagString: Untagged
@@ -733,7 +733,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   grabTransform: {fileID: 0}
---- !u!114 &4398201079036992528
+--- !u!114 &7683910168445433321
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -742,7 +742,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4315599219316094429}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37bfaf04ceac41c78725eac6e5465b8f, type: 3}
+  m_Script: {fileID: 11500000, guid: 482b0f14f5124e4d9904bb65a72862a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   textTermProviderSelection: {fileID: 6310090573974258106, guid: 50bca41c9b8dfa745882e9c74565ba98,
