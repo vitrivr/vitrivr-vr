@@ -49,6 +49,13 @@ namespace VitrivrVR.Config
       Whisper
     }
 
+    [Serializable]
+    public enum ScoreFusion
+    {
+      MeanFusion,
+      SimpleFusion
+    }
+
     /// <summary>
     /// List of paths relative to persistent path pointing to all enabled Cineast instances.
     /// </summary>
@@ -109,6 +116,7 @@ namespace VitrivrVR.Config
 
     /// <summary>
     /// The default enabled speech-to-text method.
+    /// Specify as 0 for DeepSpeech or 1 for Whisper.
     /// </summary>
     public SpeechToText defaultSpeechToText;
 
@@ -166,7 +174,7 @@ namespace VitrivrVR.Config
     /// Path to location where log files are to be written.
     /// </summary>
     public string logFileLocation;
-    
+
     /// <summary>
     /// Enables a fix for the Vive streaming bug by periodically disabling and re-enabling UI interactions when no
     /// interactions are detected.
@@ -182,10 +190,16 @@ namespace VitrivrVR.Config
     /// Angle (in degrees) by which rotating displays should rotate at once in reduced motion mode.
     /// </summary>
     public float reduceMotionAngle;
+    
+    /// <summary>
+    /// Score fusion to use for combining scores from different query components.
+    /// Specify as 0 for mean fusion or 1 for simple fusion.
+    /// </summary>
+    public ScoreFusion scoreFusion;
 
     private VitrivrVrConfig()
     {
-      cineastConfigs = new List<string> {"cineastapi.json"};
+      cineastConfigs = new List<string> { "cineastapi.json" };
       maxResults = 10000;
       maxDisplay = 100;
       dissimilarityColor = new ConfigColor(1, 0, 0);
@@ -209,7 +223,7 @@ namespace VitrivrVR.Config
       defaultMediaVolume = .5f;
       skipLength = 2.5f;
       defaultSpeechToText = SpeechToText.Whisper;
-      createPointCloud = true;
+      createPointCloud = false;
       pointCloudPointLimit = 2000;
       pointCloudFeature = "openclip";
       dresEnabled = false;
@@ -219,9 +233,10 @@ namespace VitrivrVR.Config
       interactionLogSubmissionInterval = 10f;
       writeLogsToFile = false;
       logFileLocation = "session_logs/";
-      viveStreamingFixEnabled = false;
+      viveStreamingFixEnabled = true;
       reduceMotion = false;
       reduceMotionAngle = 30;
+      scoreFusion = ScoreFusion.MeanFusion;
     }
 
     public static VitrivrVrConfig GetDefault()

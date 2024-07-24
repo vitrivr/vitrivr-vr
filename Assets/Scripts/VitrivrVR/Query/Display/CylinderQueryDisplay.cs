@@ -96,7 +96,7 @@ namespace VitrivrVR.Query.Display
 
     protected override void Initialize()
     {
-      var fusionResults = QueryData.GetMeanFusionResults();
+      var fusionResults = ScoreFusionUtil.FuseScores(QueryData);
       _results = fusionResults;
       if (_results == null)
       {

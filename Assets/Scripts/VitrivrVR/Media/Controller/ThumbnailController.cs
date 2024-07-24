@@ -10,8 +10,17 @@ namespace VitrivrVR.Media.Controller
   {
     public Texture2D errorTexture;
     public string url;
+    public float scaleFactor = 1;
 
     private void Start()
+    {
+      if (!string.IsNullOrEmpty(url))
+      {
+        StartDownload();
+      }
+    }
+
+    public void StartDownload()
     {
       StartCoroutine(DownloadHelper.DownloadTexture(url, OnDownloadError, OnDownloadSuccess));
     }
@@ -28,7 +37,7 @@ namespace VitrivrVR.Media.Controller
       rend.material.mainTexture = loadedTexture;
       float factor = Mathf.Max(loadedTexture.width, loadedTexture.height);
       var scale = new Vector3(loadedTexture.width / factor, loadedTexture.height / factor, 1);
-      rend.transform.localScale = scale;
+      rend.transform.localScale = scale * scaleFactor;
     }
   }
 }

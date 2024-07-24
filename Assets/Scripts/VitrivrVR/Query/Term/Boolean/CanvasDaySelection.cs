@@ -60,5 +60,10 @@ namespace VitrivrVR.Query.Term.Boolean
     {
       return _toggles.Any(x => x.isOn);
     }
+
+    public override void Clear()
+    {
+      _toggles.ToList().ForEach(toggle => toggle.isOn = false);
+    }
   }
 }

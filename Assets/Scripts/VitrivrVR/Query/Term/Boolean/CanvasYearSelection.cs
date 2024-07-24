@@ -54,5 +54,13 @@ namespace VitrivrVR.Query.Term.Boolean
     {
       return _toggles.Any(x => x.isOn);
     }
+
+    public override void Clear()
+    {
+      foreach (var toggle in _toggles)
+      {
+        toggle.isOn = false;
+      }
+    }
   }
 }

@@ -20,10 +20,9 @@ namespace VitrivrVR.Query.Display
     public string scrollAxis = "Horizontal";
     public float scrollSpeed = 30f;
 
-    private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays =
-      new List<(MediaItemDisplay, float)>();
+    private readonly List<(MediaItemDisplay display, float score)> _mediaDisplays = new();
 
-    private readonly Queue<ScoredSegment> _instantiationQueue = new Queue<ScoredSegment>();
+    private readonly Queue<ScoredSegment> _instantiationQueue = new();
 
     private void Update()
     {
@@ -41,7 +40,7 @@ namespace VitrivrVR.Query.Display
     private void CreateResultObject(ScoredSegment result)
     {
       // Determine position
-      var position = new Vector3(0, 0, innerRadius + 1 - (float) result.score);
+      var position = new Vector3(0, 0, innerRadius + 1 - (float)result.score);
       var column = _mediaDisplays.Count % rows - (rows - 1) / 2;
       var row = _mediaDisplays.Count / rows;
       position = Quaternion.Euler(column * itemAngle + Random.Range(-angleNoise, angleNoise),
@@ -53,7 +52,7 @@ namespace VitrivrVR.Query.Display
 
       var itemDisplay = Instantiate(mediaItemDisplay, position, rotation, transform);
 
-      _mediaDisplays.Add((itemDisplay, (float) result.score));
+      _mediaDisplays.Add((itemDisplay, (float)result.score));
 
       // Only begin initialization after determining position so that results can begin positioning
       itemDisplay.Initialize(result);
@@ -75,7 +74,7 @@ namespace VitrivrVR.Query.Display
 
     protected override void Initialize()
     {
-      var fusionResults = QueryData.GetMeanFusionResults();
+      var fusionResults = ScoreFusionUtil.FuseScores(QueryData);
       foreach (var segment in fusionResults.Take(ConfigManager.Config.maxDisplay))
       {
         _instantiationQueue.Enqueue(segment);

@@ -75,5 +75,13 @@ namespace VitrivrVR.Query.Term.Boolean
     {
       return selectedButtons.childCount > 0;
     }
+
+    public override void Clear()
+    {
+      foreach (Transform button in selectedButtons)
+      {
+        Destroy(button.gameObject);
+      }
+    }
   }
 }

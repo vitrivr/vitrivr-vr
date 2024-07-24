@@ -24,6 +24,7 @@ namespace VitrivrVR.Query.Term.Boolean
         Debug.LogWarning("More than 7 options provided to WeekdaySelection!");
       }
     }
+
     public override (string attribute, RelationalOperator op, string[] values) GetTerm()
     {
       var selection = toggles.Select(toggle => toggle.isOn).ToArray();
@@ -47,6 +48,14 @@ namespace VitrivrVR.Query.Term.Boolean
     public override bool IsEnabled()
     {
       return toggles.Select(toggle => toggle.isOn).Any(x => x);
+    }
+
+    public override void Clear()
+    {
+      foreach (var toggle in toggles)
+      {
+        toggle.isOn = false;
+      }
     }
   }
 }

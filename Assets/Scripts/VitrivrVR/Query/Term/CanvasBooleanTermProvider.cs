@@ -16,9 +16,10 @@ namespace VitrivrVR.Query.Term
     public CanvasDaySelection daySelection;
     public CanvasMonthSelection monthSelection;
     public CanvasYearSelection yearSelection;
+    public CanvasCalendarSelection calendarSelection;
     public CanvasOptionSelection optionSelection;
     public CanvasIntegerRange integerRange;
-    
+
     public TMP_Text nameDisplayText;
 
     private enum BooleanTermTypes
@@ -28,6 +29,7 @@ namespace VitrivrVR.Query.Term
       DayOptions,
       MonthOptions,
       YearOptions,
+      CalendarOptions,
       DynamicOptions
     }
 
@@ -37,7 +39,7 @@ namespace VitrivrVR.Query.Term
       Numeric
     }
 
-    private List<CanvasBooleanTerm> _termProviders = new List<CanvasBooleanTerm>();
+    private readonly List<CanvasBooleanTerm> _termProviders = new();
 
     private async void Start()
     {
@@ -89,6 +91,14 @@ namespace VitrivrVR.Query.Term
               yearOptions.Initialize(category.name, entity, years);
               _termProviders.Add(yearOptions);
               break;
+            case BooleanTermTypes.CalendarOptions:
+              var calendarOptions = Instantiate(calendarSelection, transform);
+              var dates = await QueryController.Instance.GetDistinctTableValues(category.table, category.column);
+              calendarOptions.Initialize(category.name,
+                dates.Select(unixTime => DateTimeOffset.FromUnixTimeSeconds(long.Parse(unixTime)).Date).ToList(),
+                category.table + "." + category.column);
+              _termProviders.Add(calendarOptions);
+              break;
             case BooleanTermTypes.DynamicOptions:
               var dynamicOptions = Instantiate(optionSelection, transform);
               var dynOpt = await QueryController.Instance.GetDistinctTableValues(category.table, category.column);
@@ -114,6 +124,14 @@ namespace VitrivrVR.Query.Term
         }
       }
     }
+    
+    public void Clear()
+    {
+      foreach (var termProvider in _termProviders)
+      {
+        termProvider.Clear();
+      }
+    }
 
     public override List<QueryTerm> GetTerms()
     {
@@ -134,7 +152,7 @@ namespace VitrivrVR.Query.Term
     {
       return "Boolean";
     }
-    
+
     public override void SetInstanceName(string displayName)
     {
       if (nameDisplayText != null)

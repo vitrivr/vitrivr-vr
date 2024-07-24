@@ -14,11 +14,19 @@ namespace VitrivrVR.Query.Term
     public Map.Map map;
     public TMP_Text nameDisplayText;
 
+    /// <summary>
+    /// Half similarity distance to use for building query terms.
+    /// Only used if > 0.
+    /// </summary>
+    public float halfSimilarityDistance = -1f;
+
     public override List<QueryTerm> GetTerms()
     {
       return map.gameObject.activeInHierarchy
         ? map.GetPinCoordinates()
-          .Select(coordinates => QueryTermBuilder.BuildLocationTerm(coordinates.x, coordinates.y))
+          .Select(coordinates => halfSimilarityDistance > 0
+            ? QueryTermBuilder.BuildLocationTerm(coordinates.x, coordinates.y, halfSimilarityDistance)
+            : QueryTermBuilder.BuildLocationTerm(coordinates.x, coordinates.y))
           .ToList()
         : new List<QueryTerm>();
     }
@@ -27,12 +35,23 @@ namespace VitrivrVR.Query.Term
     {
       return "Map";
     }
-    
+
     public override void SetInstanceName(string displayName)
     {
       if (nameDisplayText != null)
       {
         nameDisplayText.text = displayName;
+      }
+    }
+
+    public static void Clear()
+    {
+      // Get all UniversalPin objects at root level of the scene
+      var pins = FindObjectsOfType<Map.UniversalPin>();
+      foreach (var pin in pins)
+      {
+        pin.OnGrab();
+        Destroy(pin.gameObject);
       }
     }
   }

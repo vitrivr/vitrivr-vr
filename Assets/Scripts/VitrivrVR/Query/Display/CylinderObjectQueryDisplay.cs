@@ -107,7 +107,7 @@ namespace VitrivrVR.Query.Display
 
     protected override async void Initialize()
     {
-      var fusionResults = QueryData.GetMeanFusionResults();
+      var fusionResults = ScoreFusionUtil.FuseScores(QueryData);
       if (fusionResults == null)
       {
         NotificationController.Notify("No results returned from query!");

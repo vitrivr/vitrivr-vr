@@ -81,6 +81,8 @@ namespace VitrivrVR.Submission
     {
       mediaObjectId = RemovePattern(mediaObjectId);
 
+      Debug.Log($"Submitting result for {mediaObjectId} at {milliseconds} ms");
+
       try
       {
         var result = await _instance.SubmitResultV2(mediaObjectId, milliseconds, milliseconds);

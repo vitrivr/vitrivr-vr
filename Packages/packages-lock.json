@@ -40,7 +40,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.27",
+      "version": "3.0.28",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -78,7 +78,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.6",
+      "version": "3.0.8",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -108,7 +108,7 @@
       }
     },
     "com.unity.xr.core-utils": {
-      "version": "2.2.3",
+      "version": "2.3.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -127,7 +127,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.management": {
-      "version": "4.4.0",
+      "version": "4.4.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -139,7 +139,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.openxr": {
-      "version": "1.9.1",
+      "version": "1.10.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -165,18 +165,18 @@
       "hash": "b5c2335720146358ae35a3ca25807140da33713d"
     },
     "dev.dres.unityclient": {
-      "version": "https://github.com/dres-dev/UnityClient.git#v1.3.0",
+      "version": "https://github.com/dres-dev/UnityClient.git#v1.4.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "33c908f596feee6b468a3b393c3ceaed517658b6"
+      "hash": "691e831f5972e8d7f7c24f4f9de1e8f5809170ee"
     },
     "org.vitrivr.unityinterface.cineastapi": {
-      "version": "https://github.com/vitrivr/CineastUnityInterface.git#feature/dimensionality-reduction",
+      "version": "https://github.com/vitrivr/CineastUnityInterface.git#feature/get-by-id",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "076fe1eb3260ee299520ce234711d0a1f87ab757"
+      "hash": "8b09b849abca493a5247352e7f3129c679fde6ee"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
