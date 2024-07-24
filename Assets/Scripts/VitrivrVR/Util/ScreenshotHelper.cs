@@ -12,6 +12,7 @@ namespace VitrivrVR.Util
     public InputAction screenshotAction;
     public int width;
     public int height;
+    public string savePath;
 
     private void Start()
     {
@@ -30,7 +31,11 @@ namespace VitrivrVR.Util
 
     public void TakeTransparentScreenshot()
     {
-      TakeTransparentScreenshot(Camera.main, width, height, $"screenshot-{Time.time}.png");
+      var currentDateTime = System.DateTime.Now;
+      var dateTimeString = currentDateTime.ToString("yyyy-MM-dd_HH-mm-ss");
+      var filename = $"screenshot-{dateTimeString}.png";
+      var path = string.IsNullOrEmpty(savePath) ? filename : Path.Combine(savePath, filename);
+      TakeTransparentScreenshot(Camera.main, width, height, path);
     }
 
     public static void TakeTransparentScreenshot(Camera cam, int width, int height, string savePath)
