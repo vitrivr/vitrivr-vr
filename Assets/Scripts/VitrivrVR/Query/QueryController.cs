@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Org.Vitrivr.CineastApi.Model;
@@ -15,6 +16,7 @@ using VitrivrVR.Notification;
 using VitrivrVR.Query.Display;
 using VitrivrVR.Query.Term;
 using static VitrivrVR.Logging.Interaction;
+using File = UnityEngine.Windows.File;
 
 namespace VitrivrVR.Query
 {
@@ -89,7 +91,22 @@ namespace VitrivrVR.Query
       }
 
       _cineastClients = ConfigManager.Config.cineastConfigs
-        .Select(configPath => new CineastClient(CineastConfigManager.LoadConfigOrDefault(configPath))).ToList();
+        .Select(configPath =>
+        {
+          // Check if file exists
+#if UNITY_EDITOR
+          var folder = Application.dataPath;
+#else
+          var folder = Application.persistentDataPath;
+#endif
+          var filePath = Path.Combine(folder, configPath);
+          if (!File.Exists(filePath))
+          {
+            NotificationController.NotifyError($"Could not read Cineast config at {filePath}!");
+          }
+
+          return new CineastClient(CineastConfigManager.LoadConfigOrDefault(configPath));
+        }).ToList();
 
       Instance = this;
     }
@@ -155,6 +172,9 @@ namespace VitrivrVR.Query
       }
 
       var queryClient = CurrentClient;
+
+      Debug.Log(query.ToJson());
+      Debug.Log(queryClient.SegmentsApi.Configuration.ApiClient.RestClient.BaseUrl);
 
       var queryData = await queryClient.ExecuteQuery(query, maxResults);
 
@@ -417,7 +437,7 @@ namespace VitrivrVR.Query
         await queryClient.DimensionalityReduceFeature(orderedSegments.Select(ss => ss.segment.Id).ToList(),
           ConfigManager.Config.pointCloudFeature);
 
-      var scoreDict = orderedSegments.ToDictionary(ss => ss.segment, ss => (float)ss.score);
+      var scoreDict = orderedSegments.ToDictionary(ss => ss.segment, ss => (float) ss.score);
 
       var pointCloud = Instantiate(pointCloudDisplay, Vector3.up * 0.5f, Quaternion.identity);
       _pointCloudDisplays[display] = pointCloud;
