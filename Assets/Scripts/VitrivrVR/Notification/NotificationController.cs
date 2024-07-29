@@ -47,10 +47,7 @@ namespace VitrivrVR.Notification
       {
         _instance.notificationEvent.Invoke(error);
       }
-      else
-      {
-        Debug.LogError(error);
-      }
+      Debug.LogError(error);
 
       if (exception == null) return;
       Debug.LogError(exception.StackTrace);
