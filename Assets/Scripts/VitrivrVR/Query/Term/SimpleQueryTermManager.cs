@@ -30,15 +30,23 @@ namespace VitrivrVR.Query.Term
 
       Debug.Log($"Using text category {_textSearchCategory} and OCR category {_ocrSearchCategory}");
 
-      var booleanTermProvider =
-        Instantiate(booleanTermProviderPrefab, new Vector3(0, 0.8f, 0.75f), Quaternion.identity);
-      _booleanTermProvider = booleanTermProvider.GetComponentInChildren<CanvasBooleanTermProvider>();
-      var mapTermProvider = Instantiate(mapTermProviderPrefab, new Vector3(0, 1.2f, 0.6f), Quaternion.identity);
-      _mapTermProvider = mapTermProvider.GetComponentInChildren<MapTermProvider>();
+      // Instantiate only if enabled in config
+      if (config.booleanCategories.Count > 0)
+      {
+        var booleanTermProvider =
+          Instantiate(booleanTermProviderPrefab, new Vector3(0, 0.8f, 0.75f), Quaternion.identity);
+        _booleanTermProvider = booleanTermProvider.GetComponentInChildren<CanvasBooleanTermProvider>();
+        // Destroy unnecessary canvas and clear button
+        Destroy(booleanTermProvider.transform.Find("Canvas/Clear Button").gameObject);
+      }
 
-      // Destroy or disable unnecessary canvases and clear buttons
-      Destroy(booleanTermProvider.transform.Find("Canvas/Clear Button").gameObject);
-      mapTermProvider.transform.Find("Map Term Canvas").gameObject.SetActive(false);
+      if (config.mapTerm)
+      {
+        var mapTermProvider = Instantiate(mapTermProviderPrefab, new Vector3(0, 1.2f, 0.6f), Quaternion.identity);
+        _mapTermProvider = mapTermProvider.GetComponentInChildren<MapTermProvider>();
+        // Disable unnecessary canvas
+        mapTermProvider.transform.Find("Map Term Canvas").gameObject.SetActive(false);
+      }
     }
 
     public void SetSearchText(string text)
@@ -74,30 +82,35 @@ namespace VitrivrVR.Query.Term
       if (!string.IsNullOrEmpty(_ocrSearchText))
       {
         stages.Add(new List<QueryTerm>
-          { new(new List<string> { _ocrSearchCategory }, QueryTerm.TypeEnum.TEXT, _ocrSearchText) });
+          {new(new List<string> {_ocrSearchCategory}, QueryTerm.TypeEnum.TEXT, _ocrSearchText)});
       }
 
-      var booleanTerms = _booleanTermProvider.GetTerms();
-      if (booleanTerms.Count > 0)
+      if (_booleanTermProvider)
       {
-        stages.Add(booleanTerms);
+        var booleanTerms = _booleanTermProvider.GetTerms();
+        if (booleanTerms.Count > 0)
+        {
+          stages.Add(booleanTerms);
+        }
       }
 
       if (!string.IsNullOrEmpty(_textSearchText))
       {
         stages.Add(new List<QueryTerm>
-          { new(new List<string> { _textSearchCategory }, QueryTerm.TypeEnum.TEXT, _textSearchText) });
+          {new(new List<string> {_textSearchCategory}, QueryTerm.TypeEnum.TEXT, _textSearchText)});
       }
 
-
-      SetMapHalfSimilarityDistance();
-      var mapTerms = _mapTermProvider.GetTerms();
-      if (mapTerms.Count > 0)
+      if (_mapTermProvider)
       {
-        stages.Add(mapTerms);
+        SetMapHalfSimilarityDistance();
+        var mapTerms = _mapTermProvider.GetTerms();
+        if (mapTerms.Count > 0)
+        {
+          stages.Add(mapTerms);
+        }
       }
 
-      return stages.Count > 0 ? new List<List<List<QueryTerm>>> { stages } : new List<List<List<QueryTerm>>>();
+      return stages.Count > 0 ? new List<List<List<QueryTerm>>> {stages} : new List<List<List<QueryTerm>>>();
     }
 
     private void SetMapHalfSimilarityDistance()
