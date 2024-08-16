@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace VitrivrVR.UI
 {
@@ -18,9 +17,15 @@ namespace VitrivrVR.UI
 
     private void Update()
     {
-      // In the update we check if the camera is looking at the wrist mounted display.
+      // In the update we check if the wrist mounted display is angled towards the camera.
       // If it is, we enable the display, otherwise we disable it.
-      _display.SetActive(_camera != null && Vector3.Dot(_camera.forward, transform.position - _camera.position) > .5f);
+      if (!_camera) return;
+      var toWristDisplay = _camera.position - transform.position;
+      var dotProduct = Vector3.Dot(-_display.transform.forward, toWristDisplay);
+      var magnitudeProduct = _camera.forward.magnitude * toWristDisplay.magnitude;
+      var cosineSimilarity = dotProduct / magnitudeProduct;
+
+      _display.SetActive(cosineSimilarity > .75f);
     }
   }
 }
